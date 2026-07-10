@@ -1,0 +1,1294 @@
+{% comment %}
+  KOMBAT ZONE — Product Page
+  File: sections/kombatzone-product.liquid
+
+  Pagina prodotto completa costruita seguendo "The Perfect Product Page Builder":
+  tag prodotto, galleria immagini/video, opzioni/varianti, pricing, CTA,
+  objection busters (garanzia/spedizione/USP), descrizione persuasiva,
+  accordion (specifiche/spedizione/resi/FAQ), recensioni, correlati.
+
+  Responsive: mobile (galleria sopra, buy box sotto) e desktop (2 colonne).
+  Colori: sfondo scuro coerente col resto del sito (#0a0a0a / #111111), accento rosso #E8272A.
+{% endcomment %}
+
+{{ 'https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;500;600;700&display=swap' | stylesheet_tag }}
+
+{%- assign product = product -%}
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+<style>
+  .kzpr-wrap {
+    background: {{ section.settings.bg_color }};
+    padding: 40px 32px 0;
+    font-family: 'Inter', sans-serif;
+    color: #F2F0EB;
+  }
+
+  .kzpr-grid {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 56px;
+    align-items: start;
+  }
+
+  /* ---------- Breadcrumb / tag ---------- */
+  .kzpr-tags {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .kzpr-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    background: #E8272A;
+    color: #fff;
+  }
+
+  .kzpr-tag.secondary {
+    background: transparent;
+    border: 1px solid rgba(242,240,235,0.25);
+    color: #F2F0EB;
+  }
+
+  /* ---------- Gallery ---------- */
+  .kzpr-gallery {
+    position: sticky;
+    top: 24px;
+  }
+
+  .kzpr-main-media {
+    aspect-ratio: 1/1;
+    background: #1a1a1a;
+    overflow: hidden;
+    margin-bottom: 8px;
+    position: relative;
+  }
+
+  .kzpr-main-media img,
+  .kzpr-main-media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .kzpr-thumbs {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+
+  .kzpr-thumb {
+    aspect-ratio: 1/1;
+    background: #1a1a1a;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    padding: 0;
+    display: block;
+  }
+
+  .kzpr-thumb.active { border-color: #E8272A; }
+
+  .kzpr-thumb img,
+  .kzpr-thumb video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .kzpr-placeholder-media {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    opacity: .15;
+  }
+
+  .kzpr-placeholder-media svg { width: 48px; height: 48px; stroke: #F2F0EB; }
+
+  /* ---------- Buy box ---------- */
+  .kzpr-details { padding-top: 4px; }
+
+  .kzpr-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 38px;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1.02;
+    margin-bottom: 10px;
+    color: #F2F0EB;
+  }
+
+  .kzpr-stars {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .kzpr-stars-icons { color: #C9992A; font-size: 14px; letter-spacing: 2px; }
+  .kzpr-stars-count { font-size: 12px; color: #888880; }
+
+  .kzpr-usp {
+    font-size: 15px;
+    color: #cfcdc6;
+    line-height: 1.5;
+    margin-bottom: 24px;
+    max-width: 46ch;
+  }
+
+  .kzpr-pricing {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .kzpr-price-now { font-size: 30px; font-weight: 700; color: #F2F0EB; }
+  .kzpr-price-was { font-size: 17px; color: #6a6a62; text-decoration: line-through; }
+  .kzpr-price-pct {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    background: #E8272A;
+    padding: 3px 8px;
+  }
+
+  .kzpr-bnpl {
+    font-size: 12px;
+    color: #888880;
+    margin-bottom: 24px;
+  }
+
+  /* ---------- Variant picker ---------- */
+  .kzpr-option-group { margin-bottom: 20px; }
+
+  .kzpr-option-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #888880;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .kzpr-option-label .kzpr-selected-value { color: #F2F0EB; font-weight: 400; text-transform: none; letter-spacing: 0; }
+
+  .kzpr-swatches, .kzpr-size-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .kzpr-swatch {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid rgba(242,240,235,0.2);
+    cursor: pointer;
+    position: relative;
+    padding: 0;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .kzpr-swatch.active { border-color: #E8272A; }
+  .kzpr-swatch.unavailable { opacity: .25; cursor: not-allowed; }
+
+  .kzpr-size-btn {
+    min-width: 48px;
+    height: 48px;
+    padding: 0 16px;
+    background: transparent;
+    border: 1px solid rgba(242,240,235,0.25);
+    color: #F2F0EB;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+  }
+
+  .kzpr-size-btn.active { background: #E8272A; border-color: #E8272A; color: #fff; }
+  .kzpr-size-btn.unavailable { opacity: .3; text-decoration: line-through; cursor: not-allowed; }
+
+  .kzpr-size-guide-link {
+    font-size: 11px;
+    text-decoration: underline;
+    color: #888880;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* ---------- Qty + Buy buttons ---------- */
+  .kzpr-buy-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .kzpr-qty {
+    display: flex;
+    align-items: center;
+    border: 1px solid rgba(242,240,235,0.25);
+    height: 52px;
+    flex-shrink: 0;
+  }
+
+  .kzpr-qty button {
+    width: 40px;
+    height: 100%;
+    background: none;
+    border: none;
+    color: #F2F0EB;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .kzpr-qty input {
+    width: 36px;
+    height: 100%;
+    background: none;
+    border: none;
+    color: #F2F0EB;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+  }
+
+  .kzpr-add-to-cart {
+    flex: 1;
+    height: 52px;
+    background: #E8272A;
+    color: #fff;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .15s;
+  }
+
+  .kzpr-add-to-cart:hover { background: #c91f22; }
+  .kzpr-add-to-cart:disabled { background: #3a3a36; cursor: not-allowed; }
+
+  .kzpr-buy-now {
+    width: 100%;
+    height: 52px;
+    background: #F2F0EB;
+    color: #0a0a0a;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-bottom: 24px;
+  }
+
+  /* ---------- Objection busters ---------- */
+  .kzpr-objections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 20px 0;
+    border-top: 1px solid rgba(242,240,235,0.1);
+    border-bottom: 1px solid rgba(242,240,235,0.1);
+    margin-bottom: 28px;
+  }
+
+  .kzpr-objection {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .kzpr-objection svg { width: 20px; height: 20px; stroke: #E8272A; flex-shrink: 0; margin-top: 2px; }
+
+  .kzpr-objection-text { font-size: 12.5px; line-height: 1.4; color: #cfcdc6; }
+  .kzpr-objection-text strong { display: block; color: #F2F0EB; font-size: 13px; margin-bottom: 1px; }
+
+  /* ---------- Benefits / features ---------- */
+  .kzpr-benefits-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    color: #F2F0EB;
+  }
+
+  .kzpr-benefits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px;
+  }
+
+  .kzpr-benefits-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #cfcdc6;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(242,240,235,0.06);
+  }
+
+  .kzpr-benefits-list li:before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: #E8272A;
+    margin-top: 7px;
+    flex-shrink: 0;
+    border-radius: 50%;
+  }
+
+  .kzpr-description {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #cfcdc6;
+    margin-bottom: 32px;
+  }
+
+  .kzpr-description p { margin: 0 0 12px; }
+
+  /* ---------- Accordion ---------- */
+  .kzpr-accordion { border-top: 1px solid rgba(242,240,235,0.1); }
+
+  .kzpr-accordion-item { border-bottom: 1px solid rgba(242,240,235,0.1); }
+
+  .kzpr-accordion-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    background: none;
+    border: none;
+    color: #F2F0EB;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .kzpr-accordion-trigger .kzpr-plus { font-size: 18px; transition: transform .2s; color: #E8272A; }
+  .kzpr-accordion-item.open .kzpr-plus { transform: rotate(45deg); }
+
+  .kzpr-accordion-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .25s ease;
+  }
+
+  .kzpr-accordion-item.open .kzpr-accordion-panel { max-height: 600px; }
+
+  .kzpr-accordion-panel-inner {
+    padding: 0 0 18px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: #a8a69f;
+  }
+
+  .kzpr-accordion-panel-inner p { margin: 0 0 10px; }
+  .kzpr-accordion-panel-inner a { color: #E8272A; }
+
+  /* ---------- Reviews section (below fold) ---------- */
+  .kzpr-reviews-section {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 64px 0;
+    border-top: 1px solid rgba(242,240,235,0.1);
+  }
+
+  .kzpr-section-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #E8272A;
+    margin-bottom: 8px;
+  }
+
+  .kzpr-section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    color: #F2F0EB;
+  }
+
+  .kzpr-reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .kzpr-review-card {
+    background: #111111;
+    padding: 22px;
+  }
+
+  .kzpr-review-stars { color: #C9992A; font-size: 13px; margin-bottom: 10px; }
+
+  .kzpr-review-text {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: #cfcdc6;
+    margin-bottom: 16px;
+  }
+
+  .kzpr-review-author { display: flex; align-items: center; gap: 10px; }
+
+  .kzpr-review-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #E8272A;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .kzpr-review-name { font-size: 12.5px; font-weight: 600; color: #F2F0EB; }
+  .kzpr-review-sport { font-size: 11px; color: #6a6a62; }
+
+  /* ---------- Related products ---------- */
+  .kzpr-related-section {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 0 64px;
+  }
+
+  .kzpr-related-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .kzpr-related-card { text-decoration: none; display: block; }
+
+  .kzpr-related-img {
+    aspect-ratio: 3/4;
+    background: #1a1a1a;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .kzpr-related-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .kzpr-related-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #F2F0EB;
+    margin-bottom: 3px;
+  }
+
+  .kzpr-related-price { font-size: 13px; color: #888880; }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 860px) {
+    .kzpr-wrap { padding: 24px 16px 0; }
+    .kzpr-grid { grid-template-columns: 1fr; gap: 28px; }
+    .kzpr-gallery { position: static; }
+    .kzpr-title { font-size: 28px; }
+    .kzpr-thumbs { grid-template-columns: repeat(5, 1fr); }
+    .kzpr-objections { grid-template-columns: 1fr; }
+    .kzpr-reviews-grid { grid-template-columns: 1fr; }
+    .kzpr-related-grid { grid-template-columns: repeat(2, 1fr); }
+    .kzpr-section-title { font-size: 26px; }
+
+    /* Sticky add-to-cart bar on mobile */
+    .kzpr-mobile-sticky-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: #111111;
+      border-top: 1px solid rgba(242,240,235,0.12);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 40;
+      transform: translateY(100%);
+      transition: transform .25s ease;
+    }
+
+    .kzpr-mobile-sticky-bar.visible { transform: translateY(0); }
+
+    .kzpr-mobile-sticky-price { font-size: 15px; font-weight: 700; color: #F2F0EB; flex-shrink: 0; }
+
+    .kzpr-mobile-sticky-btn {
+      flex: 1;
+      height: 44px;
+      background: #E8272A;
+      color: #fff;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+  }
+
+  @media (min-width: 861px) {
+    .kzpr-mobile-sticky-bar { display: none; }
+  }
+</style>
+
+<div class="kzpr-wrap" id="kzpr-{{ section.id }}">
+  <div class="kzpr-grid">
+
+    {%- comment -%} ============ GALLERY ============ {%- endcomment -%}
+    <div class="kzpr-gallery">
+      <div class="kzpr-main-media" id="kzpr-main-media-{{ section.id }}">
+        {%- if product.featured_media -%}
+          {%- if product.featured_media.media_type == 'video' -%}
+            <video src="{{ product.featured_media.sources[0].url }}" autoplay muted loop playsinline></video>
+          {%- else -%}
+            <img
+              src="{{ product.featured_media | image_url: width: 1200 }}"
+              alt="{{ product.featured_media.alt | default: product.title | escape }}"
+              width="{{ product.featured_media.width }}"
+              height="{{ product.featured_media.height }}"
+            >
+          {%- endif -%}
+        {%- else -%}
+          <div class="kzpr-placeholder-media">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 3v18M16 3v18"/></svg>
+            <span>Foto prodotto</span>
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if product.media.size > 1 -%}
+        <div class="kzpr-thumbs">
+          {%- for media in product.media limit: 5 -%}
+            <button
+              class="kzpr-thumb{% if forloop.first %} active{% endif %}"
+              data-media-id="{{ media.id }}"
+              data-media-type="{{ media.media_type }}"
+              data-media-url="{% if media.media_type == 'video' %}{{ media.sources[0].url }}{% else %}{{ media | image_url: width: 1200 }}{% endif %}"
+              aria-label="Vedi immagine {{ forloop.index }}"
+            >
+              {%- if media.media_type == 'video' -%}
+                <video src="{{ media.sources[0].url }}" muted playsinline></video>
+              {%- else -%}
+                <img src="{{ media | image_url: width: 200 }}" alt="{{ media.alt | escape }}" loading="lazy">
+              {%- endif -%}
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ============ BUY BOX ============ {%- endcomment -%}
+    <div class="kzpr-details">
+
+      <div class="kzpr-tags">
+        {%- if section.settings.tag_new -%}<span class="kzpr-tag">Novit&#224;</span>{%- endif -%}
+        {%- if section.settings.tag_bestseller -%}<span class="kzpr-tag">Best seller</span>{%- endif -%}
+        {%- if section.settings.tag_limited -%}<span class="kzpr-tag secondary">Edizione limitata</span>{%- endif -%}
+      </div>
+
+      <h1 class="kzpr-title">{{ product.title }}</h1>
+
+      {%- if section.settings.show_reviews_badge -%}
+        <div class="kzpr-stars">
+          <span class="kzpr-stars-icons">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+          <span class="kzpr-stars-count">{{ section.settings.reviews_count }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.usp_text != blank -%}
+        <p class="kzpr-usp">{{ section.settings.usp_text }}</p>
+      {%- endif -%}
+
+      <div class="kzpr-pricing">
+        <span class="kzpr-price-now">{{ current_variant.price | money }}</span>
+        {%- if current_variant.compare_at_price > current_variant.price -%}
+          <span class="kzpr-price-was">{{ current_variant.compare_at_price | money }}</span>
+          {%- assign pct = current_variant.compare_at_price | minus: current_variant.price | times: 100 | divided_by: current_variant.compare_at_price -%}
+          <span class="kzpr-price-pct">&minus;{{ pct }}%</span>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.bnpl_text != blank -%}
+        <div class="kzpr-bnpl">{{ section.settings.bnpl_text }}</div>
+      {%- endif -%}
+
+      {%- form 'product', product, id: 'kzpr-product-form', class: 'kzpr-form' -%}
+        <input type="hidden" name="id" value="{{ current_variant.id }}" id="kzpr-variant-id-{{ section.id }}">
+
+        {%- unless product.has_only_default_variant -%}
+          {%- for option in product.options_with_values -%}
+            <div class="kzpr-option-group">
+              <div class="kzpr-option-label">
+                {{ option.name }}
+                <span class="kzpr-selected-value">{{ option.selected_value }}</span>
+              </div>
+
+              {%- if option.name == 'Colore' or option.name == 'Color' -%}
+                <div class="kzpr-swatches">
+                  {%- for value in option.values -%}
+                    <button
+                      type="button"
+                      class="kzpr-swatch{% if value == option.selected_value %} active{% endif %}"
+                      style="background-color: {{ value | handle }};"
+                      data-option-index="{{ option.position | minus: 1 }}"
+                      data-value="{{ value | escape }}"
+                      aria-label="{{ value }}"
+                    ></button>
+                  {%- endfor -%}
+                </div>
+              {%- else -%}
+                <div class="kzpr-size-buttons">
+                  {%- for value in option.values -%}
+                    <button
+                      type="button"
+                      class="kzpr-size-btn{% if value == option.selected_value %} active{% endif %}"
+                      data-option-index="{{ option.position | minus: 1 }}"
+                      data-value="{{ value | escape }}"
+                    >{{ value }}</button>
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+
+          {%- if section.settings.show_size_guide -%}
+            <button type="button" class="kzpr-size-guide-link" onclick="alert('Guida alle taglie in arrivo')">Guida alle taglie</button>
+          {%- endif -%}
+        {%- endunless -%}
+
+        <div class="kzpr-buy-row">
+          <div class="kzpr-qty">
+            <button type="button" class="kzpr-qty-minus" aria-label="Diminuisci quantit&#224;">&minus;</button>
+            <input type="number" name="quantity" value="1" min="1" class="kzpr-qty-input" aria-label="Quantit&#224;">
+            <button type="button" class="kzpr-qty-plus" aria-label="Aumenta quantit&#224;">+</button>
+          </div>
+          <button type="submit" class="kzpr-add-to-cart" {% unless current_variant.available %}disabled{% endunless %}>
+            {%- if current_variant.available -%}
+              {{ section.settings.add_to_cart_label }}
+            {%- else -%}
+              Esaurito
+            {%- endif -%}
+          </button>
+        </div>
+
+        {%- if section.settings.show_buy_now and current_variant.available -%}
+          <button type="button" class="kzpr-buy-now" onclick="document.getElementById('kzpr-product-form').requestSubmit(); window.location.href='/checkout';">
+            {{ section.settings.buy_now_label }}
+          </button>
+        {%- endif -%}
+      {%- endform -%}
+
+      {%- comment -%} ---- Objection busters ---- {%- endcomment -%}
+      <div class="kzpr-objections">
+        {%- if section.settings.guarantee_text != blank -%}
+          <div class="kzpr-objection">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg>
+            <div class="kzpr-objection-text"><strong>Garanzia</strong>{{ section.settings.guarantee_text }}</div>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.shipping_text != blank -%}
+          <div class="kzpr-objection">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="1" y="7" width="15" height="10" rx="1"/><path d="M16 10h4l3 3v4h-7z"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg>
+            <div class="kzpr-objection-text"><strong>Spedizione</strong>{{ section.settings.shipping_text }}</div>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.usp1_text != blank -%}
+          <div class="kzpr-objection">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 2l2.6 6.5L21 9l-5 4.5L17.5 21 12 17l-5.5 4L8 13.5 3 9l6.4-.5z"/></svg>
+            <div class="kzpr-objection-text"><strong>{{ section.settings.usp1_title }}</strong>{{ section.settings.usp1_text }}</div>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.usp2_text != blank -%}
+          <div class="kzpr-objection">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M20 6L9 17l-5-5"/></svg>
+            <div class="kzpr-objection-text"><strong>{{ section.settings.usp2_title }}</strong>{{ section.settings.usp2_text }}</div>
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} ---- Benefits ---- {%- endcomment -%}
+      {%- if section.settings.benefits_title != blank -%}
+        <div class="kzpr-benefits-title">{{ section.settings.benefits_title }}</div>
+      {%- endif -%}
+      <ul class="kzpr-benefits-list">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'benefit' -%}
+            <li {{ block.shopify_attributes }}>{{ block.settings.text }}</li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+
+      {%- comment -%} ---- Description ---- {%- endcomment -%}
+      <div class="kzpr-description">
+        {{ product.description }}
+      </div>
+
+      {%- comment -%} ---- Accordion: spec / shipping / returns / faq ---- {%- endcomment -%}
+      <div class="kzpr-accordion">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'accordion_item' -%}
+            <div class="kzpr-accordion-item" {{ block.shopify_attributes }}>
+              <button type="button" class="kzpr-accordion-trigger">
+                {{ block.settings.heading }}
+                <span class="kzpr-plus">+</span>
+              </button>
+              <div class="kzpr-accordion-panel">
+                <div class="kzpr-accordion-panel-inner">{{ block.settings.content }}</div>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+    </div>
+  </div>
+
+  {%- comment -%} ============ REVIEWS ============ {%- endcomment -%}
+  {%- assign has_reviews = false -%}
+  {%- for block in section.blocks -%}{%- if block.type == 'review' -%}{%- assign has_reviews = true -%}{%- endif -%}{%- endfor -%}
+  {%- if has_reviews -%}
+    <div class="kzpr-reviews-section">
+      <div class="kzpr-section-eyebrow">{{ section.settings.reviews_eyebrow }}</div>
+      <div class="kzpr-section-title">{{ section.settings.reviews_title }}</div>
+      <div class="kzpr-reviews-grid">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'review' -%}
+            <div class="kzpr-review-card" {{ block.shopify_attributes }}>
+              <div class="kzpr-review-stars">
+                {%- for i in (1..block.settings.stars) -%}&#9733;{%- endfor -%}
+              </div>
+              <div class="kzpr-review-text">&#8220;{{ block.settings.text }}&#8221;</div>
+              <div class="kzpr-review-author">
+                <div class="kzpr-review-avatar">{{ block.settings.initials }}</div>
+                <div>
+                  <div class="kzpr-review-name">{{ block.settings.name }}</div>
+                  <div class="kzpr-review-sport">{{ block.settings.sport_location }}</div>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} ============ RELATED PRODUCTS ============ {%- endcomment -%}
+  {%- if section.settings.show_related and product.metafields.related.size > 0 or section.settings.show_related -%}
+    <div class="kzpr-related-section">
+      <div class="kzpr-section-eyebrow">{{ section.settings.related_eyebrow }}</div>
+      <div class="kzpr-section-title">{{ section.settings.related_title }}</div>
+      <div class="kzpr-related-grid">
+        {%- assign related_count = 0 -%}
+        {%- for rec_product in collections[product.collections.first.handle].products -%}
+          {%- if rec_product.id != product.id and related_count < 4 -%}
+            {%- assign related_count = related_count | plus: 1 -%}
+            <a href="{{ rec_product.url }}" class="kzpr-related-card">
+              <div class="kzpr-related-img">
+                {%- if rec_product.featured_image -%}
+                  <img src="{{ rec_product.featured_image | image_url: width: 500 }}" alt="{{ rec_product.title | escape }}" loading="lazy">
+                {%- endif -%}
+              </div>
+              <div class="kzpr-related-name">{{ rec_product.title }}</div>
+              <div class="kzpr-related-price">{{ rec_product.price | money }}</div>
+            </a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+</div>
+
+{%- comment -%} ============ MOBILE STICKY BAR ============ {%- endcomment -%}
+<div class="kzpr-mobile-sticky-bar" id="kzpr-sticky-bar-{{ section.id }}">
+  <div class="kzpr-mobile-sticky-price">{{ current_variant.price | money }}</div>
+  <button type="button" class="kzpr-mobile-sticky-btn" id="kzpr-sticky-add-{{ section.id }}">
+    {{ section.settings.add_to_cart_label }}
+  </button>
+</div>
+
+<script>
+(function() {
+  var root = document.getElementById('kzpr-{{ section.id }}');
+  if (!root) return;
+
+  var mainMedia = document.getElementById('kzpr-main-media-{{ section.id }}');
+  var thumbs = root.querySelectorAll('.kzpr-thumb');
+
+  thumbs.forEach(function(thumb) {
+    thumb.addEventListener('click', function() {
+      thumbs.forEach(function(t) { t.classList.remove('active'); });
+      thumb.classList.add('active');
+      var type = thumb.getAttribute('data-media-type');
+      var url = thumb.getAttribute('data-media-url');
+      if (type === 'video') {
+        mainMedia.innerHTML = '<video src="' + url + '" autoplay muted loop playsinline></video>';
+      } else {
+        mainMedia.innerHTML = '<img src="' + url + '" alt="">';
+      }
+    });
+  });
+
+  // Quantity stepper
+  var qtyInput = root.querySelector('.kzpr-qty-input');
+  var qtyMinus = root.querySelector('.kzpr-qty-minus');
+  var qtyPlus = root.querySelector('.kzpr-qty-plus');
+  if (qtyMinus && qtyPlus && qtyInput) {
+    qtyMinus.addEventListener('click', function() {
+      var v = Math.max(1, parseInt(qtyInput.value || 1) - 1);
+      qtyInput.value = v;
+    });
+    qtyPlus.addEventListener('click', function() {
+      var v = parseInt(qtyInput.value || 1) + 1;
+      qtyInput.value = v;
+    });
+  }
+
+  // Accordion
+  var accordionItems = root.querySelectorAll('.kzpr-accordion-item');
+  accordionItems.forEach(function(item) {
+    var trigger = item.querySelector('.kzpr-accordion-trigger');
+    trigger.addEventListener('click', function() {
+      var wasOpen = item.classList.contains('open');
+      accordionItems.forEach(function(i) { i.classList.remove('open'); });
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+  // Variant selection (size / color buttons)
+  var variantData = {{ product.variants | json }};
+  var selectedOptions = [];
+  {%- for option in product.options_with_values -%}
+    selectedOptions.push("{{ option.selected_value | escape }}");
+  {%- endfor -%}
+
+  function updateVariant() {
+    var match = variantData.find(function(v) {
+      return v.options.every(function(opt, i) { return opt === selectedOptions[i]; });
+    });
+    var hiddenInput = document.getElementById('kzpr-variant-id-{{ section.id }}');
+    var addBtn = root.querySelector('.kzpr-add-to-cart');
+    var priceEl = root.querySelector('.kzpr-price-now');
+    var stickyPrice = document.querySelector('#kzpr-sticky-bar-{{ section.id }} .kzpr-mobile-sticky-price');
+    if (match && hiddenInput) {
+      hiddenInput.value = match.id;
+      if (addBtn) {
+        addBtn.disabled = !match.available;
+        addBtn.textContent = match.available ? '{{ section.settings.add_to_cart_label }}' : 'Esaurito';
+      }
+      if (priceEl && match.price) {
+        priceEl.textContent = formatMoney(match.price);
+      }
+      if (stickyPrice && match.price) {
+        stickyPrice.textContent = formatMoney(match.price);
+      }
+    }
+  }
+
+  function formatMoney(cents) {
+    return '&#8364;' + (cents / 100).toFixed(2).replace('.', ',');
+  }
+
+  root.querySelectorAll('.kzpr-swatch, .kzpr-size-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var idx = parseInt(btn.getAttribute('data-option-index'));
+      var value = btn.getAttribute('data-value');
+      selectedOptions[idx] = value;
+
+      var group = btn.closest('.kzpr-option-group');
+      group.querySelectorAll('.kzpr-swatch, .kzpr-size-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      group.querySelector('.kzpr-selected-value').textContent = value;
+
+      updateVariant();
+    });
+  });
+
+  // Mobile sticky bar: show after scrolling past buy box
+  var stickyBar = document.getElementById('kzpr-sticky-bar-{{ section.id }}');
+  var detailsEl = root.querySelector('.kzpr-details');
+  if (stickyBar && detailsEl && window.innerWidth <= 860) {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+          stickyBar.classList.add('visible');
+        } else {
+          stickyBar.classList.remove('visible');
+        }
+      });
+    }, { threshold: 0 });
+    observer.observe(detailsEl);
+  }
+
+  var stickyAddBtn = document.getElementById('kzpr-sticky-add-{{ section.id }}');
+  if (stickyAddBtn) {
+    stickyAddBtn.addEventListener('click', function() {
+      document.getElementById('kzpr-product-form').requestSubmit();
+    });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "KZ Product Page",
+  "tag": "section",
+  "class": "kz-product-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Colore sfondo",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "header",
+      "content": "Tag prodotto"
+    },
+    {
+      "type": "checkbox",
+      "id": "tag_new",
+      "label": "Mostra tag \"Novità\"",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "tag_bestseller",
+      "label": "Mostra tag \"Best seller\"",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "tag_limited",
+      "label": "Mostra tag \"Edizione limitata\"",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Recensioni (badge stelle sotto titolo)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_reviews_badge",
+      "label": "Mostra badge recensioni",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "reviews_count",
+      "label": "Testo conteggio recensioni",
+      "default": "4.9 su 5 &middot; 200+ recensioni verificate"
+    },
+    {
+      "type": "header",
+      "content": "USP / Promessa prodotto"
+    },
+    {
+      "type": "textarea",
+      "id": "usp_text",
+      "label": "Frase sotto il titolo (promessa prodotto)",
+      "default": "Protezione da combattimento vera, non da vetrina. Pensato per chi si allena ogni giorno e non può permettersi di rompere l&#8217;attrezzatura a metà stagione."
+    },
+    {
+      "type": "text",
+      "id": "bnpl_text",
+      "label": "Testo pagamento rateale",
+      "default": "Paga in 3 rate senza interessi con Klarna/PayPal"
+    },
+    {
+      "type": "header",
+      "content": "Bottoni acquisto"
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_label",
+      "label": "Testo bottone Aggiungi al carrello",
+      "default": "Aggiungi al carrello"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_buy_now",
+      "label": "Mostra bottone Acquista ora",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "buy_now_label",
+      "label": "Testo bottone Acquista ora",
+      "default": "Acquista ora"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_size_guide",
+      "label": "Mostra link guida taglie",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Objection busters"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_text",
+      "label": "Garanzia",
+      "default": "Reso gratuito 30 giorni, cambio o rimborso senza domande."
+    },
+    {
+      "type": "text",
+      "id": "shipping_text",
+      "label": "Spedizione",
+      "default": "Spedito dall&#8217;Europa in 48&ndash;72h, tracciabile."
+    },
+    {
+      "type": "text",
+      "id": "usp1_title",
+      "label": "USP 1 &ndash; titolo",
+      "default": "Personalizzazione gratis"
+    },
+    {
+      "type": "text",
+      "id": "usp1_text",
+      "label": "USP 1 &ndash; testo",
+      "default": "Nome o numero incluso, zero costi extra."
+    },
+    {
+      "type": "text",
+      "id": "usp2_title",
+      "label": "USP 2 &ndash; titolo",
+      "default": "Qualità da competizione"
+    },
+    {
+      "type": "text",
+      "id": "usp2_text",
+      "label": "USP 2 &ndash; testo",
+      "default": "Materiali testati per allenamento intensivo quotidiano."
+    },
+    {
+      "type": "header",
+      "content": "Benefit list"
+    },
+    {
+      "type": "text",
+      "id": "benefits_title",
+      "label": "Titolo lista benefit",
+      "default": "Perché scegliere questo prodotto"
+    },
+    {
+      "type": "header",
+      "content": "Sezione recensioni"
+    },
+    {
+      "type": "text",
+      "id": "reviews_eyebrow",
+      "label": "Eyebrow recensioni",
+      "default": "Recensioni verificate"
+    },
+    {
+      "type": "text",
+      "id": "reviews_title",
+      "label": "Titolo sezione recensioni",
+      "default": "Chi lo ha già usato"
+    },
+    {
+      "type": "header",
+      "content": "Prodotti correlati"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_related",
+      "label": "Mostra prodotti correlati",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "related_eyebrow",
+      "label": "Eyebrow correlati",
+      "default": "Completa il tuo set"
+    },
+    {
+      "type": "text",
+      "id": "related_title",
+      "label": "Titolo correlati",
+      "default": "Potrebbe interessarti anche"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit / Feature",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Testo benefit",
+          "default": "Imbottitura ad alta densità per assorbimento urti superiore"
+        }
+      ]
+    },
+    {
+      "type": "accordion_item",
+      "name": "Accordion (spec/spedizione/resi/FAQ)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Titolo",
+          "default": "Specifiche prodotto"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Contenuto"
+        }
+      ]
+    },
+    {
+      "type": "review",
+      "name": "Recensione",
+      "settings": [
+        {
+          "type": "range",
+          "id": "stars",
+          "label": "Stelle",
+          "min": 1,
+          "max": 5,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Testo recensione"
+        },
+        {
+          "type": "text",
+          "id": "initials",
+          "label": "Iniziali"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Nome"
+        },
+        {
+          "type": "text",
+          "id": "sport_location",
+          "label": "Sport / località"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KZ Product Page",
+      "blocks": [
+        {
+          "type": "benefit",
+          "settings": { "text": "Imbottitura ad alta densità per assorbimento urti superiore" }
+        },
+        {
+          "type": "benefit",
+          "settings": { "text": "Chiusura regolabile per una tenuta sicura durante lo sparring" }
+        },
+        {
+          "type": "benefit",
+          "settings": { "text": "Materiali traspiranti, facili da pulire dopo ogni sessione" }
+        },
+        {
+          "type": "accordion_item",
+          "settings": {
+            "heading": "Specifiche prodotto",
+            "content": "<p>Materiale: da specificare.<\/p><p>Taglie disponibili: da specificare.<\/p><p>Peso: da specificare.<\/p>"
+          }
+        },
+        {
+          "type": "accordion_item",
+          "settings": {
+            "heading": "Spedizione",
+            "content": "<p>Elaborazione ordine entro 24&ndash;48 ore lavorative. Spedizione dall&#8217;Europa in 48&ndash;72h.<\/p>"
+          }
+        },
+        {
+          "type": "accordion_item",
+          "settings": {
+            "heading": "Resi e garanzia",
+            "content": "<p>Reso gratuito entro 30 giorni. I prodotti personalizzati con nome/numero non sono rimborsabili salvo difetti di produzione.<\/p>"
+          }
+        },
+        {
+          "type": "accordion_item",
+          "settings": {
+            "heading": "Domande frequenti",
+            "content": "<p>Per altre domande, contatta il nostro supporto clienti.<\/p>"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "text": "Qualità assurda per il prezzo. Lo uso da mesi in allenamento quotidiano, nessun problema.",
+            "initials": "MR",
+            "name": "Marco R.",
+            "sport_location": "Boxe"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "text": "Personalizzazione perfetta, arrivato in meno di una settimana. Consigliato.",
+            "initials": "DL",
+            "name": "Daniele L.",
+            "sport_location": "MMA"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "text": "Materiali superiori alle aspettative. Tornerò sicuramente.",
+            "initials": "SK",
+            "name": "Sara K.",
+            "sport_location": "Muay Thai"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
