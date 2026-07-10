@@ -1,0 +1,21 @@
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+
+# Shopify CLI
+.shopify/
+shopify.app.toml
+shopify.app.*.toml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Node (in case of build tooling)
+node_modules/
+npm-debug.log*
