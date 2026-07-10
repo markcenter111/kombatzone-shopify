@@ -1,0 +1,235 @@
+{% comment %}
+  KOMBAT ZONE — Come funziona
+  File: sections/kombatzone-how-it-works.liquid
+  Come usarlo: Online Store → Temi → Modifica codice → Sections → Add a new section → incolla questo file
+  Poi vai su Customize e aggiungi la sezione "KZ — Come funziona" dove preferisci
+  (consigliato: dopo "Shop per sport" o dopo la griglia prodotti, prima della sezione
+  Personalizzazione — è il punto dove spieghi il processo prima che il cliente decida).
+{% endcomment %}
+
+<style>
+  #kz-how-{{ section.id }} {
+    --bg2: #1a1a1a;
+    --red: #E8272A;
+    --text: #F2F0EB;
+    --text-dim: #888880;
+    --border: rgba(255,255,255,0.07);
+    --ff-display: 'Barlow Condensed', sans-serif;
+    background: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+  #kz-how-{{ section.id }} .section-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+  #kz-how-{{ section.id }} .section-title {
+    font-family: var(--ff-display), sans-serif;
+    font-size: 42px;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: .01em;
+    color: var(--text);
+  }
+  #kz-how-{{ section.id }} .how-steps {
+    display: flex;
+    align-items: center;
+    margin-top: 40px;
+    gap: 0;
+  }
+  #kz-how-{{ section.id }} .how-step {
+    flex: 1;
+    min-width: 0;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 28px 24px;
+    position: relative;
+  }
+  #kz-how-{{ section.id }} .how-arrow {
+    flex: 0 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted, #4a4a44);
+    font-size: 20px;
+    padding-top: 20px;
+  }
+  #kz-how-{{ section.id }} .how-num {
+    font-family: var(--ff-display), sans-serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: rgba(232,39,42,0.12);
+    line-height: 1;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+  }
+  #kz-how-{{ section.id }} .how-icon { font-size: 28px; margin-bottom: 16px; }
+  #kz-how-{{ section.id }} .how-title {
+    font-family: var(--ff-display), sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  #kz-how-{{ section.id }} .how-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+  #kz-how-{{ section.id }} .how-tag {
+    display: inline-block;
+    background: rgba(232,39,42,0.1);
+    color: var(--red);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    margin-top: 12px;
+  }
+
+  @media (max-width: 800px) {
+    #kz-how-{{ section.id }} .how-steps {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
+    #kz-how-{{ section.id }} .how-arrow {
+      transform: rotate(90deg);
+      padding-top: 0;
+    }
+  }
+</style>
+
+<div id="kz-how-{{ section.id }}">
+  <div class="section-eyebrow">{{ section.settings.eyebrow }}</div>
+  <div class="section-title">{{ section.settings.title }}</div>
+
+  <div class="how-steps">
+    {% for block in section.blocks %}
+      <div class="how-step" {{ block.shopify_attributes }}>
+        <div class="how-num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</div>
+        <div class="how-icon">{{ block.settings.icon }}</div>
+        <div class="how-title">{{ block.settings.title }}</div>
+        <div class="how-desc">{{ block.settings.desc }}</div>
+        {% if block.settings.tag != blank %}
+          <div class="how-tag">{{ block.settings.tag }}</div>
+        {% endif %}
+      </div>
+      {% unless forloop.last %}
+        <div class="how-arrow">→</div>
+      {% endunless %}
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "KZ — Come funziona",
+  "tag": "section",
+  "class": "kz-how-it-works-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Testi"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Semplice e veloce"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titolo",
+      "default": "Come funziona"
+    },
+    {
+      "type": "header",
+      "content": "Aspetto sezione"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Colore di sfondo",
+      "default": "#111111"
+    },
+    {
+      "type": "header",
+      "content": "Altezza sezione"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Spazio sopra",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Spazio sotto",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icona (emoji)",
+          "default": "🛒"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titolo step",
+          "default": "Scegli"
+        },
+        {
+          "type": "textarea",
+          "id": "desc",
+          "label": "Descrizione",
+          "default": "Descrizione dello step."
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Tag (opzionale)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KZ — Come funziona",
+      "blocks": [
+        { "type": "step", "settings": { "icon": "🛒", "title": "Scegli", "desc": "Seleziona il prodotto e la disciplina che fa per te. Guantoni, shorts, set completi.", "tag": "+ di 60 prodotti" } },
+        { "type": "step", "settings": { "icon": "✏️", "title": "Personalizza", "desc": "Inserisci il tuo nome, nickname o numero nella nota dell'ordine. Gratis, sempre.", "tag": "Incluso gratis" } },
+        { "type": "step", "settings": { "icon": "📦", "title": "Ricevi", "desc": "Spediamo in 48h dall'Italia. Il tuo gear personalizzato arriva pronto all'uso.", "tag": "48–72h in EU" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

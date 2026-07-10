@@ -1,0 +1,77 @@
+{% comment %}
+  Snippet: collezione-main-card.liquid
+  File:    snippets/collezione-main-card.liquid
+
+  Renders a single KombatZone collection card.
+
+  Usage:
+    {%- render 'collezione-main-card',
+          block:       block,
+          is_tall:     true,
+          is_featured: true
+    -%}
+
+  Accepts:
+    block       {Object}  — Shopify block object with settings
+    is_tall     {Boolean} — Whether the card spans 2 grid rows (default: false)
+    is_featured {Boolean} — Whether to show the red top-border accent (default: false)
+{% endcomment %}
+
+{%- liquid
+  assign col        = collections[block.settings.collection]
+  assign card_url   = col.url | default: '#'
+  assign card_title = col.title | default: block.settings.label
+  assign card_count = col.products_count
+  assign label_text = block.settings.label | default: ''
+  assign col_img    = col.featured_image
+
+  assign card_classes = 'kz-card'
+  if is_tall
+    assign card_classes = card_classes | append: ' kz-card--tall'
+  else
+    assign card_classes = card_classes | append: ' kz-card--sm'
+  endif
+  if is_featured
+    assign card_classes = card_classes | append: ' kz-card--featured'
+  endif
+-%}
+
+<a href="{{ card_url }}"
+   class="{{ card_classes }}"
+   aria-label="{{ card_title }}"
+   {{ block.shopify_attributes }}>
+
+  {%- if col_img -%}
+    <div class="kz-card__img-wrapper">
+      <img
+        src="{{ col_img | image_url: width: 900 }}"
+        srcset="{{ col_img | image_url: width: 400 }} 400w, {{ col_img | image_url: width: 600 }} 600w, {{ col_img | image_url: width: 900 }} 900w"
+        sizes="(min-width: 1024px) 33vw, 50vw"
+        alt="{{ card_title | escape }}"
+        loading="lazy"
+        width="{{ col_img.width }}"
+        height="{{ col_img.height }}"
+        class="kz-card__img">
+    </div>
+  {%- else -%}
+    <div class="kz-card__placeholder">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <path d="M3 9h18M9 21V9"/>
+      </svg>
+    </div>
+  {%- endif -%}
+
+  {%- if label_text != blank -%}
+    <span class="kz-card__label">{{ label_text }}</span>
+  {%- endif -%}
+
+  <div class="kz-card__info">
+    <p class="kz-card__name">{{ card_title }}</p>
+    {%- if block.settings.show_count and card_count -%}
+      <p class="kz-card__count">{{ card_count }} prodotti</p>
+    {%- endif -%}
+  </div>
+
+</a>

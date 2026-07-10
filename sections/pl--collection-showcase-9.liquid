@@ -1,0 +1,1647 @@
+{% comment %}
+  Section: Collection Showcase 9
+  Version: 0.5.0
+  Dependencies:
+    Blocks: _pl--carousel-dot-nav, _pl--carousel-next-button, _pl--carousel-prev-button, _pl--carousel-slide, pl--button, pl--collection-carousel, pl--grid, pl--group, pl--heading, pl--image, pl--product-price, pl--text
+    Snippets: pl--css-var, pl--icon
+    Assets: pl--carousel.js, pl--image-placeholder-landscape.png, pl--vendor-embla-carousel.esm.js
+  ===================================================
+  IMPORTANT – PLEASE READ BEFORE MODIFYING THIS FILE
+  ===================================================
+  This section is part of the Pent Library (Shopify section library).
+
+  Support (or Bug Reports):
+  • Email: support@pentlibrary.com (include Section name and version)
+  • Docs: https://www.pentlibrary.com/docs
+
+  Notes:
+  • Modifying this file may break functionality or prevent updates from applying.
+  • The contents of this file are auto-generated, and changes might be automatically overwritten.
+  • Modifying the file may break the section, edit at own risk
+
+  License: https://www.pentlibrary.com/license
+{% endcomment %}
+
+{% stylesheet %}
+  .pl--collection-showcase-9 {
+    background-color: var(--pl-section-bg-color);
+    height: var(--pl-section-height);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+  .pl--collection-showcase-9__container {
+    margin-inline: auto;
+  }
+  .pl--collection-showcase-9__pad-inline {
+    padding-left: var(--pl-section-padding-left);
+    padding-right: var(--pl-section-padding-right);
+  }
+  .pl--collection-showcase-9__pad-block {
+    padding-top: var(--pl-section-padding-top);
+    padding-bottom: var(--pl-section-padding-bottom);
+  }
+  .pl--collection-showcase-9__layout {
+    display: grid;
+    grid-template-columns: minmax(0px, 1fr);
+    grid-template-rows: auto;
+    gap: var(--pl-section-gap);
+    align-items: var(--pl-section-align-items);
+    justify-content: var(--pl-section-justify-content);
+  }
+
+  @media screen and (max-width: 768px) {
+    .pl--collection-showcase-9 {
+      background-color: var(--pl-section-bg-color-mobile);
+      height: var(--pl-section-height-mobile);
+      --page-width: var(--page-width-mobile);
+    }
+    .pl--collection-showcase-9__pad-inline {
+      padding-left: var(--pl-section-padding-left-mobile);
+      padding-right: var(--pl-section-padding-right-mobile);
+    }
+    .pl--collection-showcase-9__pad-block {
+      padding-top: var(--pl-section-padding-top-mobile);
+      padding-bottom: var(--pl-section-padding-bottom-mobile);
+    }
+    .pl--collection-showcase-9__layout {
+      gap: var(--pl-section-gap-mobile);
+      align-items: var(--pl-section-align-items-mobile);
+      justify-content: var(--pl-section-justify-content-mobile);
+    }
+  }
+{% endstylesheet %}
+
+<div
+  class="--pl--section-wrapper pl--collection-showcase-9 {{ section.settings.custom_class }}"
+  style="
+    {%- render 'pl--css-var',
+      variableName: 'pl-section-height',
+      baseValue: section.settings.section_height,
+      overrideTrigger: 'custom',
+      overrideValue: section.settings.custom_height,
+      overrideUnit: section.settings.custom_height_unit,
+      defaultValue: section.settings.section_height
+    -%}
+    {%- if section.settings.width == 'custom' -%}
+      {%- render 'pl--css-var',
+        variableName: 'page-width',
+        baseValue: section.settings.width,
+        overrideTrigger: 'custom',
+        overrideValue: section.settings.max_width,
+        overrideUnit: section.settings.max_width_unit,
+        defaultValue: section.settings.width
+      -%}
+    {%- endif -%}
+    --pl-section-gap: {{ section.settings.gap_vertical }}{{ section.settings.gap_vertical_unit }};
+    {%- render 'pl--css-var',
+      variableName: 'pl-section-justify-content',
+      baseValue: section.settings.flex_direction,
+      overrideTrigger: 'column',
+      overrideValue: section.settings.column_alignment,
+      defaultValue: section.settings.row_alignment
+    -%}
+    {%- render 'pl--css-var',
+      variableName: 'pl-section-align-items',
+      baseValue: section.settings.flex_direction,
+      overrideTrigger: 'column',
+      overrideValue: section.settings.row_alignment,
+      defaultValue: section.settings.column_alignment
+    -%}
+    --pl-section-bg-color: {{ section.settings.bg_color }};
+    {% if section.settings.section_padding_mode != 'auto' %}
+      {%- if section.settings.section_padding_mode == 'block-inline' -%}
+        --pl-section-padding-left: {{ section.settings.padding_inline }}{{ section.settings.padding_inline_unit }};
+        --pl-section-padding-right: {{ section.settings.padding_inline }}{{ section.settings.padding_inline_unit }};
+        --pl-section-padding-top: {{ section.settings.padding_block }}{{ section.settings.padding_block_unit }};
+        --pl-section-padding-bottom: {{ section.settings.padding_block }}{{ section.settings.padding_block_unit }};
+      {% else %}
+        {%- render 'pl--css-var',
+          variableName: 'pl-section-padding-top',
+          baseValue: section.settings.section_padding_mode,
+          overrideTrigger: 'custom',
+          overrideValue: section.settings.padding_top,
+          overrideUnit: section.settings.padding_unit,
+          defaultValue: section.settings.padding_all,
+          defaultValueUnit: section.settings.padding_unit
+        -%}
+        {%- render 'pl--css-var',
+          variableName: 'pl-section-padding-right',
+          baseValue: section.settings.section_padding_mode,
+          overrideTrigger: 'custom',
+          overrideValue: section.settings.padding_right,
+          overrideUnit: section.settings.padding_unit,
+          defaultValue: section.settings.padding_all,
+          defaultValueUnit: section.settings.padding_unit
+        -%}
+        {%- render 'pl--css-var',
+          variableName: 'pl-section-padding-bottom',
+          baseValue: section.settings.section_padding_mode,
+          overrideTrigger: 'custom',
+          overrideValue: section.settings.padding_bottom,
+          overrideUnit: section.settings.padding_unit,
+          defaultValue: section.settings.padding_all,
+          defaultValueUnit: section.settings.padding_unit
+        -%}
+        {%- render 'pl--css-var',
+          variableName: 'pl-section-padding-left',
+          baseValue: section.settings.section_padding_mode,
+          overrideTrigger: 'custom',
+          overrideValue: section.settings.padding_left,
+          overrideUnit: section.settings.padding_unit,
+          defaultValue: section.settings.padding_all,
+          defaultValueUnit: section.settings.padding_unit
+        -%}
+      {% endif %}
+    {% else %}
+      --pl-section-padding-left: 5%;
+      --pl-section-padding-right: 5%;
+      --pl-section-padding-top: 64px;
+      --pl-section-padding-bottom: 64px;
+    {% endif %}
+
+    {% comment %} Mobile {% endcomment %}
+
+    {%- render 'pl--css-var',
+      variableName: 'pl-section-height-mobile',
+      baseValue: section.settings.section_height_mobile,
+      overrideTrigger: 'custom',
+      overrideValue: section.settings.custom_height_mobile,
+      overrideUnit: section.settings.custom_height_unit_mobile,
+      defaultValue: section.settings.section_height_mobile
+    -%}
+    {%- if section.settings.width_mobile == 'custom' -%}
+      {%- render 'pl--css-var',
+        variableName: 'page-width-mobile',
+        baseValue: section.settings.width_mobile,
+        overrideTrigger: 'custom',
+        overrideValue: section.settings.max_width_mobile,
+        overrideUnit: section.settings.max_width_unit_mobile,
+        defaultValue: section.settings.width_mobile
+      -%}
+    {%- endif -%}
+    --pl-section-gap-mobile: {{ section.settings.gap_vertical_mobile }}{{ section.settings.gap_vertical_unit_mobile }};
+    {%- render 'pl--css-var',
+      variableName: 'pl-section-justify-content-mobile',
+      baseValue: section.settings.flex_direction_mobile,
+      overrideTrigger: 'column',
+      overrideValue: section.settings.column_alignment_mobile,
+      defaultValue: section.settings.row_alignment_mobile
+    -%}
+    {%- render 'pl--css-var',
+      variableName: 'pl-section-align-items-mobile',
+      baseValue: section.settings.flex_direction_mobile,
+      overrideTrigger: 'column',
+      overrideValue: section.settings.row_alignment_mobile,
+      defaultValue: section.settings.column_alignment_mobile
+    -%}
+    --pl-section-bg-color-mobile: {{ section.settings.bg_color_mobile }};
+    {% if section.settings.section_padding_mode_mobile != 'auto' %}
+      {%- if section.settings.section_padding_mode_mobile == 'block-inline' -%}
+        --pl-section-padding-left-mobile: {{ section.settings.padding_inline_mobile }}{{ section.settings.padding_inline_unit_mobile }};
+        --pl-section-padding-right-mobile: {{ section.settings.padding_inline_mobile }}{{ section.settings.padding_inline_unit_mobile }};
+        --pl-section-padding-top-mobile: {{ section.settings.padding_block_mobile }}{{ section.settings.padding_block_unit_mobile }};
+        --pl-section-padding-bottom-mobile: {{ section.settings.padding_block_mobile }}{{ section.settings.padding_block_unit_mobile }};
+      {% else %}
+        {%- render 'pl--css-var',
+          variableName: 'pl-section-padding-top-mobile',
+          baseValue: section.settings.section_padding_mode_mobile,
+          overrideTrigger: 'custom',
+          overrideValue: section.settings.padding_top_mobile,
+          overrideUnit: section.settings.padding_unit_mobile,
+          defaultValue: section.settings.padding_all_mobile,
+          defaultValueUnit: section.settings.padding_unit_mobile
+        -%}
+        {%- render 'pl--css-var',
+          variableName: 'pl-section-padding-right-mobile',
+          baseValue: section.settings.section_padding_mode_mobile,
+          overrideTrigger: 'custom',
+          overrideValue: section.settings.padding_right_mobile,
+          overrideUnit: section.settings.padding_unit_mobile,
+          defaultValue: section.settings.padding_all_mobile,
+          defaultValueUnit: section.settings.padding_unit_mobile
+        -%}
+        {%- render 'pl--css-var',
+          variableName: 'pl-section-padding-bottom-mobile',
+          baseValue: section.settings.section_padding_mode_mobile,
+          overrideTrigger: 'custom',
+          overrideValue: section.settings.padding_bottom_mobile,
+          overrideUnit: section.settings.padding_unit_mobile,
+          defaultValue: section.settings.padding_all_mobile,
+          defaultValueUnit: section.settings.padding_unit_mobile
+        -%}
+        {%- render 'pl--css-var',
+          variableName: 'pl-section-padding-left-mobile',
+          baseValue: section.settings.section_padding_mode_mobile,
+          overrideTrigger: 'custom',
+          overrideValue: section.settings.padding_left_mobile,
+          overrideUnit: section.settings.padding_unit_mobile,
+          defaultValue: section.settings.padding_all_mobile,
+          defaultValueUnit: section.settings.padding_unit_mobile
+        -%}
+      {% endif %}
+    {% else %}
+      --pl-section-padding-left-mobile: 5%;
+      --pl-section-padding-right-mobile: 5%;
+      --pl-section-padding-top-mobile: 64px;
+      --pl-section-padding-bottom-mobile: 64px;
+    {% endif %}
+  "
+>
+  <div class="--pl--page-width-global">
+    <div class="pl--collection-showcase-9__pad-inline">
+      <div class="pl--collection-showcase-9__container">
+        <div class="pl--collection-showcase-9__pad-block">
+          <div class="pl--collection-showcase-9__layout">
+            {% content_for 'blocks' %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% comment %} schematic sections/pl--collection-showcase-9 {% endcomment %}
+
+{% schema %}
+{
+  "name": "Collection Showcase 9",
+  "tag": "section",
+  "blocks": [
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Customize the section to your liking. Need help? Check our [documentation](https://www.pentlibrary.com/docs)."
+    },
+    {
+      "type": "select",
+      "id": "settings_view",
+      "label": "Settings for",
+      "options": [
+        {
+          "value": "all",
+          "label": "All"
+        },
+        {
+          "value": "desktop",
+          "label": "Desktop"
+        },
+        {
+          "value": "mobile",
+          "label": "Mobile"
+        }
+      ],
+      "default": "all"
+    },
+    {
+      "type": "header",
+      "content": "🌐 Collection Source"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "header",
+      "content": "🖥️ Size",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "select",
+      "id": "section_height",
+      "label": "Height",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Hug"
+        },
+        {
+          "value": "100vh",
+          "label": "Fill ↕"
+        },
+        {
+          "value": "custom",
+          "label": "⋮"
+        }
+      ],
+      "default": "auto",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "number",
+      "id": "custom_height",
+      "label": "Height",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' and section.settings.section_height == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "custom_height_unit",
+      "label": "↳ Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' and section.settings.section_height == 'custom' and section.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "number",
+      "id": "max_height",
+      "label": "Max Height",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' and section.settings.section_height == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "max_height_unit",
+      "label": "↳ Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' and section.settings.section_height == 'custom' and section.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Auto"
+        },
+        {
+          "value": "100%",
+          "label": "Fill ↔"
+        },
+        {
+          "value": "fit-content",
+          "label": "Hug"
+        },
+        {
+          "value": "custom",
+          "label": "⋮"
+        }
+      ],
+      "default": "auto",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "number",
+      "id": "max_width",
+      "label": "Max Width",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' and section.settings.width == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "max_width_unit",
+      "label": "↳ Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' and section.settings.width == 'custom' and section.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "header",
+      "content": "🖥️ Grid Layout",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "number",
+      "id": "gap_vertical",
+      "label": "Gap ↕",
+      "default": 0,
+      "visible_if": "{{ section.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "select",
+      "id": "gap_vertical_unit",
+      "label": "Gap Unit ↕",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' and section.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "select",
+      "id": "column_alignment",
+      "label": "Align ↕",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "↑ Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "↓ Bottom"
+        },
+        {
+          "value": "space-between",
+          "label": "Space Between"
+        },
+        {
+          "value": "space-around",
+          "label": "Space Around"
+        },
+        {
+          "value": "space-evenly",
+          "label": "Space Evenly"
+        },
+        {
+          "value": "stretch",
+          "label": "Stretch"
+        }
+      ],
+      "default": "center",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "select",
+      "id": "row_alignment",
+      "label": "Align ↔",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "← Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right →"
+        },
+        {
+          "value": "space-between",
+          "label": "Space Between"
+        },
+        {
+          "value": "space-around",
+          "label": "Space Around"
+        },
+        {
+          "value": "space-evenly",
+          "label": "Space Evenly"
+        },
+        {
+          "value": "stretch",
+          "label": "Stretch"
+        }
+      ],
+      "default": "center",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "header",
+      "content": "🖥️ Background",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "transparent",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "header",
+      "content": "🖥️ Padding",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "select",
+      "id": "section_padding_mode",
+      "label": "Padding",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Default"
+        },
+        {
+          "value": "block-inline",
+          "label": "Vertical & Horizontal"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "auto",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "number",
+      "id": "padding_inline",
+      "label": "Horizontal ↔",
+      "default": 5,
+      "visible_if": "{{ section.settings.settings_view != 'mobile' and section.settings.section_padding_mode == 'block-inline' }}"
+    },
+    {
+      "type": "select",
+      "id": "padding_inline_unit",
+      "label": "↳ Horizontal Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "%",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' and section.settings.section_padding_mode == 'block-inline' and section.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "number",
+      "id": "padding_block",
+      "label": "Vertical ↕",
+      "default": 64,
+      "visible_if": "{{ section.settings.settings_view != 'mobile' and section.settings.section_padding_mode == 'block-inline' }}"
+    },
+    {
+      "type": "select",
+      "id": "padding_block_unit",
+      "label": "↳ Vertical Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' and section.settings.section_padding_mode == 'block-inline' and section.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "number",
+      "id": "padding_top",
+      "label": "Top",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' and section.settings.section_padding_mode == 'custom' }}"
+    },
+    {
+      "type": "number",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' and section.settings.section_padding_mode == 'custom' }}"
+    },
+    {
+      "type": "number",
+      "id": "padding_right",
+      "label": "Right",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' and section.settings.section_padding_mode == 'custom' }}"
+    },
+    {
+      "type": "number",
+      "id": "padding_left",
+      "label": "Left",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' and section.settings.section_padding_mode == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "padding_unit",
+      "label": "Padding Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ section.settings.settings_view != 'mobile' and section.settings.section_padding_mode == 'custom' and section.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "header",
+      "content": "📱 Size",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "select",
+      "id": "section_height_mobile",
+      "label": "Height",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Hug"
+        },
+        {
+          "value": "100vh",
+          "label": "Fill ↕"
+        },
+        {
+          "value": "custom",
+          "label": "⋮"
+        }
+      ],
+      "default": "auto",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "number",
+      "id": "custom_height_mobile",
+      "label": "Height",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' and section.settings.section_height_mobile == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "custom_height_unit_mobile",
+      "label": "↳ Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' and section.settings.section_height_mobile == 'custom' and section.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "number",
+      "id": "max_height_mobile",
+      "label": "Max Height",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' and section.settings.section_height_mobile == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "max_height_unit_mobile",
+      "label": "↳ Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' and section.settings.section_height_mobile == 'custom' and section.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "select",
+      "id": "width_mobile",
+      "label": "Width",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Auto"
+        },
+        {
+          "value": "100%",
+          "label": "Fill ↔"
+        },
+        {
+          "value": "fit-content",
+          "label": "Hug"
+        },
+        {
+          "value": "custom",
+          "label": "⋮"
+        }
+      ],
+      "default": "auto",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "number",
+      "id": "max_width_mobile",
+      "label": "Max Width",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' and section.settings.width_mobile == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "max_width_unit_mobile",
+      "label": "↳ Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' and section.settings.width_mobile == 'custom' and section.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "header",
+      "content": "📱 Grid Layout",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "number",
+      "id": "gap_vertical_mobile",
+      "label": "Gap ↕",
+      "default": 0,
+      "visible_if": "{{ section.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "select",
+      "id": "gap_vertical_unit_mobile",
+      "label": "Gap Unit ↕",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' and section.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "select",
+      "id": "column_alignment_mobile",
+      "label": "Align ↕",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "↑ Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "↓ Bottom"
+        },
+        {
+          "value": "space-between",
+          "label": "Space Between"
+        },
+        {
+          "value": "space-around",
+          "label": "Space Around"
+        },
+        {
+          "value": "space-evenly",
+          "label": "Space Evenly"
+        },
+        {
+          "value": "stretch",
+          "label": "Stretch"
+        }
+      ],
+      "default": "center",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "select",
+      "id": "row_alignment_mobile",
+      "label": "Align ↔",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "← Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right →"
+        },
+        {
+          "value": "space-between",
+          "label": "Space Between"
+        },
+        {
+          "value": "space-around",
+          "label": "Space Around"
+        },
+        {
+          "value": "space-evenly",
+          "label": "Space Evenly"
+        },
+        {
+          "value": "stretch",
+          "label": "Stretch"
+        }
+      ],
+      "default": "center",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "header",
+      "content": "📱 Background",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_mobile",
+      "label": "Background Color",
+      "default": "transparent",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "header",
+      "content": "📱 Padding",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "select",
+      "id": "section_padding_mode_mobile",
+      "label": "Padding",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Default"
+        },
+        {
+          "value": "block-inline",
+          "label": "Vertical & Horizontal"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "auto",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "number",
+      "id": "padding_inline_mobile",
+      "label": "Horizontal ↔",
+      "default": 5,
+      "visible_if": "{{ section.settings.settings_view != 'desktop' and section.settings.section_padding_mode_mobile == 'block-inline' }}"
+    },
+    {
+      "type": "select",
+      "id": "padding_inline_unit_mobile",
+      "label": "↳ Horizontal Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "%",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' and section.settings.section_padding_mode_mobile == 'block-inline' and section.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "number",
+      "id": "padding_block_mobile",
+      "label": "Vertical ↕",
+      "default": 64,
+      "visible_if": "{{ section.settings.settings_view != 'desktop' and section.settings.section_padding_mode_mobile == 'block-inline' }}"
+    },
+    {
+      "type": "select",
+      "id": "padding_block_unit_mobile",
+      "label": "↳ Vertical Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' and section.settings.section_padding_mode_mobile == 'block-inline' and section.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "number",
+      "id": "padding_top_mobile",
+      "label": "Top",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' and section.settings.section_padding_mode_mobile == 'custom' }}"
+    },
+    {
+      "type": "number",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' and section.settings.section_padding_mode_mobile == 'custom' }}"
+    },
+    {
+      "type": "number",
+      "id": "padding_right_mobile",
+      "label": "Right",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' and section.settings.section_padding_mode_mobile == 'custom' }}"
+    },
+    {
+      "type": "number",
+      "id": "padding_left_mobile",
+      "label": "Left",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' and section.settings.section_padding_mode_mobile == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "padding_unit_mobile",
+      "label": "Padding Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ section.settings.settings_view != 'desktop' and section.settings.section_padding_mode_mobile == 'custom' and section.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "header",
+      "content": "⚙️ Advanced"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_units",
+      "label": "Use Custom Units",
+      "default": false,
+      "info": "Enable custom units for precise control over spacing and sizing"
+    },
+    {
+      "type": "paragraph",
+      "content": "Collection Showcase 9 Section (v.0.5.0)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Showcase 9 (PL)",
+      "settings": {
+        "gap_vertical": 24,
+        "gap_vertical_mobile": 16
+      },
+      "blocks": [
+        {
+          "type": "pl--grid",
+          "settings": {
+            "grid_auto_flow": "row",
+            "grid_auto_flow_mobile": "row",
+            "grid_template_columns": "custom",
+            "grid_template_columns_custom": "1fr max-content",
+            "gap_horizontal": 16,
+            "gap_horizontal_mobile": 12,
+            "gap_vertical": 16,
+            "gap_vertical_mobile": 12,
+            "column_alignment": "flex-end",
+            "column_alignment_mobile": "flex-end",
+            "row_alignment": "space-between",
+            "row_alignment_mobile": "space-between",
+            "width": "100%",
+            "width_mobile": "100%"
+          },
+          "blocks": [
+            {
+              "type": "pl--group",
+              "settings": {
+                "gap": 8,
+                "gap_mob": 8,
+                "flex_direction": "column",
+                "flex_direction_mob": "column",
+                "align_items": "flex-start",
+                "align_items_mob": "flex-start",
+                "justify_content": "flex-start",
+                "justify_content_mob": "flex-start"
+              },
+              "blocks": [
+                {
+                  "type": "pl--text",
+                  "settings": {
+                    "text": "<p>Tagline</p>",
+                    "font_size": 16,
+                    "font_size_mob": 16,
+                    "font": "inter_n6",
+                    "custom_class": "-pl-mb-n2",
+                    "text_alignment": "left"
+                  }
+                },
+                {
+                  "type": "pl--heading",
+                  "settings": {
+                    "heading": "Collection heading",
+                    "tag": "h2",
+                    "text_alignment": "left",
+                    "font_size": 32,
+                    "font_size_mob": 32,
+                    "heading_variant": "large"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "pl--group",
+              "settings": {
+                "gap": 16,
+                "gap_mob": 16
+              },
+              "blocks": [
+                {
+                  "type": "pl--button",
+                  "settings": {
+                    "button_variant": "primary_button",
+                    "full_width": "false",
+                    "full_width_mob": "false",
+                    "padding_top": 12,
+                    "padding_bottom": 12,
+                    "padding_left": 16,
+                    "padding_right": 16,
+                    "border_radius": 8,
+                    "border_style": "solid",
+                    "border_width": 1,
+                    "border_color": "#000000",
+                    "background_color": "#000000",
+                    "color": "#ffffff",
+                    "label": "View All",
+                    "link": "{{ closest.collection.url }}"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "pl--collection-carousel",
+          "settings": {
+            "collection": "{{ closest.collection }}",
+            "slides_per": 3.5
+          },
+          "blocks": [
+            {
+              "type": "_pl--carousel-slide",
+              "name": "Carousel Slide",
+              "id": "carousel-slide",
+              "static": true,
+              "settings": {
+                "is_link": true,
+                "link_url": "{{ closest.product.url }}",
+                "target_blank": false,
+                "flex_wrap": "nowrap",
+                "flex_wrap_mobile": "nowrap",
+                "height": "100%",
+                "flex_direction": "column",
+                "flex_direction_mobile": "column",
+                "border_style": "none",
+                "border_style_mobile": "none"
+              },
+              "blocks": [
+                {
+                  "type": "pl--image",
+                  "name": "Product Image",
+                  "settings": {
+                    "aspect_ratio": "fill",
+                    "aspect_ratio_mob": "fill",
+                    "border_radius": 16,
+                    "image": "{{ closest.product.featured_image }}",
+                    "image_loading": "auto",
+                    "placeholder": "pl--image-placeholder-portrait.png"
+                  }
+                },
+                {
+                  "type": "pl--group",
+                  "name": "Content",
+                  "settings": {
+                    "flex_direction": "column",
+                    "flex_direction_mob": "column",
+                    "align_items": "flex-start",
+                    "align_items_mob": "flex-start",
+                    "justify_content": "space-between",
+                    "justify_content_mob": "space-between",
+                    "gap": 4,
+                    "gap_mob": 4,
+                    "padding_bottom": 8,
+                    "padding_bottom_mob": 8,
+                    "padding_left": 8,
+                    "padding_left_mob": 8,
+                    "padding_right": 8,
+                    "padding_right_mob": 8,
+                    "padding_top": 8,
+                    "padding_top_mob": 8,
+                    "flex_wrap": "nowrap",
+                    "flex_wrap_mob": "nowrap",
+                    "width": "100%",
+                    "width_mob": "100%"
+                  },
+                  "blocks": [
+                    {
+                      "type": "pl--text",
+                      "settings": {
+                        "text": "<p>{{ closest.product.title }}</p>",
+                        "placeholder_text": "<p>Title</p>",
+                        "font_size": 16,
+                        "font_size_mob": 16,
+                        "font": "inter_n6"
+                      }
+                    },
+                    {
+                      "type": "pl--text",
+                      "settings": {
+                        "text": "<p>Variant</p>",
+                        "font_size": 16,
+                        "font_size_mob": 16,
+                        "color": "#7C7C7C"
+                      }
+                    },
+                    {
+                      "type": "pl--product-price",
+                      "settings": {
+                        "font_size": 16,
+                        "font_size_mob": 16,
+                        "color": "#7C7C7C",
+                        "product": "{{ closest.product }}"
+                      }
+                    },
+                    {
+                      "type": "pl--group",
+                      "name": "Button Group",
+                      "settings": {
+                        "gap": 8,
+                        "gap_mob": 8,
+                        "padding_top": 8,
+                        "padding_top_mob": 8,
+                        "width": "100%",
+                        "width_mob": "100%"
+                      },
+                      "blocks": [
+                        {
+                          "type": "pl--button",
+                          "settings": {
+                            "full_width": "true",
+                            "full_width_mob": "true",
+                            "padding_top": 8,
+                            "padding_bottom": 8,
+                            "padding_left": 14,
+                            "padding_right": 14,
+                            "border_radius": 8,
+                            "border_style": "solid",
+                            "border_width": 1,
+                            "visual_only": false,
+                            "label": "Shop Now",
+                            "link": "{{ closest.product.url }}"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

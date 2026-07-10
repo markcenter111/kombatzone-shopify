@@ -1,0 +1,998 @@
+{% stylesheet %}
+  .pl--carousel__dots {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--pl-car-dot-nav-gap);
+  }
+
+  .pl--carousel__dot {
+    -webkit-tap-highlight-color: rgba(49, 49, 49, 0.3);
+    -webkit-appearance: none;
+    appearance: none;
+    text-decoration: none;
+    display: flex;
+    background-color: var(--pl-car-dot-nav-bg-color);
+    touch-action: manipulation;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    width: var(--pl-car-dot-nav-width);
+    height: var(--pl-car-dot-nav-height);
+    border-radius: var(--pl-car-dot-nav-border-radius);
+    border: var(--pl-car-dot-nav-border-width) var(--pl-car-dot-nav-border-style)
+      var(--pl-car-dot-nav-border-color);
+    transition: background-color var(--pl-car-dot-nav-transition-speed) ease,
+      width var(--pl-car-dot-nav-transition-speed) ease,
+      border-radius var(--pl-car-dot-nav-transition-speed) ease;
+  }
+
+  .pl--carousel__dot:hover {
+    background-color: var(--pl-car-dot-nav-bg-color-hover);
+  }
+
+  .pl--carousel__dot--selected {
+    background-color: var(--pl-car-dot-nav-bg-color-selected);
+    width: var(--pl-car-dot-nav-active-width);
+    border-radius: 15px;
+  }
+
+  .pl--carousel__dot--selected:hover {
+    background-color: var(--pl-car-dot-nav-bg-color-selected);
+  }
+
+  @media screen and (max-width: 768px) {
+    .pl--carousel__dots {
+      gap: var(--pl-car-dot-nav-gap-mobile);
+    }
+
+    .pl--carousel__dot {
+      background-color: var(--pl-car-dot-nav-bg-color-mobile);
+      width: var(--pl-car-dot-nav-width-mobile);
+      height: var(--pl-car-dot-nav-height-mobile);
+      border-radius: var(--pl-car-dot-nav-border-radius-mobile);
+      border: var(--pl-car-dot-nav-border-width-mobile) var(--pl-car-dot-nav-border-style-mobile)
+        var(--pl-car-dot-nav-border-color-mobile);
+      transition: background-color var(--pl-car-dot-nav-transition-speed-mobile) ease,
+        width var(--pl-car-dot-nav-transition-speed-mobile) ease,
+        border-radius var(--pl-car-dot-nav-transition-speed-mobile) ease;
+    }
+
+    .pl--carousel__dot:hover {
+      background-color: var(--pl-car-dot-nav-bg-color-hover-mobile);
+    }
+
+    .pl--carousel__dot--selected {
+      background-color: var(--pl-car-dot-nav-bg-color-selected-mobile);
+      width: var(--pl-car-dot-nav-active-width-mobile);
+    }
+
+    .pl--carousel__dot--selected:hover {
+      background-color: var(--pl-car-dot-nav-bg-color-selected-mobile);
+    }
+  }
+{% endstylesheet %}
+
+{% liquid
+  assign dot_bg_color = block.settings.bg_color
+  assign dot_bg_color_hover = dot_bg_color | color_darken: 5
+  assign dot_bg_color_selected = block.settings.bg_color_active
+
+  assign dot_bg_color_mobile = block.settings.bg_color_mobile
+  assign dot_bg_color_hover_mobile = dot_bg_color_mobile | color_darken: 5
+  assign dot_bg_color_selected_mobile = block.settings.bg_color_active_mobile
+%}
+<div
+  {{ block.shopify_attributes }}
+  data-embla-dot-nav
+  class="pl--carousel__dots"
+  style="
+    --pl-car-dot-nav-width: {{ block.settings.custom_width }}{{ block.settings.custom_width_unit }};
+    --pl-car-dot-nav-height: {{ block.settings.custom_height }}{{ block.settings.custom_height_unit }};
+    --pl-car-dot-nav-gap: {{ block.settings.gap_horizontal }}{{ block.settings.gap_horizontal_unit }};
+    --pl-car-dot-nav-bg-color: {{ dot_bg_color }};
+    --pl-car-dot-nav-bg-color-hover: {{ dot_bg_color_hover }};
+    --pl-car-dot-nav-bg-color-selected: {{ dot_bg_color_selected }};
+    --pl-car-dot-nav-border-radius: {{ block.settings.border_radius}}{{ block.settings.border_radius_unit }};
+    --pl-car-dot-nav-border-style: {{ block.settings.border_style }};
+    --pl-car-dot-nav-border-width: {{ block.settings.border_width }}{{ block.settings.border_width_unit }};
+    --pl-car-dot-nav-border-color: {{ block.settings.border_color }};
+    {% render 'pl--css-var',
+     variableName: 'pl-car-dot-nav-transition-speed',
+     baseValue: block.settings.transition_speed,
+     baseUnit: 'ms',
+     overrideTrigger: 'custom',
+     overrideValue: block.settings.transition_speed_custom,
+     overrideUnit: 'ms',
+     defaultValue: block.settings.transition_speed,
+     defaultValueUnit: 'ms',
+    -%}
+    --pl-car-dot-nav-active-width: {% if block.settings.width_on_active == 'wide' %}calc(var(--pl-car-dot-nav-width) * 3){% else %}var(--pl-car-dot-nav-width){% endif %};
+
+    --pl-car-dot-nav-width-mobile: {{ block.settings.custom_width_mobile }}{{ block.settings.custom_width_unit_mobile }};
+    --pl-car-dot-nav-height-mobile: {{ block.settings.custom_height_mobile }}{{ block.settings.custom_height_unit_mobile }};
+    --pl-car-dot-nav-gap-mobile: {{ block.settings.gap_horizontal_mobile }}{{ block.settings.gap_horizontal_unit_mobile }};
+    --pl-car-dot-nav-bg-color-mobile: {{ dot_bg_color_mobile }};
+    --pl-car-dot-nav-bg-color-hover-mobile: {{ dot_bg_color_hover_mobile }};
+    --pl-car-dot-nav-bg-color-selected-mobile: {{ dot_bg_color_selected_mobile }};
+    --pl-car-dot-nav-border-radius-mobile: {{ block.settings.border_radius_mobile}}{{ block.settings.border_radius_unit_mobile }};
+    --pl-car-dot-nav-border-style-mobile: {{ block.settings.border_style_mobile }};
+    --pl-car-dot-nav-border-width-mobile: {{ block.settings.border_width_mobile }}{{ block.settings.border_width_unit_mobile }};
+    --pl-car-dot-nav-border-color-mobile: {{ block.settings.border_color_mobile }};
+    {% render 'pl--css-var',
+     variableName: 'pl-car-dot-nav-transition-speed-mobile',
+     baseValue: block.settings.transition_speed_mobile,
+     baseUnit: 'ms',
+     overrideTrigger: 'custom',
+     overrideValue: block.settings.transition_speed_custom_mobile,
+     overrideUnit: 'ms',
+     defaultValue: block.settings.transition_speed_mobile,
+     defaultValueUnit: 'ms',
+    -%}
+    --pl-car-dot-nav-active-width-mobile: {% if block.settings.width_on_active_mobile == 'wide' %}calc(var(--pl-car-dot-nav-width-mobile) * 3){% else %}var(--pl-car-dot-nav-width-mobile){% endif %};
+  "
+></div>
+
+{% schema %}
+{
+  "name": "Carousel Dot Navigation",
+  "tag": null,
+  "blocks": [],
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Customize the block to your liking. Need help? Check our [documentation](https://www.pentlibrary.com/docs)."
+    },
+    {
+      "type": "select",
+      "id": "settings_view",
+      "label": "Settings for",
+      "options": [
+        {
+          "value": "all",
+          "label": "All"
+        },
+        {
+          "value": "desktop",
+          "label": "Desktop"
+        },
+        {
+          "value": "mobile",
+          "label": "Mobile"
+        }
+      ],
+      "default": "all"
+    },
+    {
+      "type": "header",
+      "content": "🖥️ Dots Dimensions",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "number",
+      "id": "custom_width",
+      "label": "Width",
+      "default": 7,
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "select",
+      "id": "custom_width_unit",
+      "label": "Width Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' and block.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "number",
+      "id": "custom_height",
+      "label": "Height",
+      "default": 7,
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "select",
+      "id": "custom_height_unit",
+      "label": "Height Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' and block.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "number",
+      "id": "gap_horizontal",
+      "label": "Gap ↔",
+      "default": 4,
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "select",
+      "id": "gap_horizontal_unit",
+      "label": "Gap Unit ↔",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' and block.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "header",
+      "content": "🖥️ Background",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#c9c9c9",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_active",
+      "label": "Active Background Color",
+      "default": "#111111",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "header",
+      "content": "🖥️ Border",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Radius",
+      "step": 1,
+      "default": 100,
+      "min": 0,
+      "max": 100,
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "select",
+      "id": "border_radius_unit",
+      "label": "↳ Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' and block.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "select",
+      "id": "border_style",
+      "label": "Style",
+      "options": [
+        {
+          "value": "none",
+          "label": "✖"
+        },
+        {
+          "value": "solid",
+          "label": "─"
+        },
+        {
+          "value": "dashed",
+          "label": "┄"
+        }
+      ],
+      "default": "none",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "number",
+      "id": "border_width",
+      "label": "Width",
+      "placeholder": "Enter a value in pixels",
+      "default": 1,
+      "visible_if": "{{ block.settings.settings_view != 'mobile' and block.settings.border_style != 'none' }}"
+    },
+    {
+      "type": "select",
+      "id": "border_width_unit",
+      "label": "↳ Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' and block.settings.border_style != 'none' and block.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Color",
+      "default": "#000000",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' and block.settings.border_style != 'none' }}"
+    },
+    {
+      "type": "header",
+      "content": "🖥️ Transition",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "select",
+      "id": "transition_speed",
+      "label": "Interaction Speed",
+      "options": [
+        {
+          "value": "0",
+          "label": "Instant (no transition)"
+        },
+        {
+          "value": "25",
+          "label": "Flash"
+        },
+        {
+          "value": "50",
+          "label": "Very Fast"
+        },
+        {
+          "value": "100",
+          "label": "Fast"
+        },
+        {
+          "value": "150",
+          "label": "Moderate"
+        },
+        {
+          "value": "200",
+          "label": "Normal (balanced default)"
+        },
+        {
+          "value": "250",
+          "label": "Slightly Slow"
+        },
+        {
+          "value": "350",
+          "label": "Slow"
+        },
+        {
+          "value": "500",
+          "label": "Very Slow"
+        },
+        {
+          "value": "750",
+          "label": "Sluggish"
+        },
+        {
+          "value": "1000",
+          "label": "Dramatic"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "200",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "number",
+      "id": "transition_speed_custom",
+      "label": "Custom Speed",
+      "info": "In milliseconds",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' and block.settings.transition_speed == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "width_on_active",
+      "label": "Active options",
+      "options": [
+        {
+          "value": "normal",
+          "label": "Normal"
+        },
+        {
+          "value": "wide",
+          "label": "Wide"
+        }
+      ],
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "header",
+      "content": "📱 Dots Dimensions",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "number",
+      "id": "custom_width_mobile",
+      "label": "Width",
+      "default": 7,
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "select",
+      "id": "custom_width_unit_mobile",
+      "label": "Width Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' and block.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "number",
+      "id": "custom_height_mobile",
+      "label": "Height",
+      "default": 7,
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "select",
+      "id": "custom_height_unit_mobile",
+      "label": "Height Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' and block.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "number",
+      "id": "gap_horizontal_mobile",
+      "label": "Gap ↔",
+      "default": 4,
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "select",
+      "id": "gap_horizontal_unit_mobile",
+      "label": "Gap Unit ↔",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' and block.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "header",
+      "content": "📱 Background",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_mobile",
+      "label": "Background Color",
+      "default": "#c9c9c9",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_active_mobile",
+      "label": "Active Background Color",
+      "default": "#111111",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "header",
+      "content": "📱 Border",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius_mobile",
+      "label": "Radius",
+      "step": 1,
+      "default": 100,
+      "min": 0,
+      "max": 100,
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "select",
+      "id": "border_radius_unit_mobile",
+      "label": "↳ Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' and block.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "select",
+      "id": "border_style_mobile",
+      "label": "Style",
+      "options": [
+        {
+          "value": "none",
+          "label": "✖"
+        },
+        {
+          "value": "solid",
+          "label": "─"
+        },
+        {
+          "value": "dashed",
+          "label": "┄"
+        }
+      ],
+      "default": "none",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "number",
+      "id": "border_width_mobile",
+      "label": "Width",
+      "placeholder": "Enter a value in pixels",
+      "default": 1,
+      "visible_if": "{{ block.settings.settings_view != 'desktop' and block.settings.border_style != 'none' }}"
+    },
+    {
+      "type": "select",
+      "id": "border_width_unit_mobile",
+      "label": "↳ Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' and block.settings.border_style != 'none' and block.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "color",
+      "id": "border_color_mobile",
+      "label": "Color",
+      "default": "#000000",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' and block.settings.border_style != 'none' }}"
+    },
+    {
+      "type": "header",
+      "content": "📱 Transition",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "select",
+      "id": "transition_speed_mobile",
+      "label": "Interaction Speed",
+      "options": [
+        {
+          "value": "0",
+          "label": "Instant (no transition)"
+        },
+        {
+          "value": "25",
+          "label": "Flash"
+        },
+        {
+          "value": "50",
+          "label": "Very Fast"
+        },
+        {
+          "value": "100",
+          "label": "Fast"
+        },
+        {
+          "value": "150",
+          "label": "Moderate"
+        },
+        {
+          "value": "200",
+          "label": "Normal (balanced default)"
+        },
+        {
+          "value": "250",
+          "label": "Slightly Slow"
+        },
+        {
+          "value": "350",
+          "label": "Slow"
+        },
+        {
+          "value": "500",
+          "label": "Very Slow"
+        },
+        {
+          "value": "750",
+          "label": "Sluggish"
+        },
+        {
+          "value": "1000",
+          "label": "Dramatic"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "200",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "number",
+      "id": "transition_speed_custom_mobile",
+      "label": "Custom Speed",
+      "info": "In milliseconds",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' and block.settings.transition_speed_mobile == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "width_on_active_mobile",
+      "label": "Active options",
+      "options": [
+        {
+          "value": "normal",
+          "label": "Normal"
+        },
+        {
+          "value": "wide",
+          "label": "Wide"
+        }
+      ],
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "header",
+      "content": "⚙️ Advanced"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_units",
+      "label": "Use Custom Units",
+      "default": false,
+      "info": "Enable custom units for precise control over spacing and sizing"
+    },
+    {
+      "type": "paragraph",
+      "content": "Carousel Dot Navigation (v.0.5.0)"
+    }
+  ]
+}
+{% endschema %}
+
+{%- comment -%} schematic blocks/pl--carousel-dot-nav {%- endcomment -%}

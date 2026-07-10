@@ -1,0 +1,319 @@
+/* ============================================================
+   KombatZone — Collections Section
+   File: assets/collezione-main.css
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;600&display=swap');
+
+/* ---------- Section wrapper ---------- */
+
+/*
+  .kz-collections-section = classe applicata dal {% schema %} al <div> Shopify
+  che wrappa la section. Azzera margini e padding che i temi aggiungono di default.
+*/
+.kz-collections-section {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #0a0a0a;
+}
+
+.kz-collections {
+  background: #0a0a0a;
+  font-family: 'Inter', sans-serif;
+  /* Su schermi alti occupa almeno tutta la viewport meno la header stimata */
+  min-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Il grid si espande per riempire lo spazio disponibile */
+.kz-collections__grid {
+  flex: 1;
+}
+
+/* ---------- Section header ---------- */
+.kz-collections__header {
+  text-align: center;
+  padding: 36px 24px 28px;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.kz-collections__eyebrow {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .22em;
+  color: #E8272A;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.kz-collections__heading {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 46px;
+  font-weight: 900;
+  color: #F2F0EB;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  line-height: 1;
+  margin: 0;
+}
+
+.kz-collections__heading-highlight {
+  color: #E8272A;
+}
+
+/* ---------- Grid ---------- */
+.kz-collections__grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr 1.1fr;
+  grid-template-rows: var(--kz-row-h, 240px) var(--kz-row-h, 240px);
+  gap: 3px;
+  padding: 3px;
+}
+
+/* ---------- Card base ---------- */
+.kz-card {
+  position: relative;
+  overflow: hidden;
+  background: #111;
+  cursor: pointer;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Gradient overlay — si alleggerisce sull'hover per "aprire" l'immagine */
+.kz-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.85) 0%,
+    rgba(0,0,0,0.18) 50%,
+    rgba(0,0,0,0.05) 100%
+  );
+  transition: background .45s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.kz-card:hover::after {
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.70) 0%,
+    rgba(0,0,0,0.05) 45%,
+    rgba(0,0,0,0) 100%
+  );
+}
+
+/* Featured top bar rimossa per scelta di design */
+
+/* Tall card: spans 2 rows */
+.kz-card--tall {
+  grid-row: span 2;
+}
+
+/* ---------- Card image — zoom on hover ---------- */
+.kz-card__img-wrapper {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.kz-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.0);
+  transform-origin: center center;
+  transition: transform .55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+.kz-card:hover .kz-card__img {
+  transform: scale(1.07);
+}
+
+/* Placeholder (nessuna immagine) */
+.kz-card__placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(1.0);
+  transition: transform .55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.kz-card:hover .kz-card__placeholder {
+  transform: scale(1.07);
+}
+
+.kz-card__placeholder svg {
+  opacity: .08;
+}
+
+/* ---------- Card label (eyebrow top-left) ---------- */
+.kz-card__label {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 2;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .2em;
+  /* Visibilità migliorata: testo bianco + text-shadow per leggibilità su qualsiasi foto */
+  color: rgba(255,255,255,0.90);
+  text-shadow: 0 1px 6px rgba(0,0,0,0.7);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: color .3s ease;
+}
+
+.kz-card__label::before {
+  content: '';
+  width: 16px;
+  height: 1.5px;
+  background: #E8272A;
+  display: inline-block;
+  flex-shrink: 0;
+  transition: width .3s ease;
+}
+
+/* Sull'hover: la linea rossa si allunga */
+.kz-card:hover .kz-card__label::before {
+  width: 22px;
+}
+
+/* ---------- Card info (bottom) ---------- */
+.kz-card__info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  padding: 18px 18px 22px;
+  transform: translateY(4px);
+  transition: transform .4s ease;
+}
+
+/* L'info sale leggermente sull'hover */
+.kz-card:hover .kz-card__info {
+  transform: translateY(0);
+}
+
+.kz-card__name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 30px;
+  font-weight: 900;
+  color: #F2F0EB;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  line-height: 1;
+  margin: 0;
+}
+
+.kz-card--sm .kz-card__name {
+  font-size: 22px;
+}
+
+/* ---------- Conteggio prodotti con freccia ---------- */
+.kz-card__count {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #E8272A;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-top: 6px;
+  opacity: 0.85;
+  transition: opacity .3s ease, gap .3s ease;
+}
+
+/* Freccia: sempre presente, scivola verso destra sull'hover */
+.kz-card__count::after {
+  content: '→';
+  display: inline-block;
+  transform: translateX(0);
+  transition: transform .3s ease;
+}
+
+.kz-card:hover .kz-card__count {
+  opacity: 1;
+  gap: 8px;
+}
+
+.kz-card:hover .kz-card__count::after {
+  transform: translateX(3px);
+}
+
+/* ---------- Focus accessibility ---------- */
+.kz-card:focus-visible {
+  outline: 2px solid #E8272A;
+  outline-offset: 2px;
+  z-index: 4;
+}
+
+/* ---------- Responsive ---------- */
+
+/* Tablet */
+@media (max-width: 900px) and (min-width: 641px) {
+  .kz-collections__grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: var(--kz-row-h, 220px) var(--kz-row-h, 220px);
+  }
+}
+
+/*
+  Mobile — composizione editoriale:
+  ┌─────────────────────┐  ~260px  hero  (card 1, full width)
+  ├──────────┬──────────┤  ~180px  duo   (card 2 + card 3)
+  └─────────────────────┘  ~180px  footer (card 4, full width)
+*/
+@media (max-width: 640px) {
+  /* Su mobile la sezione non deve gonfiare troppo */
+  .kz-collections {
+    min-height: unset;
+  }
+
+  .kz-collections__grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows:
+      calc(var(--kz-row-h, 240px) * 1.08)
+      calc(var(--kz-row-h, 240px) * 0.75)
+      calc(var(--kz-row-h, 240px) * 0.75);
+  }
+
+  .kz-card--tall { grid-row: span 1; }
+
+  .kz-collections__grid > .kz-card:nth-child(1) { grid-column: 1 / -1; grid-row: 1; }
+  .kz-collections__grid > .kz-card:nth-child(2) { grid-column: 1;      grid-row: 2; }
+  .kz-collections__grid > .kz-card:nth-child(3) { grid-column: 2;      grid-row: 2; }
+  .kz-collections__grid > .kz-card:nth-child(4) { grid-column: 1 / -1; grid-row: 3; }
+
+  .kz-collections__heading { font-size: 36px; }
+
+  .kz-collections__grid > .kz-card:nth-child(1) .kz-card__name,
+  .kz-collections__grid > .kz-card:nth-child(4) .kz-card__name { font-size: 32px; }
+
+  .kz-collections__grid > .kz-card:nth-child(2) .kz-card__name,
+  .kz-collections__grid > .kz-card:nth-child(3) .kz-card__name { font-size: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kz-card__img,
+  .kz-card__placeholder,
+  .kz-card::after,
+  .kz-card__info,
+  .kz-card__label::before,
+  .kz-card__count::after {
+    transition: none;
+  }
+}

@@ -1,0 +1,192 @@
+{%- comment -%}
+  Section: sections/kz-collection.liquid
+  Template: templates/collection.json
+{%- endcomment -%}
+
+{{ 'kz-collection.css' | asset_url | stylesheet_tag }}
+
+{%- paginate collection.products by section.settings.products_per_page -%}
+
+<div class="kz-catalog">
+
+  {%- comment -%} ── Breadcrumb ── {%- endcomment -%}
+  <nav class="kz-breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ routes.root_url }}">Home</a>
+    <span aria-hidden="true">/</span>
+    <span class="kz-breadcrumb__current">{{ collection.title }}</span>
+  </nav>
+
+  {%- comment -%} ── Category Pills ── {%- endcomment -%}
+  <div class="kz-cat-bar" role="list">
+
+    <a href="{{ collection.url }}"
+       class="kz-cat-btn{% unless current_tags %} kz-cat-btn--active{% endunless %}"
+       role="listitem">
+      TUTTI
+    </a>
+
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'category' -%}
+        {%- assign tag       = block.settings.tag -%}
+        {%- assign tag_url   = collection.url | append: '/' | append: tag | handle -%}
+        <a href="{{ tag_url }}"
+           class="kz-cat-btn{% if current_tags contains tag %} kz-cat-btn--active{% endif %}"
+           role="listitem"
+           {{ block.shopify_attributes }}>
+          {{ block.settings.label }}
+        </a>
+      {%- endif -%}
+    {%- endfor -%}
+
+  </div>
+
+  {%- comment -%} ── Filter / Sort Bar ── {%- endcomment -%}
+  <div class="kz-filter-bar">
+
+    <div class="kz-filter-bar__left">
+      <span class="kz-filter-bar__label">Filtri:</span>
+
+      
+      <select class="kz-select"
+              aria-label="Filtra per marca"
+              onchange="window.location=this.value">
+        <option value="{{ collection.url }}">Tutte le marche</option>
+        {%- assign vendors = section.settings.vendors | split: ',' -%}
+        {%- for vendor in vendors -%}
+          {%- assign v = vendor | strip -%}
+          <option value="{{ collection.url }}/{{ v | handle }}"
+            {%- if current_tags contains v %} selected{%- endif %}>
+            {{ v }}
+          </option>
+        {%- endfor -%}
+      </select>
+
+      
+      <select class="kz-select"
+              aria-label="Filtra per taglia"
+              onchange="window.location=this.value">
+        <option value="{{ collection.url }}">Tutte le taglie</option>
+        {%- assign sizes = section.settings.sizes | split: ',' -%}
+        {%- for size in sizes -%}
+          {%- assign s = size | strip -%}
+          <option value="{{ collection.url }}/{{ s | handle }}"
+            {%- if current_tags contains s %} selected{%- endif %}>
+            {{ s }}
+          </option>
+        {%- endfor -%}
+      </select>
+    </div>
+
+    <div class="kz-filter-bar__right">
+      <span class="kz-filter-bar__count">{{ paginate.items }} prodott{{ paginate.items | pluralize: 'o', 'i' }}</span>
+
+      
+      <select class="kz-select"
+              aria-label="Ordina per"
+              onchange="window.location=this.value">
+        {%- for option in collection.sort_options -%}
+          <option value="{{ collection.url }}?sort_by={{ option.value }}"
+            {%- if collection.sort_by == option.value %} selected{%- endif %}>
+            {{ option.name }}
+          </option>
+        {%- endfor -%}
+      </select>
+    </div>
+
+  </div>
+
+  {%- comment -%} ── Product Grid ── {%- endcomment -%}
+  <div class="kz-product-grid kz-product-grid--{{ section.settings.grid_size }}" id="kz-grid">
+    {%- for product in collection.products -%}
+      {%- render 'kz-product-card', product: product -%}
+    {%- else -%}
+      <p class="kz-empty">Nessun prodotto trovato in questa categoria.</p>
+    {%- endfor -%}
+  </div>
+
+  {%- comment -%} ── Pagination ── {%- endcomment -%}
+  {%- if paginate.pages > 1 -%}
+    <div class="kz-pagination">
+      {{ paginate | default_pagination }}
+    </div>
+  {%- endif -%}
+
+</div>
+
+{%- endpaginate -%}
+
+{%- render 'kz-product-modal' -%}
+<script src="{{ 'kz-product-modal.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "KombatZone Catalog",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "select",
+      "id": "grid_size",
+      "label": "Dimensione griglia prodotti",
+      "options": [
+        { "value": "sm", "label": "Piccola (più prodotti)" },
+        { "value": "md", "label": "Media (default)"       },
+        { "value": "lg", "label": "Grande (meno prodotti)"}
+      ],
+      "default": "md"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24,
+      "label": "Prodotti per pagina"
+    },
+    {
+      "type": "text",
+      "id": "vendors",
+      "label": "Marche (separate da virgola)",
+      "default": "Venum, Hayabusa, Leone, Cleto Reyes"
+    },
+    {
+      "type": "text",
+      "id": "sizes",
+      "label": "Taglie (separate da virgola)",
+      "default": "S / 8 oz, M / 10 oz, L / 12 oz, XL / 14 oz"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Categoria",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Etichetta pulsante",
+          "default": "Categoria"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Tag Shopify (esatto)",
+          "info": "Deve corrispondere esattamente al tag applicato ai prodotti"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KombatZone Catalog",
+      "blocks": [
+        { "type": "category", "settings": { "label": "GUANTI MMA",    "tag": "guanti-mma"    } },
+        { "type": "category", "settings": { "label": "GUANTI BOXE",   "tag": "guanti-boxe"   } },
+        { "type": "category", "settings": { "label": "PROTEZIONI",    "tag": "protezioni"    } },
+        { "type": "category", "settings": { "label": "ABBIGLIAMENTO", "tag": "abbigliamento" } },
+        { "type": "category", "settings": { "label": "SACCHI",        "tag": "sacchi"        } }
+      ]
+    }
+  ]
+}
+{% endschema %}

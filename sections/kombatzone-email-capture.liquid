@@ -1,0 +1,306 @@
+{% comment %}
+  KOMBAT ZONE — Offerta esclusiva (Email Capture)
+  File: sections/kombatzone-email-capture.liquid
+  Come usarlo: Online Store → Temi → Modifica codice → Sections → Add a new section → incolla questo file
+  Poi vai su Customize e aggiungi la sezione "KZ — Email capture" dove preferisci
+  (consigliato: prima della sezione recensioni o prima della CTA finale).
+
+  IMPORTANTE: il form qui sotto usa {% form 'customer' %}, il sistema nativo di Shopify
+  per la raccolta email. Le email inserite finiscono davvero nei tuoi Clienti
+  (Shopify Admin → Clienti) con il tag "newsletter" e consenso marketing attivo —
+  non è più un campo finto senza azione.
+{% endcomment %}
+
+<style>
+  #kz-email-{{ section.id }} {
+    --bg0: #0a0a0a;
+    --bg2: #1a1a1a;
+    --gold: #C9992A;
+    --text: #F2F0EB;
+    --text-dim: #888880;
+    --text-muted: #4a4a44;
+    --red: #E8272A;
+    --border: rgba(255,255,255,0.07);
+    --ff-display: 'Barlow Condensed', sans-serif;
+    --ff-body: 'Inter', sans-serif;
+    background: {{ section.settings.bg_color }};
+    border-top: 1px solid var(--border);
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    padding-left: 32px;
+    padding-right: 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  @media (max-width: 800px) {
+    #kz-email-{{ section.id }} { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  #kz-email-{{ section.id }} .email-tag {
+    display: inline-block;
+    background: rgba(201,153,42,0.15);
+    color: var(--gold);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    margin-bottom: 16px;
+  }
+  #kz-email-{{ section.id }} .email-title {
+    font-family: var(--ff-display), sans-serif;
+    font-size: 44px;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: .95;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  #kz-email-{{ section.id }} .email-title em { font-style: normal; color: var(--gold); }
+  #kz-email-{{ section.id }} .email-sub {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+  #kz-email-{{ section.id }} .email-perks {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 20px;
+  }
+  #kz-email-{{ section.id }} .email-perk {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  #kz-email-{{ section.id }} .email-perk-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  #kz-email-{{ section.id }} .email-form {
+    display: flex;
+    gap: 0;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  #kz-email-{{ section.id }} .email-input {
+    flex: 1;
+    min-width: 200px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-right: none;
+    color: var(--text);
+    font-family: var(--ff-body), sans-serif;
+    font-size: 13px;
+    padding: 14px 18px;
+    outline: none;
+  }
+  #kz-email-{{ section.id }} .email-input::placeholder { color: var(--text-muted); }
+  #kz-email-{{ section.id }} .email-btn {
+    background: var(--gold);
+    color: #1a0f00;
+    font-family: var(--ff-body), sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 14px 24px;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .15s;
+  }
+  #kz-email-{{ section.id }} .email-btn:hover { background: #b8861f; }
+  #kz-email-{{ section.id }} .email-fine {
+    font-size: 10px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  #kz-email-{{ section.id }} .email-error {
+    font-size: 12px;
+    color: var(--red);
+    margin-bottom: 10px;
+  }
+  #kz-email-{{ section.id }} .email-success {
+    background: rgba(201,153,42,0.1);
+    border: 1px solid rgba(201,153,42,0.3);
+    color: var(--gold);
+    font-size: 13px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+
+  @media (max-width: 480px) {
+    #kz-email-{{ section.id }} .email-form { flex-direction: column; }
+    #kz-email-{{ section.id }} .email-input { border-right: 1px solid var(--border); }
+  }
+</style>
+
+<div id="kz-email-{{ section.id }}">
+  <div class="email-left">
+    <div class="email-tag">{{ section.settings.tag }}</div>
+    <h2 class="email-title">{{ section.settings.title_line1 }}<br><em>{{ section.settings.title_line2 }}</em></h2>
+    <p class="email-sub">{{ section.settings.subtitle }}</p>
+    {% if section.blocks.size > 0 %}
+      <div class="email-perks">
+        {% for block in section.blocks %}
+          <div class="email-perk" {{ block.shopify_attributes }}>
+            <div class="email-perk-dot"></div>{{ block.settings.text }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="email-right">
+    {% form 'customer', id: 'kz-newsletter-form' %}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+
+      {% if form.posted_successfully? %}
+        <div class="email-success">{{ section.settings.success_message }}</div>
+      {% endif %}
+
+      {% if form.errors %}
+        <div class="email-error">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</div>
+      {% endif %}
+
+      <div class="email-form">
+        <input class="email-input" type="email" name="contact[email]" placeholder="{{ section.settings.input_placeholder }}" required>
+        <button type="submit" class="email-btn">{{ section.settings.button_text }}</button>
+      </div>
+    {% endform %}
+    <div class="email-fine">{{ section.settings.fine_print }}</div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "KZ — Email capture",
+  "tag": "section",
+  "class": "kz-email-capture-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Testi"
+    },
+    {
+      "type": "text",
+      "id": "tag",
+      "label": "Tag",
+      "default": "Offerta esclusiva"
+    },
+    {
+      "type": "text",
+      "id": "title_line1",
+      "label": "Titolo riga 1",
+      "default": "−10% sul"
+    },
+    {
+      "type": "text",
+      "id": "title_line2",
+      "label": "Titolo riga 2 (oro)",
+      "default": "primo ordine."
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Sottotitolo",
+      "default": "Iscriviti alla newsletter e ricevi subito il codice sconto. Più drop esclusivi, guide e contenuti riservati agli iscritti."
+    },
+    {
+      "type": "header",
+      "content": "Form"
+    },
+    {
+      "type": "text",
+      "id": "input_placeholder",
+      "label": "Placeholder campo email",
+      "default": "La tua email"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Testo bottone",
+      "default": "Ottieni −10%"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Messaggio dopo iscrizione",
+      "default": "Fatto! Controlla la tua email — il codice sconto sta arrivando."
+    },
+    {
+      "type": "text",
+      "id": "fine_print",
+      "label": "Testo piccolo sotto al form",
+      "default": "Nessuno spam. Solo contenuti che vale la pena leggere. Cancellazione in un click."
+    },
+    {
+      "type": "header",
+      "content": "Aspetto sezione"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Colore di sfondo",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "header",
+      "content": "Altezza sezione"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Spazio sopra",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Spazio sotto",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "perk",
+      "name": "Vantaggio",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Testo",
+          "default": "Vantaggio per chi si iscrive"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KZ — Email capture",
+      "blocks": [
+        { "type": "perk", "settings": { "text": "Codice −10% immediato" } },
+        { "type": "perk", "settings": { "text": "Accesso anticipato ai nuovi drop" } },
+        { "type": "perk", "settings": { "text": "Offerte riservate agli iscritti" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

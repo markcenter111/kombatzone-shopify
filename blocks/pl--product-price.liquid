@@ -1,0 +1,180 @@
+{% liquid 
+    assign custom_font = block.settings.font
+    assign font_size = block.settings.font_size | abs | append: 'px'
+    assign color = block.settings.color
+    assign text_alignment = block.settings.text_alignment
+    assign font_size_mob = block.settings.font_size_mob | abs | append: 'px'
+    assign text_alignment_mob = block.settings.text_alignment_mob
+%}
+
+{% comment %} Load Font {% endcomment %}
+{% unless block.settings.text_variant.css_class and custom_font.system? == true %}
+    <style>
+        {{ custom_font | font_face: font_display: 'swap' }} 
+    </style>
+{% endunless %}
+
+{% comment %} Cleaning up custom class to not interfere with heading variant {% endcomment %}
+{%  liquid 
+    assign custom_class = block.settings.custom_class
+%}
+
+{% style %}
+  .--pl--price-{{ block.id }} {
+      text-align: {{ text_alignment }};
+      {% if color.alpha > 0.0 %};
+        color: {{ color }} !important;
+      {% endif %}
+      {% unless block.settings.text_variant.css_class %}
+        font-size: {{ font_size }};
+        font-family: '{{ custom_font.family | remove: '"' }}', {{ custom_font.fallback_families }}; 
+        font-weight: {{ custom_font.weight }}; 
+        font-style: {{ custom_font.style }}; 
+        line-height: normal;
+      {% endunless %}
+      white-space: nowrap;
+  }
+
+  @media screen and (max-width: 768px) {
+    .--pl--price-{{ block.id }} {
+      text-align: {{ text_alignment_mob }};
+      {% unless block.settings.text_variant.css_class %}
+        font-size: {{ font_size_mob }};
+      {% endunless %}
+    }
+  }
+{% endstyle %}
+
+
+
+<div
+  class="--pl--base-text {{ custom_class }} {{ block.settings.text_variant.css_class }} --pl--price-{{ block.id }}"
+  {{ block.shopify_attributes }}
+>
+  {%- liquid
+    if block.settings.product != blank
+      assign target = block.settings.product.selected_or_first_available_variant
+    endif
+
+    assign compare_at_price = target.compare_at_price
+    assign price = target.price | default: 1999
+    assign money_price = price | money_with_currency
+  -%}
+
+  {%- if compare_at_price -%}
+    <s>{{ compare_at_price | money_with_currency }}</s>
+  {%- endif -%}
+
+  {{ money_price }}
+</div>
+
+{% schema %}
+{
+  "name": "Text",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Customize the text to your liking. Need help? Check our [documentation](https://www.pentlibrary.com/docs)."
+    },
+    {
+        "type": "header",
+        "content": "Desktop"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "metaobject",
+      "id": "text_variant",
+      "label": "Variant",
+      "metaobject_type": "app--154529792001--text_styles_pl_editor",
+      "info": "Overrides 'Font' and 'Font Size'"
+    },
+    {
+      "type": "header",
+      "content": "Font"
+    },
+    {
+      "type": "font_picker",
+      "id": "font",
+      "label": "Font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "number",
+      "id": "font_size",
+      "label": "Font Size",
+      "placeholder": "Enter a value in pixels",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "Color"
+    },
+    {
+      "type": "text_alignment",
+      "id": "text_alignment",
+      "label": "Align",
+      "default": "left"
+    },
+    {
+        "type": "header",
+        "content": "📱 Mobile",
+        "info": "These settings only apply to mobile devices."
+    },
+    {
+      "type": "header",
+      "content": "📱 Style"
+    },
+    {
+      "type": "number",
+      "id": "font_size_mob",
+      "label": "Font Size",
+      "placeholder": "Enter a value in pixels",
+      "default": 16
+    },
+    {
+      "type": "text_alignment",
+      "id": "text_alignment_mob",
+      "label": "Align",
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "⚙️ Advanced"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_text",
+      "label": "Placeholder"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Class",
+      "info": "For developers: Add space-separated CSS classes. See our [docs](https://www.pentlibrary.com/docs) for available classes."
+    },
+    {
+      "type": "paragraph",
+      "content": "text block (v.1.0.0)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Text (PL)"
+    },
+    {
+        "name": "Tagline (PL)",
+        "settings": {
+            "font_size": 16,
+            "font": "inter_n6",
+            "product": "{{ closest.product }}"
+        }
+    }
+  ]
+}
+{% endschema %}

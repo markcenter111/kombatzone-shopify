@@ -1,0 +1,131 @@
+{% comment %}
+  KOMBAT ZONE — Differentiator Band
+  File: sections/kombatzone-diff-band.liquid
+  Come usarlo: Online Store → Temi → Modifica codice → Sections → Add a new section → incolla questo file
+  Poi vai su Customize e aggiungi la sezione "Kombat Zone — Vantaggi" dove preferisci
+  (consigliato: subito dopo la griglia prodotti, prima della sezione personalizzazione).
+{% endcomment %}
+
+<style>
+  #kz-diff-{{ section.id }} {
+    --red: #E8272A;
+    --ff-display: 'Barlow Condensed', sans-serif;
+    background: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    padding-left: 32px;
+    padding-right: 32px;
+    display: flex;
+    align-items: center;
+  }
+  #kz-diff-{{ section.id }} .diff-item {
+    flex: 1;
+    padding: 0 40px;
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.2);
+  }
+  #kz-diff-{{ section.id }} .diff-item:first-child { padding-left: 0; }
+  #kz-diff-{{ section.id }} .diff-item:last-child { padding-right: 0; border-right: none; }
+  #kz-diff-{{ section.id }} .diff-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+    opacity: .9;
+  }
+  #kz-diff-{{ section.id }} .diff-title {
+    font-family: var(--ff-display), sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: 4px;
+    color: #fff;
+  }
+  #kz-diff-{{ section.id }} .diff-desc {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 700px) {
+    #kz-diff-{{ section.id }} {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 24px;
+    }
+    #kz-diff-{{ section.id }} .diff-item {
+      border-right: none !important;
+      padding: 0 !important;
+    }
+  }
+</style>
+
+<div id="kz-diff-{{ section.id }}">
+  {% for block in section.blocks %}
+    <div class="diff-item" {{ block.shopify_attributes }}>
+      <div class="diff-icon">{{ block.settings.icon }}</div>
+      <div class="diff-title">{{ block.settings.title }}</div>
+      <div class="diff-desc">{{ block.settings.desc }}</div>
+    </div>
+  {% endfor %}
+</div>
+
+{% schema %}
+{
+  "name": "KZ — Vantaggi",
+  "tag": "section",
+  "class": "kz-diff-band-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Colore di sfondo",
+      "default": "#E8272A"
+    },
+    {
+      "type": "header",
+      "content": "Altezza sezione"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Spazio sopra",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Spazio sotto",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "diff_item",
+      "name": "Vantaggio",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icona (emoji o simbolo)", "default": "✦" },
+        { "type": "text", "id": "title", "label": "Titolo", "default": "Vantaggio" },
+        { "type": "textarea", "id": "desc", "label": "Descrizione", "default": "Descrizione del vantaggio." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KZ — Vantaggi",
+      "blocks": [
+        { "type": "diff_item", "settings": { "icon": "✦", "title": "Nome gratis", "desc": "Personalizzazione inclusa su ogni ordine — nessun costo extra." } },
+        { "type": "diff_item", "settings": { "icon": "⚡", "title": "Spedizione EU", "desc": "Magazzino in Europa. Consegna in 48–72 ore lavorative." } },
+        { "type": "diff_item", "settings": { "icon": "↩", "title": "Reso 30 giorni", "desc": "Taglia sbagliata? Cambi o rimborso senza domande." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

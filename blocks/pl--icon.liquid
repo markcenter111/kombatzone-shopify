@@ -1,0 +1,240 @@
+{% style %}
+  .pl--icon-{{ block.id }} {
+      width: auto;
+      height: {{ block.settings.height |  abs |  append: 'px' }};
+      aspect-ratio: {{ block.settings.aspect_ratio }};
+      object-fit: contain;
+
+      padding-top: {{ block.settings.padding_top |  abs |  append: 'px' }};
+      padding-bottom: {{ block.settings.padding_bottom |  abs |  append: 'px' }};
+      padding-left: {{ block.settings.padding_left |  abs |  append: 'px' }};
+      padding-right: {{ block.settings.padding_right |  abs |  append: 'px' }};
+
+      color: {{ block.settings.color }};
+  }
+
+  @media (max-width: 768px) {
+      .pl--icon-{{ block.id }} {
+          height: {{ block.settings.height_mob |  abs |  append: 'px' }};
+          aspect-ratio: {{ block.settings.aspect_ratio_mob }};
+
+          padding-top: {{ block.settings.padding_top_mob |  abs |  append: 'px' }};
+          padding-bottom: {{ block.settings.padding_bottom_mob |  abs |  append: 'px' }};
+          padding-left: {{ block.settings.padding_left_mob |  abs |  append: 'px' }};
+          padding-right: {{ block.settings.padding_right_mob |  abs |  append: 'px' }};
+      }
+  }
+{% endstyle %}
+
+<div {{ block.shopify_attributes }} style="line-height: 0;">
+  {% capture icon_class %}pl--icon-{{ block.id }}{% endcapture %}
+  {% if block.settings.image_upload != blank %}
+    {{
+      block.settings.image_upload
+      | image_url: width: 500
+      | image_tag: widths: '50, 100, 200, 300, 400, 500', class: icon_class
+    }}
+  {% elsif block.settings.svg_icon != blank %}
+    <div class="pl--icon-{{ block.id }}">
+      {{ block.settings.svg_icon }}
+    </div>
+  {% else %}
+    {% assign placeholder = block.settings.placeholder | default: 'pl--icon-placeholder.svg' %}
+    {% comment %} Render placeholder icon {% endcomment %}
+    <img
+      src="{{ placeholder | asset_url }}"
+      alt="Placeholder icon"
+      loading="lazy"
+      width="100%"
+      height="100%"
+      class="{{ icon_class }}"
+    >
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Icon",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Customize the icon to your liking. Need help? Check our [documentation](https://www.pentlibrary.com/docs)."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_upload",
+      "label": "Image Icon",
+      "info": "This overrides the svg icon"
+    },
+    {
+      "type": "liquid",
+      "id": "svg_icon",
+      "label": "Svg Icon"
+    },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "Color",
+      "default": "#000"
+    },
+    {
+      "type": "header",
+      "content": "Size"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "Aspect Ratio",
+      "default": "1/1",
+      "options": [
+        {
+          "label": "Original",
+          "value": "auto"
+        },
+        {
+          "label": "Square",
+          "value": "1/1"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Padding",
+      "info": "All values in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_top",
+      "label": "Top",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_left",
+      "label": "Left",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_right",
+      "label": "Right",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "header",
+      "content": "📱 Mobile"
+    },
+    {
+      "type": "header",
+      "content": "📱 Size"
+    },
+    {
+      "type": "range",
+      "id": "height_mob",
+      "label": "Height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio_mob",
+      "label": "Aspect Ratio",
+      "default": "auto",
+      "options": [
+        {
+          "label": "Original",
+          "value": "auto"
+        },
+        {
+          "label": "Square",
+          "value": "1/1"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "📱 Padding",
+      "info": "All values in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_top_mob",
+      "label": "Top",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_bottom_mob",
+      "label": "Bottom",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_left_mob",
+      "label": "Left",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_right_mob",
+      "label": "Right",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "header",
+      "content": "⚙️ Advanced"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Placeholder",
+      "placeholder": "Default setting"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Class",
+      "info": "For developers: Add space-separated CSS classes. See our [docs](https://www.pentlibrary.com/docs) for available classes."
+    },
+    {
+      "type": "paragraph",
+      "content": "icon block (v.1.0.0)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Icon"
+    },
+    {
+      "name": "Logo",
+      "settings": {
+        "height": 38,
+        "height_mob": 32,
+        "aspect_ratio": "auto",
+        "aspect_ratio_mob": "auto",
+        "placeholder": "pl--logo-placeholder.png"
+      }
+    }
+  ]
+}
+{% endschema %}

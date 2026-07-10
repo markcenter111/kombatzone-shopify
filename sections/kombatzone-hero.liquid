@@ -1,0 +1,543 @@
+{% comment %}
+  KOMBAT ZONE — Hero Section
+  File: sections/kombatzone-hero.liquid
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --kz-bg0: #0a0a0a;
+    --kz-red: #E8272A;
+    --kz-text: #F2F0EB;
+    --kz-text-dim: #888880;
+    --kz-text-muted: #4a4a44;
+    --kz-border: rgba(255,255,255,0.07);
+    --kz-ff-display: 'Barlow Condensed', sans-serif;
+    --kz-ff-body: 'Inter', sans-serif;
+  }
+
+  .kz-hero {
+    position: relative;
+    min-height: 520px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    background: var(--kz-bg0);
+    padding: 0 32px 48px;
+    margin: 0;
+  }
+
+  .kz-hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 70% 50%, rgba(232,39,42,0.13) 0%, transparent 65%),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 59px,
+        rgba(255,255,255,0.018) 59px,
+        rgba(255,255,255,0.018) 60px
+      );
+    pointer-events: none;
+  }
+
+  .kz-hero-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--kz-red) 0%, transparent 70%);
+  }
+
+  /* ── SLIDESHOW SFONDO ── */
+  .kz-hero-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1s ease;
+    z-index: 0;
+  }
+  .kz-hero-slide.active {
+    opacity: 1;
+  }
+  .kz-hero-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.18;
+    display: block;
+  }
+
+  /* Barra di progresso hero (segmenti rossi in alto) */
+  .kz-hero-progress {
+    position: absolute;
+    top: 3px; /* sotto la bar rossa di 3px */
+    left: 0; right: 0;
+    display: flex;
+    gap: 3px;
+    padding: 6px 32px 0;
+    z-index: 3;
+    box-sizing: border-box;
+  }
+  .kz-hero-progress-seg {
+    flex: 1;
+    height: 2px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 1px;
+    overflow: hidden;
+  }
+  .kz-hero-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #E8272A;
+    border-radius: 1px;
+  }
+  @keyframes kz-hero-fill {
+    from { width: 0%; }
+    to   { width: 100%; }
+  }
+
+  .kz-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 540px;
+  }
+
+  .kz-hero-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--kz-red);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--kz-ff-body);
+  }
+  .kz-hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--kz-red);
+    flex-shrink: 0;
+  }
+
+  .kz-hero-title {
+    font-family: var(--kz-ff-display);
+    font-size: 80px;
+    font-weight: 900;
+    line-height: .92;
+    text-transform: uppercase;
+    letter-spacing: -.01em;
+    margin-bottom: 24px;
+    color: var(--kz-text);
+  }
+  .kz-hero-title em {
+    font-style: normal;
+    color: var(--kz-red);
+    display: block;
+  }
+
+  .kz-hero-sub {
+    font-size: 14px;
+    color: var(--kz-text-dim);
+    max-width: 360px;
+    margin-bottom: 32px;
+    line-height: 1.7;
+    font-family: var(--kz-ff-body);
+  }
+
+  .kz-hero-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .kz-btn-primary {
+    background: var(--kz-red);
+    color: #fff;
+    font-family: var(--kz-ff-body);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background .15s, transform .1s;
+  }
+  .kz-btn-primary:hover { background: #c41f22; color: #fff; transform: translateY(-1px); }
+
+  .kz-btn-ghost {
+    background: transparent;
+    color: var(--kz-text-dim);
+    font-family: var(--kz-ff-body);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 14px 0;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: color .15s;
+  }
+  .kz-btn-ghost:hover { color: var(--kz-text); }
+
+  .kz-hero-stats {
+    position: absolute;
+    right: 32px;
+    bottom: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    z-index: 2;
+  }
+
+  .kz-stat-item { text-align: right; }
+
+  .kz-stat-num {
+    font-family: var(--kz-ff-display);
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--kz-text);
+    line-height: 1;
+  }
+
+  .kz-stat-label {
+    font-size: 11px;
+    color: var(--kz-text-muted);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-top: 2px;
+    font-family: var(--kz-ff-body);
+  }
+
+  .kz-stat-divider {
+    width: 1px;
+    height: 40px;
+    background: var(--kz-border);
+    align-self: flex-end;
+  }
+
+  @media (max-width: 768px) {
+    .kz-hero {
+      padding: 48px 20px;
+      min-height: auto;
+      align-items: flex-start;
+    }
+    .kz-hero-title { font-size: 52px; }
+    .kz-hero-stats { display: none; }
+    .kz-hero-content { max-width: 100%; }
+  }
+</style>
+
+<section class="kz-hero">
+  <div class="kz-hero-bg"></div>
+  <div class="kz-hero-bar"></div>
+
+  {%- assign kz_first_slide = true -%}
+  {%- for i in (1..8) -%}
+    {%- assign kz_key = 'slide_image_' | append: i -%}
+    {%- assign kz_img = section.settings[kz_key] -%}
+    {%- if kz_img != blank -%}
+      <div class="kz-hero-slide{% if kz_first_slide %} active{% endif %}">
+        <img
+          src="{{ kz_img | image_url: width: 1920 }}"
+          alt="{{ kz_img.alt | escape }}"
+          width="{{ kz_img.width }}"
+          height="{{ kz_img.height }}"
+          {% if kz_first_slide %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
+        >
+      </div>
+      {%- assign kz_first_slide = false -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- assign kz_slide_count = 0 -%}
+  {%- for i in (1..8) -%}
+    {%- assign kz_key = 'slide_image_' | append: i -%}
+    {%- if section.settings[kz_key] != blank -%}
+      {%- assign kz_slide_count = kz_slide_count | plus: 1 -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- if kz_slide_count > 1 -%}
+    <div class="kz-hero-progress" id="kz-hero-progress-{{ section.id }}">
+      {%- for i in (1..8) -%}
+        {%- assign kz_key = 'slide_image_' | append: i -%}
+        {%- if section.settings[kz_key] != blank -%}
+          <div class="kz-hero-progress-seg"><div class="kz-hero-progress-fill"></div></div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  <div class="kz-hero-content">
+
+    {%- if section.settings.eyebrow != blank -%}
+      <div class="kz-hero-eyebrow">{{ section.settings.eyebrow }}</div>
+    {%- endif -%}
+
+    <h1 class="kz-hero-title">
+      {{- section.settings.title_line1 -}}<br>
+      <em>{{- section.settings.title_line2 -}}</em>
+    </h1>
+
+    {%- if section.settings.subtitle != blank -%}
+      <p class="kz-hero-sub">{{ section.settings.subtitle }}</p>
+    {%- endif -%}
+
+    <div class="kz-hero-actions">
+      {%- if section.settings.cta_primary_label != blank -%}
+        <a href="{{ section.settings.cta_primary_url }}" class="kz-btn-primary">
+          {{- section.settings.cta_primary_label -}}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.cta_ghost_label != blank -%}
+        <a href="{{ section.settings.cta_ghost_url }}" class="kz-btn-ghost">
+          {{- section.settings.cta_ghost_label -}}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      {%- endif -%}
+    </div>
+
+  </div>
+
+  <div class="kz-hero-stats">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'stat' -%}
+        {%- unless forloop.first -%}
+          <div class="kz-stat-divider"></div>
+        {%- endunless -%}
+        <div class="kz-stat-item" {{ block.shopify_attributes }}>
+          <div class="kz-stat-num">{{ block.settings.stat_number }}</div>
+          <div class="kz-stat-label">{{ block.settings.stat_label }}</div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+</section>
+
+
+{%- assign kz_slide_count = 0 -%}
+{%- for i in (1..8) -%}
+  {%- assign key = 'slide_image_' | append: i -%}
+  {%- if section.settings[key] != blank -%}{%- assign kz_slide_count = kz_slide_count | plus: 1 -%}{%- endif -%}
+{%- endfor -%}
+
+{%- if kz_slide_count > 1 -%}
+<script>
+(function () {
+  var INTERVAL = {{ section.settings.slide_interval | times: 1000 }};
+  var sectionId = '{{ section.id }}';
+
+  var slides   = document.querySelectorAll('.kz-hero-section .kz-hero-slide');
+  var fills    = document.querySelectorAll('#kz-hero-progress-' + sectionId + ' .kz-hero-progress-fill');
+  var current  = 0;
+  var timer    = null;
+
+  function goTo(index) {
+    slides[current].classList.remove('active');
+    fills[current].style.animation = 'none';
+    fills[current].style.width = '100%';
+
+    current = (index + slides.length) % slides.length;
+    slides[current].classList.add('active');
+
+    fills.forEach(function(f, i) {
+      f.style.animation = 'none';
+      f.offsetWidth; // reflow
+      f.style.width = i < current ? '100%' : '0%';
+    });
+
+    var fill = fills[current];
+    fill.style.animation = 'none';
+    fill.offsetWidth;
+    fill.style.animation = 'kz-hero-fill ' + INTERVAL + 'ms linear forwards';
+  }
+
+  function start() {
+    goTo(0);
+    timer = setInterval(function () {
+      goTo(current + 1);
+    }, INTERVAL);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "KZ Hero",
+  "tag": "div",
+  "class": "kz-hero-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Testo piccolo sopra il titolo",
+      "default": "Attrezzatura da combattimento"
+    },
+    {
+      "type": "text",
+      "id": "title_line1",
+      "label": "Titolo — prima riga",
+      "default": "Entra"
+    },
+    {
+      "type": "text",
+      "id": "title_line2",
+      "label": "Titolo — seconda riga (rossa)",
+      "default": "nell'arena."
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Sottotitolo",
+      "default": "Gear professionale per chi prende il proprio sport sul serio. MMA, Boxe, Muay Thai — senza compromessi."
+    },
+    {
+      "type": "text",
+      "id": "cta_primary_label",
+      "label": "Bottone principale — testo",
+      "default": "Scopri la collezione"
+    },
+    {
+      "type": "url",
+      "id": "cta_primary_url",
+      "label": "Bottone principale — link"
+    },
+    {
+      "type": "text",
+      "id": "cta_ghost_label",
+      "label": "Bottone secondario — testo",
+      "default": "Personalizza il tuo set"
+    },
+    {
+      "type": "url",
+      "id": "cta_ghost_url",
+      "label": "Bottone secondario — link"
+    },
+    {
+      "type": "header",
+      "content": "🖼 Foto sfondo (slideshow)"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_image_1",
+      "label": "Foto 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_image_2",
+      "label": "Foto 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_image_3",
+      "label": "Foto 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_image_4",
+      "label": "Foto 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_image_5",
+      "label": "Foto 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_image_6",
+      "label": "Foto 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_image_7",
+      "label": "Foto 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_image_8",
+      "label": "Foto 8"
+    },
+    {
+      "type": "range",
+      "id": "slide_interval",
+      "label": "Secondi tra una foto e l'altra",
+      "min": 2,
+      "max": 15,
+      "step": 1,
+      "default": 5,
+      "unit": "s"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Statistica",
+      "settings": [
+        {
+          "type": "text",
+          "id": "stat_number",
+          "label": "Numero",
+          "default": "1.200+"
+        },
+        {
+          "type": "text",
+          "id": "stat_label",
+          "label": "Etichetta",
+          "default": "Atleti attivi"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KZ Hero",
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": {
+            "stat_number": "1.200+",
+            "stat_label": "Atleti attivi"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "stat_number": "4.9",
+            "stat_label": "Rating medio"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "stat_number": "48h",
+            "stat_label": "Spedizione EU"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

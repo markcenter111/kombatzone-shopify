@@ -1,0 +1,282 @@
+{% comment %}
+  KOMBAT ZONE — Promo Banner con Countdown Globale Sincronizzato
+  File: sections/kombatzone-promo-banner.liquid
+  
+  Installazione:
+  1. Online Store → Themes → Edit code → Sections → Add new section
+  2. Chiama il file "kombatzone-promo-banner" e incolla questo codice
+  3. Vai su Customize → aggiungi "KZ Promo Banner" come primissima sezione (sopra l'header)
+  
+  Come funziona il timer sincronizzato:
+  - Imposta "Data e ora fine offerta" nel pannello Customize
+  - Tutti i visitatori vedranno lo STESSO conto alla rovescia, perché
+    il timer punta a un momento fisso nel tempo (non relativo all'apertura della pagina)
+  - Quando il countdown arriva a 0, il banner si nasconde automaticamente
+{% endcomment %}
+
+{% if section.settings.show_banner %}
+
+<style>
+  :root {
+    --kz-promo-bg: {{ section.settings.banner_color }};
+    --kz-ff-display: 'Barlow Condensed', sans-serif;
+    --kz-ff-body: 'Inter', sans-serif;
+  }
+
+  .kz-promo-banner {
+    background: var(--kz-promo-bg);
+    padding: 10px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    position: relative;
+    flex-wrap: wrap;
+  }
+
+  .kz-promo-text {
+    font-family: var(--kz-ff-body);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .kz-promo-countdown {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .kz-promo-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+  }
+
+  .kz-promo-digit {
+    background: rgba(0,0,0,0.25);
+    color: #fff;
+    font-family: var(--kz-ff-display);
+    font-size: 20px;
+    font-weight: 900;
+    padding: 2px 8px;
+    letter-spacing: .04em;
+    min-width: 36px;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .kz-promo-unit-label {
+    font-family: var(--kz-ff-body);
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .kz-promo-sep {
+    color: rgba(255,255,255,0.5);
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  .kz-promo-cta {
+    font-family: var(--kz-ff-body);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #fff;
+    text-decoration: underline;
+    cursor: pointer;
+    white-space: nowrap;
+    background: none;
+    border: none;
+  }
+
+  .kz-promo-close {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.6);
+    font-size: 16px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+  }
+  .kz-promo-close:hover { color: #fff; }
+</style>
+
+<div class="kz-promo-banner" id="kz-promo-banner">
+
+  <div class="kz-promo-text">
+    {{ section.settings.banner_text }}
+  </div>
+
+  <div class="kz-promo-countdown" id="kz-countdown">
+    <div class="kz-promo-unit">
+      <div class="kz-promo-digit" id="kz-days">00</div>
+      <div class="kz-promo-unit-label">giorni</div>
+    </div>
+    <div class="kz-promo-sep">:</div>
+    <div class="kz-promo-unit">
+      <div class="kz-promo-digit" id="kz-hours">00</div>
+      <div class="kz-promo-unit-label">ore</div>
+    </div>
+    <div class="kz-promo-sep">:</div>
+    <div class="kz-promo-unit">
+      <div class="kz-promo-digit" id="kz-mins">00</div>
+      <div class="kz-promo-unit-label">min</div>
+    </div>
+    <div class="kz-promo-sep">:</div>
+    <div class="kz-promo-unit">
+      <div class="kz-promo-digit" id="kz-secs">00</div>
+      <div class="kz-promo-unit-label">sec</div>
+    </div>
+  </div>
+
+  {% if section.settings.cta_label != blank %}
+    <a href="{{ section.settings.cta_url }}" class="kz-promo-cta">
+      {{ section.settings.cta_label }} →
+    </a>
+  {% endif %}
+
+  {% if section.settings.show_close %}
+    <button class="kz-promo-close" onclick="document.getElementById('kz-promo-banner').style.display='none'" aria-label="Chiudi">✕</button>
+  {% endif %}
+
+</div>
+
+<script>
+  (function() {
+    // ─── DATA DI SCADENZA — impostata dal pannello Customize ───
+    // Formato ISO 8601: "2026-06-25T23:59:59" (ora italiana UTC+2 in estate)
+    // Tutti i visitatori vedono lo stesso countdown perché punta
+    // allo stesso momento assoluto nel tempo.
+    var endTime = new Date("{{ section.settings.end_datetime }}").getTime();
+
+    function updateCountdown() {
+      var now = new Date().getTime();
+      var diff = endTime - now;
+
+      if (diff <= 0) {
+        // Offerta scaduta: nascondi il banner
+        var banner = document.getElementById('kz-promo-banner');
+        if (banner) banner.style.display = 'none';
+        return;
+      }
+
+      var days  = Math.floor(diff / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var mins  = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      var secs  = Math.floor((diff % (1000 * 60)) / 1000);
+
+      var dEl = document.getElementById('kz-days');
+      var hEl = document.getElementById('kz-hours');
+      var mEl = document.getElementById('kz-mins');
+      var sEl = document.getElementById('kz-secs');
+
+      if (dEl) dEl.textContent = String(days).padStart(2, '0');
+      if (hEl) hEl.textContent = String(hours).padStart(2, '0');
+      if (mEl) mEl.textContent = String(mins).padStart(2, '0');
+      if (sEl) sEl.textContent = String(secs).padStart(2, '0');
+
+      // Nascondi giorni se sono 0
+      var daysUnit = dEl ? dEl.closest('.kz-promo-unit') : null;
+      if (daysUnit && days === 0) {
+        daysUnit.style.display = 'none';
+        // nascondi anche il separatore dopo
+        var seps = document.querySelectorAll('.kz-promo-sep');
+        if (seps[0]) seps[0].style.display = 'none';
+      }
+    }
+
+    // Aggiorna subito e poi ogni secondo
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  })();
+</script>
+
+{% endif %}
+
+{% schema %}
+{
+  "name": "KZ Promo Banner",
+  "tag": "div",
+  "class": "kz-promo-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Visibilità"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_banner",
+      "label": "Mostra il banner",
+      "default": true,
+      "info": "Deseleziona per nascondere il banner senza eliminare la sezione"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_close",
+      "label": "Mostra pulsante ✕ per chiudere",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Contenuto"
+    },
+    {
+      "type": "text",
+      "id": "banner_text",
+      "label": "Testo del banner",
+      "default": "⚡ Offerta lampo — Spedizione gratuita su tutti gli ordini"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Testo link CTA (lascia vuoto per nasconderlo)",
+      "default": "Approfitta ora"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Link CTA"
+    },
+    {
+      "type": "header",
+      "content": "⏱ Countdown — Uguale per tutti i visitatori"
+    },
+    {
+      "type": "text",
+      "id": "end_datetime",
+      "label": "Data e ora fine offerta",
+      "default": "2026-06-30T23:59:59",
+      "info": "Formato: AAAA-MM-GGThh:mm:ss — es. 2026-06-30T23:59:59 per il 30 giugno alle 23:59. Tutti i visitatori vedranno lo STESSO countdown perché punta a questo momento fisso. Ricorda: usa l'ora italiana (UTC+2 in estate, UTC+1 in inverno)."
+    },
+    {
+      "type": "header",
+      "content": "Stile"
+    },
+    {
+      "type": "color",
+      "id": "banner_color",
+      "label": "Colore sfondo banner",
+      "default": "#E8272A"
+    }
+  ],
+  "presets": [
+    {
+      "name": "KZ Promo Banner"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,835 @@
+{% comment %}
+  Block: Collection Carousel
+  Version: 0.5.0
+
+  Dependencies:
+    Blocks: 
+    Snippets: 
+    Assets: pl--carousel.js, pl--vendor-embla-carousel.esm.js
+  ===================================================
+  IMPORTANT – PLEASE READ BEFORE MODIFYING THIS FILE
+  ===================================================
+  This block is part of the Pent Library (Shopify block library).
+
+  Support (or Bug Reports):
+  • Email: support@pentlibrary.com (include Block name and version)
+  • Docs: https://www.pentlibrary.com/docs
+
+  Notes:
+  • Modifying this file may break functionality or prevent updates from applying.
+  • The contents of this file are auto-generated, and changes might be automatically overwritten.
+  • Modifying the file may break the block, edit at own risk
+
+  License: https://www.pentlibrary.com/license
+{% endcomment %}
+
+<script type="module" src="{{ 'pl--carousel.js' | asset_url }}" fetchpriority="low"></script>
+
+{% stylesheet %}
+  .pl--carousel {
+    margin-inline: var(--carousel-overflow-margin);
+    position: relative;
+  }
+  .pl--carousel__viewport {
+    overflow: hidden;
+    padding-inline: var(--viewport-overflow-padding);
+  }
+  .pl--carousel__container {
+    display: flex;
+    touch-action: pan-y pinch-zoom;
+    margin-left: calc(var(--slide-spacing) * -1);
+  }
+
+  .pl--carousel__container > .pl--carousel__slide {
+    transform: translate3d(0, 0, 0);
+    flex: 0 0 var(--slides);
+    min-width: 0;
+    padding-left: var(--slide-spacing);
+  }
+
+  .pl--carousel__controls-spacer {
+    display: none;
+    padding-block: 10px;
+  }
+
+  @media screen and (min-width: 769px) {
+    .pl--carousel__controls {
+      display: grid;
+      grid-template-columns: var(--controls-grid-columns, auto 1fr);
+      justify-content: space-between;
+      gap: 10px;
+      padding-inline: var(--viewport-overflow-padding);
+    }
+    .pl--carousel[data-buttons-position='centered'] .pl--carousel__controls {
+      grid-template-columns: 1fr;
+    }
+    .pl--carousel__buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      align-items: center;
+      pointer-events: none;
+      order: var(--controls-buttons-order, 1);
+    }
+    .pl--carousel[data-show-arrows='false'] .pl--carousel__buttons {
+      display: none;
+    }
+    .pl--carousel[data-buttons-position='centered']:not([data-show-arrows='false'])
+      .pl--carousel__buttons {
+      display: flex;
+      position: absolute;
+      left: var(--cotrol-arrows-padding-left);
+      right: var(--cotrol-arrows-padding-right);
+      top: 0;
+      bottom: var(--dynamic-bottom-alignment);
+      justify-content: space-between;
+    }
+    .pl--carousel__dots-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: var(--carousel-dots-justify-content, flex-end);
+      order: var(--controls-dots-order, 2);
+    }
+    .pl--carousel[data-show-dots='false'] .pl--carousel__dots-wrapper {
+      display: none;
+    }
+    .pl--carousel__dots-wrapper:has(.pl--dots-wra-algn-rgt) {
+      margin-right: var(--slide-spacing);
+    }
+
+    .pl--carousel:is(
+        [data-show-arrows='true']:not([data-buttons-position='centered']),
+        [data-show-dots='true']
+      )
+      .pl--carousel__controls-spacer {
+      display: block;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .pl--carousel {
+      margin-inline: var(--carousel-overflow-margin-mobile);
+    }
+    .pl--carousel__viewport {
+      padding-inline: var(--viewport-overflow-padding-mobile);
+    }
+    .pl--carousel__container {
+      margin-left: calc(var(--slide-spacing-mobile) * -1);
+    }
+
+    .pl--carousel__container > .pl--carousel__slide {
+      flex: 0 0 var(--slides-mobile);
+      padding-left: var(--slide-spacing-mobile);
+    }
+
+    .pl--carousel__controls {
+      display: grid;
+      grid-template-columns: var(--controls-grid-columns-mobile, auto 1fr);
+      justify-content: space-between;
+      gap: 10px;
+      padding-inline: var(--viewport-overflow-padding-mobile);
+    }
+    .pl--carousel[data-buttons-position-mobile='centered'] .pl--carousel__controls {
+      grid-template-columns: 1fr;
+    }
+    .pl--carousel__buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      align-items: center;
+      pointer-events: none;
+      order: var(--controls-buttons-order-mobile, 1);
+    }
+    .pl--carousel[data-show-arrows-mobile='false'] .pl--carousel__buttons {
+      display: none;
+    }
+    .pl--carousel[data-buttons-position-mobile='centered']:not([data-show-arrows-mobile='false'])
+      .pl--carousel__buttons {
+      display: flex;
+      position: absolute;
+      left: var(--cotrol-arrows-padding-left-mobile);
+      right: var(--cotrol-arrows-padding-right-mobile);
+      top: 0;
+      bottom: var(--dynamic-bottom-alignment-mobile);
+      justify-content: space-between;
+    }
+    .pl--carousel__dots-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: var(--carousel-dots-justify-content-mobile, flex-end);
+      order: var(--controls-dots-order-mobile, 2);
+    }
+    .pl--carousel[data-show-dots-mobile='false'] .pl--carousel__dots-wrapper {
+      display: none;
+    }
+    .pl--carousel__dots-wrapper:has(.pl--dots-wra-algn-rgt) {
+      margin-right: var(--slide-spacing-mobile);
+    }
+    .pl--carousel__controls-spacer {
+      display: none;
+    }
+
+    .pl--carousel:is(
+        [data-show-arrows-mobile='true']:not([data-buttons-position-mobile='centered']),
+        [data-show-dots-mobile='true']
+      )
+      .pl--carousel__controls-spacer {
+      display: block;
+    }
+  }
+{% endstylesheet %}
+
+{% comment %}
+  {% javascript %}
+    import PlCarousel from './pl--carousel.js';
+  {% endjavascript %}
+{% endcomment %}
+{%- liquid
+  assign slide_size = 100 | divided_by: block.settings.slides_per
+  assign slide_size_mobile = 100 | divided_by: block.settings.slides_per_mobile
+
+  assign dynamic_bottom_alignment = 0
+  if block.settings.show_dot_nav
+    assign dynamic_bottom_alignment = '30px'
+  endif
+
+  assign dynamic_bottom_alignment_mobile = 0
+  if block.settings.show_dot_nav_mobile
+    assign dynamic_bottom_alignment_mobile = '20px'
+  endif
+
+  assign carousel_overflow = 'hidden'
+  if block.settings.carousel_overflow
+    assign carousel_overflow = 'visible'
+  endif
+
+  assign carousel_overflow_mobile = 'hidden'
+  if block.settings.carousel_overflow_mobile
+    assign carousel_overflow_mobile = 'visible'
+  endif
+
+  assign collection_products = block.settings.collection.products | default: (1..block.settings.limit)
+-%}
+
+<pl-carousel
+  {{ block.shopify_attributes }}
+  class="pl--carousel"
+  style="
+    --carousel-overflow-margin: {% if block.settings.carousel_overflow %}calc(var(--rb-left, 0px) * -1) calc(var(--rb-right, 0px) * -1);{% else %}0;{% endif %}
+    --viewport-overflow-padding: {% if block.settings.carousel_overflow %}var(--rb-left, 0px) var(--rb-right, 0px);{% else %}0;{% endif %}
+    --cotrol-arrows-padding-left: {% if block.settings.carousel_overflow %}calc(var(--rb-left, 5%) - var(--centered-buttons-fine-tuning));{% else %}10px;{% endif %}
+    --cotrol-arrows-padding-right: {% if block.settings.carousel_overflow %}calc(var(--rb-right, 5%) - var(--centered-buttons-fine-tuning));{% else %}10px;{% endif %}
+    --carousel-overflow: {{ carousel_overflow }};
+    --slides: {{ slide_size }}%;
+    --slide-spacing: {{ block.settings.gap }}{{ block.settings.gap_unit }};
+    --dynamic-bottom-alignment: {{ dynamic_bottom_alignment }};
+    --centered-buttons-fine-tuning: min(15px, 2%);
+    --carousel-dots-justify-content: {{ block.settings.dot_nav_position }};
+    --controls-buttons-order: {{ block.settings.buttons_order }};
+    --controls-dots-order: {% if block.settings.buttons_order == '1' %}2{% else %}1{% endif %};
+    --controls-grid-columns: {% if block.settings.show_prev_next_buttons and block.settings.buttons_order == '1' %}auto 1fr{% else if block.settings.show_prev_next_buttons and block.settings.buttons_order == '2' %}1fr auto{% else %}1fr{% endif %};
+    --show-prev-next-buttons: {{ block.settings.show_prev_next_buttons }};
+
+    --carousel-overflow-margin-mobile: {% if block.settings.carousel_overflow_mobile %}calc(var(--rb-left, 0px) * -1) calc(var(--rb-right, 0px) * -1);{% else %}0;{% endif %}
+    --viewport-overflow-padding-mobile: {% if block.settings.carousel_overflow_mobile %}var(--rb-left, 0px) var(--rb-right, 0px);{% else %}0;{% endif %}
+    --cotrol-arrows-padding-left-mobile: {% if block.settings.carousel_overflow_mobile %}calc(var(--rb-left, 5%) - var(--centered-buttons-fine-tuning));{% else %}min(15px, 1%);{% endif %}
+    --cotrol-arrows-padding-right-mobile: {% if block.settings.carousel_overflow_mobile %}calc(var(--rb-right, 5%) - var(--centered-buttons-fine-tuning));{% else %}min(15px, 1%);{% endif %}
+    --carousel-overflow-mobile: {{ carousel_overflow_mobile }};
+    --slides-mobile: {{ slide_size_mobile }}%;
+    --slide-spacing-mobile: {{ block.settings.gap_mobile }}{{ block.settings.gap_unit_mobile }};
+    --dynamic-bottom-alignment-mobile: {{ dynamic_bottom_alignment_mobile }};
+    --carousel-dots-justify-content-mobile: {{ block.settings.dot_nav_position_mobile }};
+    --controls-buttons-order-mobile: {{ block.settings.buttons_order_mobile }};
+    --controls-dots-order-mobile: {% if block.settings.buttons_order_mobile == '1' %}2{% else %}1{% endif %};
+    --controls-grid-columns-mobile: {% if block.settings.show_prev_next_buttons_mobile and block.settings.buttons_order_mobile == '1' %}auto 1fr{% else if block.settings.show_prev_next_buttons_mobile and block.settings.buttons_order_mobile == '2' %}1fr auto{% else %}1fr{% endif %};
+    --show-prev-next-buttons-mobile: {{ block.settings.show_prev_next_buttons_mobile }};
+  "
+  data-duration="{{ block.settings.transition_speed }}"
+  data-duration-mobile="{{ block.settings.transition_speed_mobile }}"
+  data-align="{{ block.settings.align }}"
+  data-align-mobile="{{ block.settings.align_mobile }}"
+  data-contain-scroll="{{ block.settings.contain_scroll }}"
+  data-contain-scroll-mobile="{{ block.settings.contain_scroll_mobile }}"
+  data-slides-to-scroll="{{ block.settings.slides_to_scroll }}"
+  data-slides-to-scroll-mobile="{{ block.settings.slides_to_scroll_mobile }}"
+  data-watch-drag="{{ block.settings.watch_drag }}"
+  data-watch-drag-mobile="{{ block.settings.watch_drag_mobile }}"
+
+  data-show-arrows="{{ block.settings.show_prev_next_buttons }}"
+  data-show-arrows-mobile="{{ block.settings.show_prev_next_buttons_mobile }}"
+  data-show-dots="{{ block.settings.show_dot_nav }}"
+  data-show-dots-mobile="{{ block.settings.show_dot_nav_mobile }}"
+  data-buttons-position="{{ block.settings.prev_next_buttons_position }}"
+  data-buttons-position-mobile="{{ block.settings.prev_next_buttons_position_mobile }}"
+>
+  <div data-embla-viewport class="pl--carousel__viewport">
+    <div data-embla-container class="pl--carousel__container">
+      {% for product in collection_products limit: block.settings.limit %}
+        {% content_for 'block',
+          id: 'carousel-slide',
+          type: '_pl--carousel-slide',
+          closest.product: product
+        %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <div
+    class="pl--carousel__controls-spacer"
+    style="{% if block.settings.show_prev_next_buttons and block.settings.prev_next_buttons_position == 'centered' and block.settings.show_dot_nav == false %}display: none;{% endif %}"
+  ></div>
+
+  <div
+    class="pl--carousel__controls"
+  >
+    <div class="pl--carousel__buttons">
+      {%- content_for 'block', id: 'carousel-prev-button', type: '_pl--carousel-prev-button' -%}
+      {%- content_for 'block', id: 'carousel-next-button', type: '_pl--carousel-next-button' -%}
+    </div>
+    <div class="pl--carousel__dots-wrapper {% if block.settings.dot_nav_position == 'flex-end' %}pl--dots-wra-algn-rgt{% endif %}">
+      {%- content_for 'block', id: 'carousel-dot-nav', type: '_pl--carousel-dot-nav' -%}
+    </div>
+  </div>
+</pl-carousel>
+
+{%- comment -%} schematic blocks/pl--collection-carousel {%- endcomment -%}
+
+{% schema %}
+{
+  "name": "Collection Carousel",
+  "tag": null,
+  "blocks": [],
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Customize the block to your liking. Need help? Check our [documentation](https://www.pentlibrary.com/docs)."
+    },
+    {
+      "type": "select",
+      "id": "settings_view",
+      "label": "Settings for",
+      "options": [
+        {
+          "value": "all",
+          "label": "All"
+        },
+        {
+          "value": "desktop",
+          "label": "Desktop"
+        },
+        {
+          "value": "mobile",
+          "label": "Mobile"
+        }
+      ],
+      "default": "all"
+    },
+    {
+      "type": "header",
+      "content": "🌐 Collection Source"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "label": "Max Items",
+      "min": 1,
+      "max": 50,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "🖥️ Layout",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "range",
+      "id": "slides_per",
+      "label": "Slides / view",
+      "min": 1,
+      "max": 6,
+      "step": 0.1,
+      "default": 3.5,
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap ↔",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "default": 12,
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "select",
+      "id": "gap_unit",
+      "label": "↳ Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' and block.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Align ↔",
+      "options": [
+        {
+          "value": "start",
+          "label": "← Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "end",
+          "label": "Right →"
+        }
+      ],
+      "default": "start",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "contain_scroll",
+      "label": "Remove Start/End Space",
+      "default": true,
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "carousel_overflow",
+      "label": "Span page width",
+      "default": false,
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "header",
+      "content": "🖥️ Navigation",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_prev_next_buttons",
+      "label": "Show Arrows",
+      "default": true,
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "select",
+      "id": "prev_next_buttons_position",
+      "label": "Arrow Alignment",
+      "options": [
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        },
+        {
+          "value": "centered",
+          "label": "Centered"
+        }
+      ],
+      "default": "bottom",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' and block.settings.show_prev_next_buttons }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dot_nav",
+      "label": "Show Dots",
+      "default": true,
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "select",
+      "id": "dot_nav_position",
+      "label": "Dots Alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "flex-start",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' and block.settings.show_dot_nav }}"
+    },
+    {
+      "type": "select",
+      "id": "buttons_order",
+      "label": "Navigation Order",
+      "options": [
+        {
+          "value": "1",
+          "label": "Arrows First"
+        },
+        {
+          "value": "2",
+          "label": "Dots First"
+        }
+      ],
+      "default": "2",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' and block.settings.show_prev_next_buttons and block.settings.prev_next_buttons_position != 'centered' and block.settings.show_dot_nav }}"
+    },
+    {
+      "type": "select",
+      "id": "slides_to_scroll",
+      "label": "Group Slides",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Yes"
+        },
+        {
+          "value": "1",
+          "label": "No"
+        }
+      ],
+      "default": "1",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "watch_drag",
+      "label": "Allow Touch Drag",
+      "default": true,
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "header",
+      "content": "🖥️ Transistion",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "select",
+      "id": "transition_speed",
+      "label": "Transition speed",
+      "options": [
+        {
+          "value": "20",
+          "label": "Fast"
+        },
+        {
+          "value": "25",
+          "label": "Regular"
+        },
+        {
+          "value": "40",
+          "label": "Medium"
+        },
+        {
+          "value": "60",
+          "label": "Slow"
+        }
+      ],
+      "default": "25",
+      "visible_if": "{{ block.settings.settings_view != 'mobile' }}"
+    },
+    {
+      "type": "header",
+      "content": "📱 Layout",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "range",
+      "id": "slides_per_mobile",
+      "label": "Slides / view",
+      "min": 1,
+      "max": 4,
+      "step": 0.1,
+      "default": 2,
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "range",
+      "id": "gap_mobile",
+      "label": "Gap ↔",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "default": 8,
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "select",
+      "id": "gap_unit_mobile",
+      "label": "↳ Unit",
+      "options": [
+        {
+          "value": "px",
+          "label": "px"
+        },
+        {
+          "value": "rem",
+          "label": "rem"
+        },
+        {
+          "value": "em",
+          "label": "em"
+        },
+        {
+          "value": "%",
+          "label": "%"
+        },
+        {
+          "value": "ch",
+          "label": "ch"
+        },
+        {
+          "value": "vw",
+          "label": "vw"
+        },
+        {
+          "value": "vh",
+          "label": "vh"
+        },
+        {
+          "value": "svh",
+          "label": "svh"
+        },
+        {
+          "value": "svw",
+          "label": "svw"
+        }
+      ],
+      "default": "px",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' and block.settings.use_custom_units == true }}"
+    },
+    {
+      "type": "select",
+      "id": "align_mobile",
+      "label": "Align ↔",
+      "options": [
+        {
+          "value": "start",
+          "label": "← Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "end",
+          "label": "Right →"
+        }
+      ],
+      "default": "start",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "contain_scroll_mobile",
+      "label": "Remove Start/End Space",
+      "default": true,
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "carousel_overflow_mobile",
+      "label": "Span page width",
+      "default": true,
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "header",
+      "content": "📱 Navigation",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_prev_next_buttons_mobile",
+      "label": "Show Arrows",
+      "default": true,
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "select",
+      "id": "prev_next_buttons_position_mobile",
+      "label": "Arrow Alignment",
+      "options": [
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        },
+        {
+          "value": "centered",
+          "label": "Centered"
+        }
+      ],
+      "default": "centered",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' and block.settings.show_prev_next_buttons_mobile }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dot_nav_mobile",
+      "label": "Show Dots",
+      "default": false,
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "select",
+      "id": "dot_nav_position_mobile",
+      "label": "Dots Alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "center",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' and block.settings.show_dot_nav_mobile }}"
+    },
+    {
+      "type": "select",
+      "id": "buttons_order_mobile",
+      "label": "Navigation Order",
+      "options": [
+        {
+          "value": "1",
+          "label": "Arrows First"
+        },
+        {
+          "value": "2",
+          "label": "Dots First"
+        }
+      ],
+      "default": "2",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' and block.settings.show_prev_next_buttons_mobile and block.settings.prev_next_buttons_position_mobile != 'centered' and block.settings.show_dot_nav_mobile }}"
+    },
+    {
+      "type": "select",
+      "id": "slides_to_scroll_mobile",
+      "label": "Group Slides",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Yes"
+        },
+        {
+          "value": "1",
+          "label": "No"
+        }
+      ],
+      "default": "1",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "watch_drag_mobile",
+      "label": "Allow Touch Drag",
+      "default": true,
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "header",
+      "content": "📱 Transition",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "select",
+      "id": "transition_speed_mobile",
+      "label": "Transition speed",
+      "options": [
+        {
+          "value": "20",
+          "label": "Fast"
+        },
+        {
+          "value": "25",
+          "label": "Regular"
+        },
+        {
+          "value": "40",
+          "label": "Medium"
+        },
+        {
+          "value": "60",
+          "label": "Slow"
+        }
+      ],
+      "default": "25",
+      "visible_if": "{{ block.settings.settings_view != 'desktop' }}"
+    },
+    {
+      "type": "header",
+      "content": "⚙️ Advanced"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_units",
+      "label": "Use Custom Units",
+      "default": false,
+      "info": "Enable custom units for precise control over spacing and sizing"
+    },
+    {
+      "type": "paragraph",
+      "content": "Collection Carousel Block (v.0.5.0)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Carousel (PL)"
+    }
+  ]
+}
+{% endschema %}

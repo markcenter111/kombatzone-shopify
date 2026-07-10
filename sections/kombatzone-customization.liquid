@@ -1,0 +1,311 @@
+{% comment %}
+  KOMBAT ZONE — Customization Section
+  File: sections/kombatzone-customization.liquid
+  Come usarlo: Online Store → Temi → Modifica codice → Sections → Add a new section → incolla questo file
+  Poi vai su Customize e aggiungi la sezione "KZ — Personalizzazione" dove preferisci
+  (consigliato: subito dopo la griglia prodotti o dopo i vantaggi).
+{% endcomment %}
+
+<style>
+  #kz-custom-{{ section.id }} {
+    --bg1: #111111;
+    --bg2: #1a1a1a;
+    --red: #E8272A;
+    --gold: #C9992A;
+    --text-dim: #888880;
+    --border: rgba(255,255,255,0.07);
+    --ff-display: 'Barlow Condensed', sans-serif;
+    --ff-body: 'Inter', sans-serif;
+    padding: 64px 32px;
+    background: {{ section.settings.bg_color }};
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  #kz-custom-{{ section.id }} .custom-visual {
+    background: var(--bg2);
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  #kz-custom-{{ section.id }} .custom-visual img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  #kz-custom-{{ section.id }} .custom-visual-inner {
+    font-family: var(--ff-display), sans-serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.04);
+    letter-spacing: .1em;
+    text-align: center;
+    text-transform: uppercase;
+    line-height: 1;
+    user-select: none;
+  }
+  #kz-custom-{{ section.id }} .custom-name-preview {
+    position: absolute;
+    font-family: var(--ff-display), sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--red);
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    z-index: 2;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  }
+  #kz-custom-{{ section.id }} .free-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--gold);
+    color: #1a0f00;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    z-index: 2;
+  }
+  #kz-custom-{{ section.id }} .custom-tag {
+    display: inline-block;
+    background: rgba(232,39,42,0.12);
+    color: var(--red);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    margin-bottom: 20px;
+  }
+  #kz-custom-{{ section.id }} .custom-title {
+    font-family: var(--ff-display), sans-serif;
+    font-size: 48px;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: .95;
+    margin-bottom: 20px;
+    color: #F2F0EB;
+  }
+  #kz-custom-{{ section.id }} .custom-title em { font-style: normal; color: var(--red); }
+  #kz-custom-{{ section.id }} .custom-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+  #kz-custom-{{ section.id }} .custom-steps {
+    list-style: none;
+    margin: 0 0 32px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  #kz-custom-{{ section.id }} .custom-steps li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  #kz-custom-{{ section.id }} .step-check {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(232,39,42,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  #kz-custom-{{ section.id }} .step-check svg { width: 10px; height: 10px; stroke: var(--red); }
+  #kz-custom-{{ section.id }} .custom-btn {
+    background: var(--red);
+    color: #fff;
+    font-family: var(--ff-body), sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    transition: background .15s, transform .1s;
+  }
+  #kz-custom-{{ section.id }} .custom-btn:hover { background: #c41f22; transform: translateY(-1px); }
+
+  @media (max-width: 800px) {
+    #kz-custom-{{ section.id }} {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+  }
+</style>
+
+<div id="kz-custom-{{ section.id }}">
+  <div class="custom-visual">
+    {% if section.settings.visual_image != blank %}
+      <img src="{{ section.settings.visual_image | image_url: width: 900 }}" alt="{{ section.settings.visual_image.alt | default: section.settings.title_line1 }}" loading="lazy">
+    {% else %}
+      <div class="custom-visual-inner">KZ<br>GEAR</div>
+    {% endif %}
+    {% if section.settings.show_name_preview %}
+      <div class="custom-name-preview">{{ section.settings.name_preview_text }}</div>
+    {% endif %}
+    {% if section.settings.show_free_badge %}
+      <div class="free-badge">{{ section.settings.free_badge_text }}</div>
+    {% endif %}
+  </div>
+
+  <div class="custom-content">
+    <div class="custom-tag">{{ section.settings.tag }}</div>
+    <h2 class="custom-title">{{ section.settings.title_line1 }}<br><em>{{ section.settings.title_line2 }}</em></h2>
+    <p class="custom-desc">{{ section.settings.description }}</p>
+
+    {% if section.blocks.size > 0 %}
+      <ul class="custom-steps">
+        {% for block in section.blocks %}
+          <li {{ block.shopify_attributes }}>
+            <div class="step-check"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>
+            {{ block.settings.text }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <a href="{{ section.settings.button_link | default: '#' }}" class="custom-btn">{{ section.settings.button_text }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "KZ — Personalizzazione",
+  "tag": "section",
+  "class": "kz-customization-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Colore di sfondo",
+      "default": "#111111"
+    },
+    {
+      "type": "header",
+      "content": "Visual"
+    },
+    {
+      "type": "image_picker",
+      "id": "visual_image",
+      "label": "Immagine (opzionale)",
+      "info": "Se vuota, mostra il placeholder testuale \"KZ GEAR\""
+    },
+    {
+      "type": "checkbox",
+      "id": "show_name_preview",
+      "label": "Mostra anteprima nome personalizzato",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "name_preview_text",
+      "label": "Testo anteprima nome",
+      "default": "IL TUO NOME"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_free_badge",
+      "label": "Mostra badge \"Gratis\"",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "free_badge_text",
+      "label": "Testo badge",
+      "default": "Gratis"
+    },
+    {
+      "type": "header",
+      "content": "Testi"
+    },
+    {
+      "type": "text",
+      "id": "tag",
+      "label": "Tag",
+      "default": "Esclusiva Kombat Zone"
+    },
+    {
+      "type": "text",
+      "id": "title_line1",
+      "label": "Titolo riga 1",
+      "default": "Il tuo gear,"
+    },
+    {
+      "type": "text",
+      "id": "title_line2",
+      "label": "Titolo riga 2 (rossa)",
+      "default": "la tua firma."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descrizione",
+      "default": "Ogni prodotto Kombat Zone può essere personalizzato con il tuo nome, nickname o numero. Zero costo aggiuntivo. Pronto in 2 giorni."
+    },
+    {
+      "type": "header",
+      "content": "Bottone"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Testo bottone",
+      "default": "Personalizza il tuo set"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link bottone",
+      "info": "Collega a un prodotto o a una collezione personalizzabile"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Testo step",
+          "default": "Scegli il prodotto"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KZ — Personalizzazione",
+      "blocks": [
+        { "type": "step", "settings": { "text": "Scegli il prodotto" } },
+        { "type": "step", "settings": { "text": "Inserisci il testo nella nota dell'ordine" } },
+        { "type": "step", "settings": { "text": "Noi personalizziamo e spediamo — senza costi extra" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

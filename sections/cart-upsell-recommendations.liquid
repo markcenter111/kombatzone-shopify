@@ -1,0 +1,39 @@
+{%- comment -%}
+  sections/cart-upsell-recommendations.liquid
+  ----------------------------------------------------------------------
+  Sezione "di servizio": non va aggiunta manualmente da nessuna pagina e
+  infatti non ha "presets" nello schema, quindi non compare nel picker
+  "Aggiungi sezione" del theme editor (stesso meccanismo già visto per
+  main-cart: niente presets = invisibile nel picker).
+
+  Viene invocata SOLO via fetch lato client, dal JS di sections/main-cart.liquid,
+  chiamando l'endpoint nativo delle product recommendations di Shopify:
+
+    /recommendations/products
+      ?section_id=cart-upsell-recommendations
+      &product_id=<ID prodotto seme>
+      &limit=<numero risultati>
+      &intent=related|complementary
+
+  Quando la richiesta arriva da quell'endpoint, Shopify popola in automatico
+  l'oggetto globale `recommendations` e renderizza SOLO questo file (non
+  l'intera pagina), restituendo l'HTML pronto da iniettare nel DOM.
+
+  Le classi .kz-also-* sono definite (non scoperte alla section) dentro
+  sections/main-cart.liquid, perché lì il <style> viene caricato una sola
+  volta quando si apre il carrello, prima ancora che questa sezione venga
+  fetchata e iniettata.
+{%- endcomment -%}
+
+{%- if recommendations.performed and recommendations.products_count > 0 -%}
+  {%- for product in recommendations.products limit: 4 -%}
+    {%- render 'upsell-product-card', product: product -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Upsell carrello",
+  "tag": "section"
+}
+{% endschema %}

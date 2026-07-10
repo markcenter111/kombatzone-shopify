@@ -1,0 +1,130 @@
+{%- comment -%}
+  snippets/cart-item.liquid
+  ----------------------------------------------------------------------
+  Renderizza una singola riga del carrello.
+  Parametri attesi:
+    - item        : oggetto line item del cart (obbligatorio)
+    - item_index  : indice 1-based dell'item nel cart (obbligatorio, serve per /cart/change.js)
+
+  Gestisce due varianti di markup:
+    1) Riga prodotto normale (.kz-cart-item)
+    2) Riga "omaggio automatico" (.kz-free-gift), attivata quando il prodotto
+       ha il tag "omaggio-automatico". L'aggiunta automatica del prodotto va
+       gestita lato Shopify Function / app di automazione: questo snippet si
+       limita a mostrarla con lo stile dedicato, senza pulsanti qty/rimuovi.
+{%- endcomment -%}
+
+{%- assign is_free_gift = false -%}
+{%- if item.product.tags contains 'omaggio-automatico' -%}
+  {%- assign is_free_gift = true -%}
+{%- endif -%}
+
+{%- if is_free_gift -%}
+
+  <div class="kz-free-gift" data-cart-item data-free-gift>
+    <div class="kz-free-gift-img">
+      {%- if item.image -%}
+        <img src="{{ item.image | image_url: width: 160 }}" width="80" height="80" alt="{{ item.image.alt | default: item.product.title | escape }}" loading="lazy">
+      {%- else -%}
+        <i class="ti ti-gift" aria-hidden="true"></i>
+      {%- endif -%}
+    </div>
+    <div>
+      <div class="kz-free-tag">Omaggio aggiunto automaticamente</div>
+      <div class="kz-free-name">{{ item.product.title }}</div>
+      <div class="kz-free-desc">
+        {%- if item.product.metafields.custom.free_gift_note != blank -%}
+          {{ item.product.metafields.custom.free_gift_note }}
+        {%- else -%}
+          In omaggio per il tuo ordine — solo per te
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+{%- else -%}
+
+  <div class="kz-cart-item" data-cart-item data-line-index="{{ item_index }}" data-key="{{ item.key }}">
+
+    <a href="{{ item.url }}" class="kz-item-img" aria-label="{{ item.product.title | escape }}">
+      {%- if item.image -%}
+        <img src="{{ item.image | image_url: width: 240 }}" width="104" height="104" alt="{{ item.image.alt | default: item.product.title | escape }}" loading="lazy">
+      {%- else -%}
+        <i class="ti ti-photo" aria-hidden="true"></i>
+      {%- endif -%}
+
+      {%- comment -%} Badge: percentuale sconto se compare_at_price > price, altrimenti badge "SET" se prodotto è un kit {%- endcomment -%}
+      {%- if item.original_price > item.final_price -%}
+        {%- assign discount_pct = item.original_price | minus: item.final_price | times: 100.0 | divided_by: item.original_price | round -%}
+        <div class="kz-item-badge">−{{ discount_pct }}%</div>
+      {%- elsif item.product.type contains 'Set' or item.product.tags contains 'set-completo' -%}
+        <div class="kz-item-badge" style="background:#C9992A;">SET</div>
+      {%- endif -%}
+    </a>
+
+    <div class="kz-item-info">
+      <div class="kz-item-cat">
+        {{ item.product.type }}{% if item.product.type != blank and item.product.collections.first.title != blank %} · {% endif %}{{ item.product.collections.first.title }}
+      </div>
+
+      <a href="{{ item.url }}" class="kz-item-name" style="text-decoration:none;">
+        {{ item.product.title }}{% if item.variant.title != 'Default Title' %}<br>{{ item.variant.title }}{% endif %}
+      </a>
+
+      <div class="kz-item-meta">
+        {%- comment -%}
+          Se il prodotto ha più di una variante (es. taglie), mostriamo un
+          menu a tendina che permette di cambiarla direttamente dalla riga
+          del carrello, mantenendo la stessa quantità. Le varianti esaurite
+          restano visibili ma disabilitate.
+        {%- endcomment -%}
+        {%- if item.product.variants.size > 1 -%}
+          <select class="kz-item-size-select" data-variant-change data-line-index="{{ item_index }}" aria-label="Cambia taglia/variante">
+            {%- for variant in item.product.variants -%}
+              <option value="{{ variant.id }}" {% if variant.id == item.variant.id %}selected{% endif %} {% if variant.available == false and variant.id != item.variant.id %}disabled{% endif %}>
+                {{ variant.title }}{% if variant.available == false and variant.id != item.variant.id %} (esaurito){% endif %}
+              </option>
+            {%- endfor -%}
+          </select>
+        {%- else -%}
+          {%- for option in item.options_with_values -%}
+            <div class="kz-item-size">{{ option.value }}</div>
+          {%- endfor -%}
+        {%- endif -%}
+
+        {%- comment -%}
+          Proprietà di personalizzazione impostate come line item property,
+          es. {{ Personalizzazione: "LEONE" }} aggiunta da un campo custom nel form prodotto.
+          Le property che iniziano con "_" sono nascoste per convenzione Shopify e vanno escluse.
+        {%- endcomment -%}
+        {%- for property in item.properties -%}
+          {%- assign property_first_char = property[0] | slice: 0, 1 -%}
+          {%- if property[1] != blank and property_first_char != '_' -%}
+            <div class="kz-custom-tag">Personalizzato: "{{ property[1] }}"</div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <div class="kz-item-right">
+      <div>
+        <div class="kz-item-price-main">{{ item.final_price | money }}</div>
+        {%- if item.original_price > item.final_price -%}
+          <div class="kz-item-price-was">{{ item.original_price | money }}</div>
+          <div class="kz-item-save">Risparmi {{ item.original_price | minus: item.final_price | money }}</div>
+        {%- endif -%}
+      </div>
+
+      <div class="kz-qty" data-qty-wrap>
+        <button type="button" class="kz-qty-btn" data-qty-decrease aria-label="Diminuisci quantità">−</button>
+        <div class="kz-qty-val" data-qty-value>{{ item.quantity }}</div>
+        <button type="button" class="kz-qty-btn" data-qty-increase aria-label="Aumenta quantità">+</button>
+      </div>
+
+      <button type="button" class="kz-remove-btn" data-cart-remove>
+        <i class="ti ti-trash" aria-hidden="true"></i> Rimuovi
+      </button>
+    </div>
+  </div>
+
+{%- endif -%}

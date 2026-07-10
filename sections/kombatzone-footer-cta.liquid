@@ -1,0 +1,160 @@
+{% comment %}
+  KOMBAT ZONE — Footer CTA Band
+  File: sections/kombatzone-footer-cta.liquid
+  Come usarlo: Online Store → Temi → Modifica codice → Sections → Add a new section → incolla questo file
+  Poi vai su Customize e aggiungi la sezione "KZ — CTA finale" in fondo alla homepage,
+  prima del footer del tema (o del blocco footer-mini se lo usi separatamente).
+{% endcomment %}
+
+<style>
+  #kz-footer-cta-{{ section.id }} {
+    --bg1: #111111;
+    --red: #E8272A;
+    --text: #F2F0EB;
+    --text-dim: #888880;
+    --border: rgba(255,255,255,0.07);
+    --ff-display: 'Barlow Condensed', sans-serif;
+    --ff-body: 'Inter', sans-serif;
+    background: {{ section.settings.bg_color }};
+    border-top: 1px solid var(--border);
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    padding-left: 32px;
+    padding-right: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  #kz-footer-cta-{{ section.id }} .footer-cta-title {
+    font-family: var(--ff-display), sans-serif;
+    font-size: 36px;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  #kz-footer-cta-{{ section.id }} .footer-cta-sub {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  #kz-footer-cta-{{ section.id }} .footer-cta-btn {
+    background: var(--red);
+    color: #fff;
+    font-family: var(--ff-body), sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 16px 36px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    display: inline-block;
+    transition: background .15s, transform .1s;
+  }
+  #kz-footer-cta-{{ section.id }} .footer-cta-btn:hover {
+    background: #c41f22;
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 600px) {
+    #kz-footer-cta-{{ section.id }} {
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+    }
+    #kz-footer-cta-{{ section.id }} .footer-cta-btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>
+
+<div id="kz-footer-cta-{{ section.id }}">
+  <div class="footer-cta-text">
+    <div class="footer-cta-title">{{ section.settings.title }}</div>
+    <div class="footer-cta-sub">{{ section.settings.subtitle }}</div>
+  </div>
+  <a href="{{ section.settings.button_link | default: '#' }}" class="footer-cta-btn">{{ section.settings.button_text }} →</a>
+</div>
+
+{% schema %}
+{
+  "name": "KZ — CTA finale",
+  "tag": "section",
+  "class": "kz-footer-cta-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Colore di sfondo",
+      "default": "#111111"
+    },
+    {
+      "type": "header",
+      "content": "Altezza sezione"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Spazio sopra",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Spazio sotto",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Testi"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titolo",
+      "default": "Pronto a combattere?"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Sottotitolo",
+      "default": "Spedizione gratuita sopra €60 · Reso 30 giorni · Personalizzazione inclusa"
+    },
+    {
+      "type": "header",
+      "content": "Bottone"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Testo bottone",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link bottone",
+      "info": "Collega alla collezione principale o al prodotto più venduto"
+    }
+  ],
+  "presets": [
+    {
+      "name": "KZ — CTA finale"
+    }
+  ]
+}
+{% endschema %}

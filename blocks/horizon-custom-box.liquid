@@ -1,0 +1,88 @@
+{%- assign target_tag = block.settings.required_tag | downcase | strip -%}
+{%- assign show_box = false -%}
+
+{%- if target_tag == blank -%}
+  {%- assign show_box = true -%}
+{%- else -%}
+  {%- for tag in product.tags -%}
+    {%- assign cleaned_tag = tag | downcase | strip -%}
+    {%- if cleaned_tag == target_tag -%}
+      {%- assign show_box = true -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- if show_box -%}
+<div class="horizon-custom-wrapper" style="margin: 0px 0; border: 1px solid #eee; padding: 0px; border-radius: 4px, max-width: 100%;">
+  <label for="horizon-personalization" style="display: block; font-weight: 600; margin-bottom: 0px; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;">
+    {{ block.settings.label_text | default: "Personalizzazione" }}
+  </label>
+  
+  <input 
+    type="text" 
+    id="horizon-personalization" 
+    placeholder="{{ block.settings.placeholder_text }}"
+    style="width: 100%; padding: 0px; border: 1px solid #e1e1e1; border-radius: 0; -webkit-appearance: none;"
+    class="horizon-mirror-input"
+  >
+</div>
+
+<script>
+(function() {
+  const initPersonalization = function() {
+    const sourceInput = document.getElementById('horizon-personalization');
+    // Cerchiamo il form di Horizon in modo più aggressivo
+    const productForm = document.querySelector('form[action*="/cart/add"]');
+
+    if (productForm && sourceInput && !productForm.querySelector('.injected-prop')) {
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.className = 'injected-prop';
+      hiddenInput.name = 'properties[{{ block.settings.label_text | default: "Personalizzazione" }}]';
+      productForm.appendChild(hiddenInput);
+
+      sourceInput.addEventListener('input', function() {
+        hiddenInput.value = sourceInput.value;
+      });
+    }
+  };
+
+  // Esegui subito e anche dopo un secondo (per i temi AJAX come Horizon)
+  document.addEventListener("DOMContentLoaded", initPersonalization);
+  setTimeout(initPersonalization, 1500);
+})();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Horizon Custom Box",
+  "settings": [
+    {
+      "type": "text",
+      "id": "required_tag",
+      "label": "Tag Prodotto (Esatto)",
+      "info": "Il box apparirà solo se il prodotto ha questo tag (es: personalizzabile)",
+      "default": "personalizzabile"
+    },
+    {
+      "type": "text",
+      "id": "label_text",
+      "label": "Etichetta",
+      "default": "Custom Name"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_text",
+      "label": "Esempio nel campo",
+      "default": "..."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Horizon Custom Box"
+    }
+  ]
+}
+{% endschema %}

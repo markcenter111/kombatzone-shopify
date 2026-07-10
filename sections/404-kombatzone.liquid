@@ -1,0 +1,150 @@
+{% comment %}
+  ==========================================================================
+  sections/404-kombatzone.liquid — KombatZone
+  Sezione per la pagina di errore 404 — SOLO contenuto centrale.
+  Header e footer sono già forniti dal tema (theme.liquid).
+  ==========================================================================
+{% endcomment %}
+
+<style>
+.kz-404-main{background:#0a0a0a;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 32px;position:relative;text-align:center;font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+
+/* Estende lo sfondo nero anche al contenitore del tema, per evitare spazi bianchi
+   se il wrapper della pagina (#MainContent, .shopify-section, ecc.) ha un'altezza
+   minima forzata dal tema (es. min-height:100vh) più alta del contenuto reale. */
+body{background:#0a0a0a}
+
+/* Sfondo grafico — numero 404 enorme */
+.kz-bg-404{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;user-select:none;pointer-events:none;overflow:hidden}
+.kz-bg-404-text{font-size:clamp(140px,32vw,280px);font-weight:900;color:transparent;-webkit-text-stroke:1.5px #2c2c2c;letter-spacing:-.02em;line-height:1;white-space:nowrap;animation:kz-float 6s ease-in-out infinite}
+
+@keyframes kz-float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-12px)}
+}
+
+/* Linea rossa decorativa */
+.kz-red-line{width:48px;height:3px;background:#E8272A;margin:0 auto 20px;animation:kz-in .5s ease both}
+
+/* Etichetta */
+.kz-label{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#E8272A;margin-bottom:12px;animation:kz-in .5s .05s ease both}
+
+/* Titolo principale */
+.kz-title{font-size:42px;font-weight:900;color:#fff;text-transform:uppercase;line-height:1;letter-spacing:-.02em;margin-bottom:16px;animation:kz-in .5s .1s ease both}
+.kz-title em{color:#E8272A;font-style:normal}
+
+/* Sottotitolo */
+.kz-subtitle{font-size:14px;color:#888;line-height:1.65;max-width:400px;margin:0 auto 32px;animation:kz-in .5s .15s ease both}
+.kz-subtitle strong{color:#bbb;font-weight:500}
+
+/* CTA buttons */
+.kz-cta-row{display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap;animation:kz-in .5s .2s ease both}
+.kz-btn-primary{display:inline-flex;align-items:center;gap:8px;background:#E8272A;color:#fff;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:12px 24px;border-radius:6px;border:none;cursor:pointer;transition:background .2s,transform .15s;text-decoration:none}
+.kz-btn-primary:hover{background:#c41f22;transform:scale(1.03)}
+.kz-btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:#ccc;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:12px 22px;border-radius:6px;border:1px solid #444;cursor:pointer;transition:border-color .2s,color .2s,transform .15s;text-decoration:none}
+.kz-btn-ghost:hover{border-color:#888;color:#fff;transform:scale(1.03)}
+.kz-btn-icon{font-size:15px}
+
+/* Suggerimenti ricerca */
+.kz-suggestions{margin-top:40px;animation:kz-in .5s .25s ease both}
+.kz-suggestions-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#666;margin-bottom:12px}
+.kz-suggestions-pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.kz-pill{font-size:11px;font-weight:600;color:#ccc;background:#141414;border:0.5px solid #333;border-radius:99px;padding:5px 14px;cursor:pointer;letter-spacing:.03em;transition:border-color .2s,color .2s;text-decoration:none;display:inline-block}
+.kz-pill:hover{border-color:#E8272A;color:#E8272A}
+
+/* Animazione entrata */
+@keyframes kz-in{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+</style>
+
+<section class="kz-404-main">
+
+  <div class="kz-bg-404" aria-hidden="true">
+    <span class="kz-bg-404-text">404</span>
+  </div>
+
+  <div style="position:relative;z-index:1;width:100%">
+    <div class="kz-red-line" aria-hidden="true"></div>
+    <p class="kz-label">{{ section.settings.eyebrow }}</p>
+    <h1 class="kz-title">{{ section.settings.title }}<br><em>{{ section.settings.title_accent }}</em></h1>
+    <p class="kz-subtitle">
+      {{ section.settings.subtitle }}<br>
+      <strong>{{ section.settings.subtitle_bold }}</strong>
+    </p>
+
+    <div class="kz-cta-row">
+      <a href="{{ routes.root_url }}" class="kz-btn-primary">
+        <i class="ti ti-home kz-btn-icon" aria-hidden="true"></i>
+        {{ section.settings.btn_primary_label }}
+      </a>
+      <a href="{{ routes.all_products_collection_url }}" class="kz-btn-ghost">
+        <i class="ti ti-tag kz-btn-icon" aria-hidden="true"></i>
+        {{ section.settings.btn_ghost_label }}
+      </a>
+    </div>
+
+    {% if section.settings.show_suggestions %}
+      <div class="kz-suggestions">
+        <p class="kz-suggestions-label">{{ section.settings.suggestions_label }}</p>
+        <div class="kz-suggestions-pills">
+          {% for block in section.blocks %}
+            {% if block.type == 'pill' %}
+              {% assign kz_collection = block.settings.collection %}
+              {% if kz_collection != blank %}
+                <a href="{{ kz_collection.url }}" class="kz-pill" {{ block.shopify_attributes }}>
+                  {{ block.settings.label | default: kz_collection.title }}
+                </a>
+              {% elsif block.settings.label != blank %}
+                <a href="{{ routes.search_url }}?q={{ block.settings.label | url_encode }}" class="kz-pill" {{ block.shopify_attributes }}>
+                  {{ block.settings.label }}
+                </a>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "404 KombatZone",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Etichetta", "default": "Errore 404" },
+    { "type": "text", "id": "title", "label": "Titolo (riga 1)", "default": "Angolo" },
+    { "type": "text", "id": "title_accent", "label": "Titolo (riga 2, evidenziata in rosso)", "default": "sbagliato." },
+    { "type": "text", "id": "subtitle", "label": "Sottotitolo", "default": "La pagina che cerchi non esiste o è stata spostata." },
+    { "type": "text", "id": "subtitle_bold", "label": "Sottotitolo (grassetto)", "default": "Torna sul ring — il gear ti aspetta." },
+    { "type": "text", "id": "btn_primary_label", "label": "Testo pulsante primario", "default": "Torna alla home" },
+    { "type": "text", "id": "btn_ghost_label", "label": "Testo pulsante secondario", "default": "Sfoglia i prodotti" },
+    { "type": "checkbox", "id": "show_suggestions", "label": "Mostra suggerimenti di ricerca", "default": true },
+    { "type": "text", "id": "suggestions_label", "label": "Etichetta suggerimenti", "default": "Stavi cercando?" }
+  ],
+  "blocks": [
+    {
+      "type": "pill",
+      "name": "Categoria consigliata",
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Collezione", "info": "Scegli la collezione da consigliare. Se lasci vuoto, il pill rimanda a una ricerca sul testo qui sotto." },
+        { "type": "text", "id": "label", "label": "Testo del pill (opzionale)", "info": "Se vuoto, viene usato il nome della collezione." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "404 KombatZone",
+      "blocks": [
+        { "type": "pill", "settings": { "label": "Guantoni MMA" } },
+        { "type": "pill", "settings": { "label": "Fightset" } },
+        { "type": "pill", "settings": { "label": "Shorts Boxe" } },
+        { "type": "pill", "settings": { "label": "Personalizza gear" } },
+        { "type": "pill", "settings": { "label": "Guantoni Muay Thai" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

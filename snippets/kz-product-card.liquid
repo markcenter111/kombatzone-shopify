@@ -1,0 +1,114 @@
+{%- comment -%}
+  Snippet: snippets/kz-product-card.liquid
+  Expects: product (product object)
+{%- endcomment -%}
+
+{%- liquid
+  assign has_discount = false
+  if product.compare_at_price > product.price
+    assign has_discount = true
+    assign discount_pct = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price | round
+  endif
+
+  comment
+    Badge priority: tag badge → discount % → nothing
+    Supported tags: bestseller, novità, pro, top-rated
+  endcomment
+
+  assign badge_text  = ''
+  assign badge_color = ''
+
+  if product.tags contains 'bestseller'
+    assign badge_text  = 'BESTSELLER'
+    assign badge_color = '#E8272A'
+  elsif product.tags contains 'novità'
+    assign badge_text  = 'NOVITÀ'
+    assign badge_color = '#2196F3'
+  elsif product.tags contains 'pro'
+    assign badge_text  = 'PRO'
+    assign badge_color = '#8B5CF6'
+  elsif product.tags contains 'top-rated'
+    assign badge_text  = 'TOP RATED'
+    assign badge_color = '#F59E0B'
+  elsif has_discount
+    assign badge_text  = '-' | append: discount_pct | append: '%'
+    assign badge_color = '#E8272A'
+  endif
+
+  comment
+    Star rating: requires Shopify Product Reviews app or Judge.me
+    Metafields: product.metafields.reviews.rating  (value.rating)
+                product.metafields.reviews.rating_count (value)
+  endcomment
+  assign rating_value = product.metafields.reviews.rating.value.rating | default: 0 | times: 1
+  assign rating_count = product.metafields.reviews.rating_count.value  | default: 0
+
+  assign first_variant = product.variants.first
+-%}
+
+<div class="kz-card">
+
+  <a href="{{ product.url }}"
+     class="kz-card__image-wrap"
+     aria-label="{{ product.title | escape }}">
+
+    {%- if product.featured_image -%}
+      <img
+        src="{{ product.featured_image | image_url: width: 400 }}"
+        alt="{{ product.featured_image.alt | default: product.title | escape }}"
+        class="kz-card__image"
+        width="400"
+        height="400"
+        loading="lazy">
+    {%- else -%}
+      <div class="kz-card__image-placeholder" aria-hidden="true">🥊</div>
+    {%- endif -%}
+
+    {%- if badge_text != '' -%}
+      <div class="kz-card__badge" style="background:{{ badge_color }}">
+        {{- badge_text -}}
+      </div>
+    {%- endif -%}
+
+  </a>
+
+  <div class="kz-card__body">
+
+    <div class="kz-card__type">{{ product.type | upcase }}</div>
+
+    <a href="{{ product.url }}" class="kz-card__title">
+      {{- product.title -}}
+    </a>
+
+    {%- if rating_value > 0 -%}
+      <div class="kz-card__rating">
+        <span class="kz-card__stars" aria-label="{{ rating_value }} stelle su 5">
+          {%- for i in (1..5) -%}
+            {%- if i <= rating_value -%}★{%- else -%}☆{%- endif -%}
+          {%- endfor -%}
+        </span>
+        <span class="kz-card__review-count">({{ rating_count }})</span>
+      </div>
+    {%- endif -%}
+
+    <div class="kz-card__price">
+      <span class="kz-card__price-current">{{ product.price | money }}</span>
+      {%- if has_discount -%}
+        <span class="kz-card__price-old">{{ product.compare_at_price | money }}</span>
+      {%- endif -%}
+    </div>
+
+    <button
+      type="button"
+      class="kz-card__atc"
+      data-kz-modal="{{ product.handle }}"
+      {%- unless product.available %} disabled aria-disabled="true"{%- endunless %}>
+      {%- if product.available -%}
+        + AGGIUNGI AL CARRELLO
+      {%- else -%}
+        ESAURITO
+      {%- endif -%}
+    </button>
+
+  </div>
+</div>

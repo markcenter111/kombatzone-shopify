@@ -1,0 +1,314 @@
+{% comment %}
+  KOMBAT ZONE — Shop per Sport (Categorie)
+  File: sections/kombatzone-categories.liquid
+  Come usarlo: Online Store → Temi → Modifica codice → Sections → Add a new section → incolla questo file
+  Poi vai su Customize e aggiungi la sezione "KZ — Shop per sport" dove preferisci
+  (consigliato: subito sotto la trust strip, prima della griglia prodotti — è il primo
+  bivio che fa scegliere al cliente la sua disciplina, quindi va messo presto nella pagina).
+
+  Ogni "disciplina" è collegata a una collezione reale: il conteggio prodotti (es. "24 prodotti")
+  non è più testo finto, si aggiorna da solo in base a quanti prodotti ha la collezione collegata.
+{% endcomment %}
+
+<style>
+  #kz-cat-{{ section.id }} {
+    --bg0: #0a0a0a;
+    --bg2: #1a1a1a;
+    --red: #E8272A;
+    --text: #F2F0EB;
+    --text-dim: #888880;
+    --text-muted: #4a4a44;
+    --border: rgba(255,255,255,0.07);
+    --ff-display: 'Barlow Condensed', sans-serif;
+    background: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+  #kz-cat-{{ section.id }} .section-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+  #kz-cat-{{ section.id }} .section-title {
+    font-family: var(--ff-display), sans-serif;
+    font-size: 42px;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: .01em;
+    margin-bottom: 32px;
+    color: var(--text);
+  }
+  #kz-cat-{{ section.id }} .categories-grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    gap: 3px;
+  }
+  @media (max-width: 900px) {
+    #kz-cat-{{ section.id }} .categories-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    #kz-cat-{{ section.id }} .categories-grid { grid-template-columns: 1fr; }
+  }
+  #kz-cat-{{ section.id }} .cat-card {
+    position: relative;
+    background: var(--bg2);
+    overflow: hidden;
+    cursor: pointer;
+    aspect-ratio: 3/2;
+    display: flex;
+    align-items: flex-end;
+    border: 1px solid var(--border);
+    text-decoration: none;
+  }
+  #kz-cat-{{ section.id }} .cat-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  #kz-cat-{{ section.id }} .cat-bg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #kz-cat-{{ section.id }} .cat-icon {
+    font-size: 72px;
+    opacity: .12;
+    font-family: var(--ff-display), sans-serif;
+    font-weight: 900;
+  }
+  #kz-cat-{{ section.id }} .cat-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--red);
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  #kz-cat-{{ section.id }} .cat-card:hover .cat-bar { opacity: 1; }
+  #kz-cat-{{ section.id }} .cat-info {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+    width: 100%;
+    background: {% if section.settings.show_overlay %}linear-gradient(0deg, rgba(0,0,0,0.75) 0%, transparent 100%){% else %}transparent{% endif %};
+  }
+  #kz-cat-{{ section.id }} .cat-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  #kz-cat-{{ section.id }} .cat-name {
+    font-family: var(--ff-display), sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  #kz-cat-{{ section.id }} .cat-count {
+    font-size: 10px;
+    color: var(--red);
+    font-weight: 600;
+    letter-spacing: .08em;
+  }
+  #kz-cat-{{ section.id }} .cat-arrow {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: var(--text-muted);
+    opacity: 0;
+    transition: opacity .2s, transform .2s;
+    z-index: 2;
+  }
+  #kz-cat-{{ section.id }} .cat-card:hover .cat-arrow { opacity: 1; transform: translateX(4px); }
+</style>
+
+<div id="kz-cat-{{ section.id }}">
+  <div class="section-eyebrow">{{ section.settings.eyebrow }}</div>
+  <div class="section-title">{{ section.settings.title }}</div>
+
+  <div class="categories-grid">
+    {% for block in section.blocks %}
+      {% assign coll = block.settings.collection %}
+      <a class="cat-card"
+         href="{% if coll %}{{ coll.url }}{% else %}{{ block.settings.fallback_link | default: '#' }}{% endif %}"
+         {{ block.shopify_attributes }}>
+
+        {% if block.settings.image != blank %}
+          <img class="cat-img" src="{{ block.settings.image | image_url: width: 800 }}" alt="{{ block.settings.name }}" loading="lazy">
+        {% else %}
+          <div class="cat-bg"><div class="cat-icon">{{ block.settings.icon }}</div></div>
+        {% endif %}
+
+        <div class="cat-bar"></div>
+
+        <div class="cat-info">
+          <div class="cat-label">{{ block.settings.label }}</div>
+          <div class="cat-name">{{ block.settings.name }}</div>
+          <div class="cat-count">
+            {% if coll %}
+              {{ coll.all_products_count }} prodotti →
+            {% else %}
+              {{ block.settings.fallback_count_text }} →
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="cat-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "KZ — Shop per sport",
+  "tag": "section",
+  "class": "kz-categories-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Testi"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Scegli la tua disciplina"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titolo",
+      "default": "Shop per sport"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Colonne da desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay",
+      "label": "Sfumatura scura sotto al testo",
+      "info": "Consigliato attivo se usi foto reali, per leggere meglio il testo",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Colore di sfondo sezione",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "header",
+      "content": "Altezza sezione"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Spazio sopra",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Spazio sotto",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "sport",
+      "name": "Disciplina",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collezione",
+          "info": "Il conteggio prodotti e il link si aggiornano da soli in base a questa collezione"
+        },
+        {
+          "type": "url",
+          "id": "fallback_link",
+          "label": "Link alternativo (solo se non scegli una collezione)"
+        },
+        {
+          "type": "text",
+          "id": "fallback_count_text",
+          "label": "Testo conteggio alternativo (solo se non scegli una collezione)",
+          "default": "Scopri i prodotti"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Etichetta sopra il nome",
+          "default": "Disciplina"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Nome disciplina",
+          "default": "Boxe"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Immagine (opzionale)",
+          "info": "Se vuota, mostra l'emoji come icona di sfondo"
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Emoji (se non carichi un'immagine)",
+          "default": "🥊"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KZ — Shop per sport",
+      "blocks": [
+        { "type": "sport", "settings": { "label": "Disciplina", "name": "Boxe", "icon": "🥊" } },
+        { "type": "sport", "settings": { "label": "Disciplina", "name": "MMA", "icon": "🥋" } },
+        { "type": "sport", "settings": { "label": "Disciplina", "name": "Muay Thai", "icon": "🦵" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

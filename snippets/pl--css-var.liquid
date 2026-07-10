@@ -1,0 +1,33 @@
+{% doc %}
+  Helper for creating CSS variables with custom value support and default fallbacks.
+
+  @param {string} variableName - The CSS custom property name (without `--` prefix).
+  @param {string} baseValue - The primary/default value of the variable.
+  @param {string} [baseUnit] - The unit to apply to the base value (e.g. "px", "%").
+  @param {string} [overrideTrigger] - The sentinel value that, if matched by baseValue, causes the override value to be used instead.
+  @param {string} [overrideValue] - The value to use if baseValue equals overrideTrigger.
+  @param {string} [overrideUnit] - The unit to apply to overrideValue (if used).
+  @param {string} [defaultValue] - Default value to use when baseValue is not overrideTrigger.
+  @param {string} [defaultValueUnit] - The unit to apply to defaultValue (if used).
+
+  @example
+  {% render 'pl--css-var',
+    variableName: 'pl-width',
+    baseValue: block.settings.width,
+    overrideTrigger: 'custom',
+    overrideValue: block.settings.custom_width,
+    overrideUnit: block.settings.custom_width_unit,
+    defaultValue: 'auto'
+  %}
+{% enddoc %}
+
+{%- if baseValue == overrideTrigger and overrideValue != blank -%}
+  --{{ variableName }}: {{ overrideValue -}}
+  {%- if overrideUnit %}{{ overrideUnit }}{% endif %};
+{%- elsif defaultValue != blank -%}
+  --{{ variableName }}: {{ defaultValue -}}
+  {%- if defaultValueUnit %}{{ defaultValueUnit }}{% endif %};
+{%- elsif baseValue != blank -%}
+  --{{ variableName }}: {{ baseValue -}}
+  {%- if baseUnit %}{{ baseUnit }}{% endif %};
+{%- endif -%}

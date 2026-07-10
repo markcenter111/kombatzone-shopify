@@ -1,0 +1,342 @@
+{%- comment -%}
+  Section: sections/kz2-collections.liquid
+  Bento grid di collezioni — hero + N card secondarie.
+  Desktop: hero a sinistra (60%), secondarie a destra (40%) in colonna.
+  Mobile:  hero full width + secondarie in griglia 2 colonne.
+  Sezioni multiple: aggiungibile più volte dal Customizer.
+{%- endcomment -%}
+
+{{ 'kz2-collections.css' | asset_url | stylesheet_tag }}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background: #0a0a0a !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+</style>
+
+<script>
+(function () {
+  function coverGap() {
+    var el = document.getElementById('shopify-section-{{ section.id }}');
+    if (!el) return;
+
+    /* 1. Risali il DOM e rendi scuro ogni antenato con background bianco */
+    var node = el.parentElement;
+    while (node && node !== document.body) {
+      var bg = window.getComputedStyle(node).backgroundColor;
+      /* rgb(255,255,255) = bianco puro, rgba(0,0,0,0) = trasparente */
+      if (bg === 'rgb(255, 255, 255)' || bg === 'rgba(0, 0, 0, 0)') {
+        node.style.setProperty('background-color', '#0a0a0a', 'important');
+      }
+      node = node.parentElement;
+    }
+
+    /* 2. Misura il gap verso il prossimo elemento e lo copre */
+    el.style.paddingBottom = '0px';
+    var next = el.nextElementSibling;
+    if (!next) return;
+    var gap = Math.ceil(next.getBoundingClientRect().top - el.getBoundingClientRect().bottom);
+    if (gap > 0) el.style.paddingBottom = gap + 'px';
+  }
+
+  /* Esegui in più momenti per sicurezza */
+  document.addEventListener('DOMContentLoaded', coverGap);
+  window.addEventListener('load', coverGap);
+  window.addEventListener('load', function () { setTimeout(coverGap, 400); });
+  window.addEventListener('resize', coverGap);
+})();
+</script>
+
+{%- liquid
+  assign padding = section.settings.section_padding | append: 'px'
+-%}
+
+<section class="kz2-coll"
+         style="padding-top:{{ padding }};padding-bottom:{{ padding }};background:#0a0a0a;"
+         aria-labelledby="kz2-coll-title-{{ section.id }}">
+
+  {%- comment -%} ── Header ── {%- endcomment -%}
+  <div class="kz2-coll__header">
+    <div class="kz2-coll__header-left">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="kz2-coll__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h2 class="kz2-coll__title" id="kz2-coll-title-{{ section.id }}">
+        {{- section.settings.title_plain -}}
+        {%- if section.settings.title_accent != blank -%}
+          <em>{{ section.settings.title_accent }}</em>
+        {%- endif -%}
+      </h2>
+      {%- if section.settings.subtitle != blank -%}
+        <p class="kz2-coll__subtitle">{{ section.settings.subtitle }}</p>
+      {%- endif -%}
+    </div>
+    {%- if section.settings.link_url != blank and section.settings.link_label != blank -%}
+      <a href="{{ section.settings.link_url }}" class="kz2-coll__link-all">
+        {{ section.settings.link_label }} &rarr;
+      </a>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} ── Grid ── {%- endcomment -%}
+  {%- if section.blocks.size > 0 -%}
+
+    <div class="kz2-coll__grid">
+
+      {%- comment -%} Prima card = sempre HERO {%- endcomment -%}
+      {%- assign hero = section.blocks.first -%}
+      {%- assign hero_coll = collections[hero.settings.collection] -%}
+
+      <div class="kz2-card kz2-card--hero{% if hero.settings.is_accent %} kz2-card--accent{% endif %}"
+           {{ hero.shopify_attributes }}>
+        <a href="{{ hero_coll.url | default: '#' }}" class="kz2-card__img-wrap" tabindex="-1" aria-hidden="true">
+          {%- if hero.settings.image -%}
+            <img src="{{ hero.settings.image | image_url: width: 900 }}"
+                 alt="{{ hero.settings.image.alt | default: hero_coll.title | escape }}"
+                 class="kz2-card__img" width="900" loading="lazy">
+          {%- elsif hero_coll.image -%}
+            <img src="{{ hero_coll.image | image_url: width: 900 }}"
+                 alt="{{ hero_coll.image.alt | default: hero_coll.title | escape }}"
+                 class="kz2-card__img" width="900" loading="lazy">
+          {%- else -%}
+            <div class="kz2-card__img-placeholder">🥊</div>
+          {%- endif -%}
+        </a>
+        <div class="kz2-card__overlay-top" aria-hidden="true"></div>
+        <div class="kz2-card__overlay" aria-hidden="true"></div>
+        {%- if hero_coll.all_products_count > 0 -%}
+          <div class="kz2-card__count">{{ hero_coll.all_products_count }} prodott{{ hero_coll.all_products_count | pluralize: 'o', 'i' }}</div>
+        {%- endif -%}
+        {%- if hero.settings.badge != blank -%}
+          <div class="kz2-card__badge">{{ hero.settings.badge }}</div>
+        {%- endif -%}
+        <div class="kz2-card__body">
+          {%- if hero.settings.tag != blank -%}
+            <p class="kz2-card__tag">{{ hero.settings.tag }}</p>
+          {%- endif -%}
+          <h3 class="kz2-card__name">{{ hero.settings.title_override | default: hero_coll.title }}</h3>
+          {%- if hero.settings.description != blank -%}
+            <p class="kz2-card__desc">{{ hero.settings.description }}</p>
+          {%- endif -%}
+          <a href="{{ hero_coll.url | default: '#' }}" class="kz2-card__cta">
+            {{ hero.settings.cta_text | default: 'Scopri' }} &rarr;
+          </a>
+        </div>
+      </div>
+
+      {%- comment -%} Card secondarie — tutte tranne la prima {%- endcomment -%}
+      {%- if section.blocks.size > 1 -%}
+        <div class="kz2-coll__secondaries">
+          {%- for block in section.blocks -%}
+            {%- unless forloop.first -%}
+              {%- assign coll = collections[block.settings.collection] -%}
+              <div class="kz2-card kz2-card--sm{% if block.settings.is_accent %} kz2-card--accent{% endif %}"
+                   {{ block.shopify_attributes }}>
+                <a href="{{ coll.url | default: '#' }}" class="kz2-card__img-wrap" tabindex="-1" aria-hidden="true">
+                  {%- if block.settings.image -%}
+                    <img src="{{ block.settings.image | image_url: width: 600 }}"
+                         alt="{{ block.settings.image.alt | default: coll.title | escape }}"
+                         class="kz2-card__img" width="600" loading="lazy">
+                  {%- elsif coll.image -%}
+                    <img src="{{ coll.image | image_url: width: 600 }}"
+                         alt="{{ coll.image.alt | default: coll.title | escape }}"
+                         class="kz2-card__img" width="600" loading="lazy">
+                  {%- else -%}
+                    <div class="kz2-card__img-placeholder">🥋</div>
+                  {%- endif -%}
+                </a>
+                <div class="kz2-card__overlay-top" aria-hidden="true"></div>
+                <div class="kz2-card__overlay" aria-hidden="true"></div>
+                {%- if coll.all_products_count > 0 -%}
+                  <div class="kz2-card__count">{{ coll.all_products_count }}</div>
+                {%- endif -%}
+                {%- if block.settings.badge != blank -%}
+                  <div class="kz2-card__badge">{{ block.settings.badge }}</div>
+                {%- endif -%}
+                <div class="kz2-card__body">
+                  {%- if block.settings.tag != blank -%}
+                    <p class="kz2-card__tag">{{ block.settings.tag }}</p>
+                  {%- endif -%}
+                  <h3 class="kz2-card__name">{{ block.settings.title_override | default: coll.title }}</h3>
+                  {%- if block.settings.description != blank -%}
+                    <p class="kz2-card__desc">{{ block.settings.description }}</p>
+                  {%- endif -%}
+                  <a href="{{ coll.url | default: '#' }}" class="kz2-card__cta">
+                    {{ block.settings.cta_text | default: 'Esplora' }} &rarr;
+                  </a>
+                </div>
+              </div>
+            {%- endunless -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+    </div>
+
+  {%- else -%}
+    <p class="kz2-coll__empty">Aggiungi collezioni dal Customizer per visualizzarle qui.</p>
+  {%- endif -%}
+
+</section>
+
+{% schema %}
+{
+  "name": "KZ Collections v2",
+  "tag": "div",
+  "class": "kz2-coll-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Intestazione"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Testo piccolo sopra il titolo",
+      "default": "Gear da combattimento"
+    },
+    {
+      "type": "text",
+      "id": "title_plain",
+      "label": "Titolo — parte normale",
+      "default": "Scegli il tuo"
+    },
+    {
+      "type": "text",
+      "id": "title_accent",
+      "label": "Titolo — parte rossa",
+      "default": "mondo."
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Sottotitolo",
+      "default": "Ogni disciplina ha il suo gear — trova quello che fa per te."
+    },
+    {
+      "type": "header",
+      "content": "Link vedi tutto"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Testo link",
+      "default": "Vedi tutto"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "URL link"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Spazio verticale (px)",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_card",
+      "name": "Collezione",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collezione"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Immagine personalizzata",
+          "info": "Sovrascrive l'immagine della collezione"
+        },
+        {
+          "type": "header",
+          "content": "Testi"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Tag sopra il titolo",
+          "info": "Es. La più venduta · Mobility · Training"
+        },
+        {
+          "type": "text",
+          "id": "title_override",
+          "label": "Titolo personalizzato",
+          "info": "Lascia vuoto per usare il nome della collezione"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Descrizione breve"
+        },
+        {
+          "type": "text",
+          "id": "cta_text",
+          "label": "Testo bottone",
+          "default": "Scopri"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge in alto a sinistra",
+          "info": "Es. Nuovi arrivi · Top seller. Lascia vuoto per nasconderlo."
+        },
+        {
+          "type": "header",
+          "content": "Stile"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_accent",
+          "label": "Bordo rosso accent",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KZ Collections v2",
+      "blocks": [
+        {
+          "type": "collection_card",
+          "settings": {
+            "tag": "La più venduta",
+            "description": "Set completi con il tuo nome — guantoni, shorts e protezioni in un colpo solo.",
+            "cta_text": "Scopri i set",
+            "is_accent": true
+          }
+        },
+        {
+          "type": "collection_card",
+          "settings": {
+            "tag": "Training",
+            "cta_text": "Esplora"
+          }
+        },
+        {
+          "type": "collection_card",
+          "settings": {
+            "tag": "Mobility",
+            "badge": "Nuovi arrivi",
+            "cta_text": "Scopri"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

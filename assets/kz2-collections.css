@@ -1,0 +1,329 @@
+/* =========================================================
+   KombatZone – Collections Bento Grid v2
+   File: assets/kz2-collections.css
+   ========================================================= */
+
+:root {
+  --kz2-red:    #E8272A;
+  --kz2-dark:   #0a0a0a;
+  --kz2-card:   #111;
+  --kz2-border: #1e1e1e;
+}
+
+/* ---------------------------------------------------------
+   Wrapper
+   --------------------------------------------------------- */
+.kz2-coll-wrap {
+  background: var(--kz2-dark);
+  margin: 0;
+  padding: 0;
+}
+
+.kz2-coll {
+  background: var(--kz2-dark);
+  padding-left: 28px;
+  padding-right: 28px;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+}
+
+/* ---------------------------------------------------------
+   Header
+   --------------------------------------------------------- */
+.kz2-coll__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.kz2-coll__header-left { flex: 1; }
+
+.kz2-coll__eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #555;
+  margin: 0 0 7px;
+}
+.kz2-coll__title {
+  font-size: 28px;
+  font-weight: 900;
+  color: #fff;
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: -.01em;
+  margin: 0 0 6px;
+}
+.kz2-coll__title em { color: var(--kz2-red); font-style: normal; }
+
+.kz2-coll__subtitle {
+  font-size: 13px;
+  color: #555;
+  margin: 0;
+  line-height: 1.5;
+}
+.kz2-coll__link-all {
+  font-size: 11px;
+  font-weight: 700;
+  color: #666;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 0.5px solid #333;
+  padding-bottom: 2px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  align-self: flex-end;
+  transition: color .2s, border-color .2s;
+}
+.kz2-coll__link-all:hover { color: var(--kz2-red); border-color: var(--kz2-red); }
+
+/* ---------------------------------------------------------
+   Bento Grid — Desktop
+   Hero (sinistra) + Secondarie (destra in colonna)
+   --------------------------------------------------------- */
+.kz2-coll__grid {
+  display: grid;
+  grid-template-columns: 1.65fr 1fr;
+  gap: 10px;
+  align-items: stretch;
+}
+
+/* Colonna destra: secondarie impilate */
+.kz2-coll__secondaries {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+/* Con 4+ secondarie: due colonne nella colonna destra */
+.kz2-coll__secondaries:has(.kz2-card--sm:nth-child(3)) {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* ---------------------------------------------------------
+   Card base
+   --------------------------------------------------------- */
+.kz2-card {
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  background: var(--kz2-card);
+  border: 1px solid var(--kz2-border);
+  display: block;
+  animation: kz2-card-in .5s cubic-bezier(.4,0,.2,1) both;
+}
+.kz2-card:nth-child(1) { animation-delay: .05s; }
+.kz2-card:nth-child(2) { animation-delay: .15s; }
+.kz2-card:nth-child(3) { animation-delay: .25s; }
+.kz2-card:nth-child(4) { animation-delay: .35s; }
+.kz2-card:nth-child(5) { animation-delay: .45s; }
+
+@keyframes kz2-card-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Immagine */
+.kz2-card__img-wrap {
+  display: block;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.kz2-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(.72);
+  transition: transform .6s cubic-bezier(.4,0,.2,1), filter .4s ease;
+}
+.kz2-card:hover .kz2-card__img {
+  transform: scale(1.05);
+  filter: brightness(.5);
+}
+.kz2-card__img-placeholder {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64px;
+  background: linear-gradient(135deg, #1a1a1a, #222);
+}
+
+/* Overlay */
+.kz2-card__overlay-top {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,.28) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 1;
+}
+.kz2-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(170deg, transparent 25%, rgba(0,0,0,.9) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Count, badge, body */
+.kz2-card__count {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(0,0,0,.62);
+  border: 0.5px solid rgba(255,255,255,.14);
+  border-radius: 99px;
+  padding: 3px 10px;
+  font-size: 10px;
+  color: rgba(255,255,255,.55);
+  font-weight: 600;
+  z-index: 2;
+  letter-spacing: .03em;
+}
+.kz2-card__badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: var(--kz2-red);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 99px;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  z-index: 2;
+}
+.kz2-card__body {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  z-index: 2;
+}
+.kz2-card__tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.45);
+  margin: 0 0 5px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.kz2-card__tag::before {
+  content: '';
+  width: 14px;
+  height: 1px;
+  background: var(--kz2-red);
+  flex-shrink: 0;
+}
+.kz2-card__name {
+  font-size: 22px;
+  font-weight: 900;
+  color: #fff;
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: -.01em;
+  margin: 0 0 5px;
+}
+.kz2-card__desc {
+  font-size: 11px;
+  color: rgba(255,255,255,.52);
+  line-height: 1.55;
+  margin: 0 0 13px;
+  max-width: 280px;
+}
+.kz2-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  text-decoration: none;
+  transition: gap .2s, color .2s;
+}
+.kz2-card:hover .kz2-card__cta { gap: 9px; color: var(--kz2-red); }
+
+.kz2-card--accent { border-color: rgba(232,39,42,.45); }
+
+/* ---------------------------------------------------------
+   Card Hero
+   --------------------------------------------------------- */
+.kz2-card--hero {
+  min-height: 420px;
+}
+.kz2-card--hero .kz2-card__img-placeholder { font-size: 90px; }
+.kz2-card--hero .kz2-card__name  { font-size: 30px; }
+.kz2-card--hero .kz2-card__desc  { font-size: 13px; color: rgba(255,255,255,.6); }
+.kz2-card--hero .kz2-card__cta   { font-size: 12px; }
+.kz2-card--hero .kz2-card__body  { padding: 24px; }
+
+/* ---------------------------------------------------------
+   Card Secondaria
+   --------------------------------------------------------- */
+.kz2-card--sm { min-height: 190px; }
+.kz2-card--sm .kz2-card__img-placeholder { font-size: 42px; }
+.kz2-card--sm .kz2-card__name  { font-size: 17px; }
+.kz2-card--sm .kz2-card__body  { padding: 14px; }
+.kz2-card--sm .kz2-card__desc  { display: none; }
+
+/* ---------------------------------------------------------
+   Empty state
+   --------------------------------------------------------- */
+.kz2-coll__empty {
+  color: #555;
+  font-size: 14px;
+  text-align: center;
+  padding: 48px 0;
+}
+
+/* ---------------------------------------------------------
+   Mobile
+   --------------------------------------------------------- */
+@media (max-width: 768px) {
+  .kz2-coll { padding-left: 16px; padding-right: 16px; }
+
+  .kz2-coll__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+  .kz2-coll__title { font-size: 22px; }
+
+  /* Grid: colonna singola — hero sopra, secondarie sotto */
+  .kz2-coll__grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Hero ridotta su mobile */
+  .kz2-card--hero {
+    min-height: 260px;
+  }
+  .kz2-card--hero .kz2-card__name { font-size: 24px; }
+  .kz2-card--hero .kz2-card__desc { font-size: 11px; display: block; }
+
+  /* Secondarie: sempre 2 colonne su mobile */
+  .kz2-coll__secondaries {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .kz2-card--sm { min-height: 160px; }
+  .kz2-card--sm .kz2-card__name { font-size: 14px; }
+  .kz2-card--sm .kz2-card__body { padding: 10px; }
+  .kz2-card--sm .kz2-card__count { font-size: 9px; padding: 2px 7px; top: 8px; right: 8px; }
+  .kz2-card--sm .kz2-card__badge { font-size: 8px; padding: 2px 7px; top: 8px; left: 8px; }
+}

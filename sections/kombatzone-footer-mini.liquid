@@ -1,0 +1,144 @@
+{% comment %}
+  KOMBAT ZONE — Footer Mini
+  File: sections/kombatzone-footer-mini.liquid
+  Come usarlo: Online Store → Temi → Modifica codice → Sections → Add a new section → incolla questo file
+  Poi vai su Customize e aggiungi la sezione "KZ — Footer mini" in fondo alla homepage
+  (sotto la sezione "KZ — CTA finale"). Se il tuo tema ha già un footer completo,
+  usa questa sezione al posto di quello, oppure tienila come barra di chiusura extra.
+{% endcomment %}
+
+<style>
+  #kz-footer-mini-{{ section.id }} {
+    --bg0: #0a0a0a;
+    --text-muted: #4a4a44;
+    --text-dim: #888880;
+    --border: rgba(255,255,255,0.07);
+    background: {{ section.settings.bg_color }};
+    border-top: 1px solid var(--border);
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    padding-left: 32px;
+    padding-right: 32px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  #kz-footer-mini-{{ section.id }} .footer-copy {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  #kz-footer-mini-{{ section.id }} .footer-links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  #kz-footer-mini-{{ section.id }} .footer-links a {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color .15s;
+    cursor: pointer;
+  }
+  #kz-footer-mini-{{ section.id }} .footer-links a:hover {
+    color: var(--text-dim);
+  }
+
+  @media (max-width: 500px) {
+    #kz-footer-mini-{{ section.id }} {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+
+<div id="kz-footer-mini-{{ section.id }}">
+  <div class="footer-copy">{{ section.settings.copy_text }}</div>
+  <div class="footer-links">
+    {% for block in section.blocks %}
+      <a href="{{ block.settings.link | default: '#' }}" {{ block.shopify_attributes }}>{{ block.settings.label }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "KZ — Footer mini",
+  "tag": "section",
+  "class": "kz-footer-mini-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Colore di sfondo",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "header",
+      "content": "Altezza sezione"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Spazio sopra",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Spazio sotto",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Testi"
+    },
+    {
+      "type": "text",
+      "id": "copy_text",
+      "label": "Testo copyright",
+      "default": "© 2026 Kombat Zone. Tutti i diritti riservati."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Testo link",
+          "default": "Privacy"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KZ — Footer mini",
+      "blocks": [
+        { "type": "link", "settings": { "label": "Privacy" } },
+        { "type": "link", "settings": { "label": "Spedizioni" } },
+        { "type": "link", "settings": { "label": "Resi" } },
+        { "type": "link", "settings": { "label": "Contatti" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

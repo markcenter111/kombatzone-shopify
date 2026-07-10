@@ -1,0 +1,357 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --kz-bg0: #0a0a0a;
+    --kz-red: #E8272A;
+    --kz-text: #F2F0EB;
+    --kz-text-dim: #888880;
+    --kz-border: rgba(255,255,255,0.07);
+    --kz-ff-display: 'Barlow Condensed', sans-serif;
+    --kz-ff-body: 'Inter', sans-serif;
+  }
+
+  /* Placeholder che riserva lo spazio fisico dell'header fisso */
+  .kz-header-placeholder {
+    height: 60px;
+    display: block;
+  }
+
+  .kz-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    height: 60px;
+    border-bottom: 1px solid var(--kz-border);
+    background: rgba(10,10,10,0.97);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 9999;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    margin: 0;
+    box-sizing: border-box;
+    transition: box-shadow .25s ease, background .25s ease;
+  }
+
+  /* Stato scrollato: shadow nera + linea rossa premium */
+  .kz-nav.kz-scrolled {
+    background: rgba(10,10,10,0.99);
+    border-bottom: 2px solid #E8272A;
+    box-shadow: 0 2px 28px rgba(0,0,0,0.75), 0 0 16px rgba(232,39,42,0.2);
+  }
+
+  .kz-nav-logo {
+    font-family: var(--kz-ff-display);
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: .08em;
+    color: var(--kz-text);
+    text-decoration: none;
+  }
+  .kz-nav-logo span { color: var(--kz-red); }
+
+  .kz-nav-links {
+    display: flex;
+    gap: 28px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--kz-text-dim);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .kz-nav-links li a {
+    color: inherit;
+    text-decoration: none;
+    transition: color .15s;
+  }
+  .kz-nav-links li a:hover { color: var(--kz-text); }
+
+  .kz-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .kz-nav-cta {
+    background: var(--kz-red);
+    color: #fff;
+    font-family: var(--kz-ff-body);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 8px 18px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background .15s;
+  }
+  .kz-nav-cta:hover { background: #c41f22; color: #fff; }
+  .kz-nav-mobile .kz-nav-cta,
+  .kz-nav-mobile .kz-nav-cta:hover { color: #fff; }
+
+  /* Icone: ricerca / account / carrello */
+  .kz-nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .kz-nav-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    color: var(--kz-text);
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: color .15s, background .15s, border-color .15s;
+  }
+  .kz-nav-icon svg {
+    width: 21px;
+    height: 21px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2.25;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+  }
+  .kz-nav-icon:hover {
+    color: var(--kz-text);
+    background: rgba(232,39,42,0.14);
+    border-color: rgba(232,39,42,0.4);
+  }
+
+  .kz-cart-count {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    min-width: 14px;
+    height: 14px;
+    padding: 0 3px;
+    background: var(--kz-red);
+    color: #fff;
+    font-family: var(--kz-ff-body);
+    font-size: 9px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    border-radius: 999px;
+  }
+
+  /* Mobile */
+  .kz-nav-hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+  .kz-nav-hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--kz-text);
+    transition: all .2s;
+  }
+
+  .kz-nav-mobile {
+    display: none;
+    flex-direction: column;
+    background: rgba(10,10,10,0.98);
+    border-top: 1px solid var(--kz-border);
+    padding: 20px 32px;
+    gap: 16px;
+  }
+  .kz-nav-mobile.open { display: flex; }
+  .kz-nav-mobile a {
+    font-family: var(--kz-ff-body);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--kz-text-dim);
+    text-decoration: none;
+    transition: color .15s;
+  }
+  .kz-nav-mobile a:hover { color: var(--kz-text); }
+
+  @media (max-width: 768px) {
+    .kz-nav-links { display: none; }
+    .kz-nav-hamburger { display: flex; }
+    .kz-nav { padding: 0 20px; }
+    .kz-nav-icons { gap: 2px; }
+    .kz-header-placeholder { height: 60px; }
+  }
+</style>
+
+<!-- Riserva lo spazio fisico perché il nav è fixed e non occupa flusso -->
+<div class="kz-header-placeholder"></div>
+
+<header>
+  <nav class="kz-nav">
+
+    <!-- Logo -->
+    <a href="{{ routes.root_url }}" class="kz-nav-logo">
+      {{ section.settings.logo_text_1 }}<span>{{ section.settings.logo_text_2 }}</span>
+    </a>
+
+    <!-- Links desktop -->
+    <ul class="kz-nav-links">
+      {% for block in section.blocks %}
+        {% if block.type == 'nav_link' %}
+          <li {{ block.shopify_attributes }}>
+            <a href="{{ block.settings.link_url }}">{{ block.settings.link_label }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+
+    <!-- Destra: icone + hamburger -->
+    <div class="kz-nav-right">
+      <div class="kz-nav-icons">
+
+        <!-- Ricerca: rimanda alla pagina/collezione scelta nelle impostazioni, altrimenti alla ricerca generica -->
+        <a href="{{ section.settings.search_url | default: routes.search_url }}" class="kz-nav-icon" aria-label="Cerca">
+          <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20 15.5 15.5"/></svg>
+        </a>
+
+        <!-- Account: porta al profilo se loggato, al login se no (stesso comportamento del codice Shopify di base) -->
+        <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="kz-nav-icon" aria-label="Account">
+          <svg viewBox="0 0 24 24"><path d="M12 3 4 6.5v4c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10v-4L12 3Z"/><circle cx="12" cy="10.5" r="2.5"/></svg>
+        </a>
+
+        <!-- Carrello -->
+        <a href="{{ routes.cart_url }}" class="kz-nav-icon" aria-label="Carrello">
+          <svg viewBox="0 0 24 24"><path d="M3 6h2l1.6 11.2A2 2 0 0 0 8.6 19h9.3a2 2 0 0 0 2-1.7L21 9H6"/><path d="M9 6V5a3 3 0 0 1 6 0v1"/><circle cx="9.5" cy="21.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="17.5" cy="21.5" r="1.1" fill="currentColor" stroke="none"/></svg>
+          {% if cart.item_count > 0 %}
+            <span class="kz-cart-count">{{ cart.item_count }}</span>
+          {% endif %}
+        </a>
+
+      </div>
+      <button class="kz-nav-hamburger" aria-label="Menu" onclick="document.getElementById('kz-mobile-menu').classList.toggle('open')">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+  </nav>
+
+  <!-- Menu mobile -->
+  <div class="kz-nav-mobile" id="kz-mobile-menu">
+    {% for block in section.blocks %}
+      {% if block.type == 'nav_link' %}
+        <a href="{{ block.settings.link_url }}">{{ block.settings.link_label }}</a>
+      {% endif %}
+    {% endfor %}
+    <a href="{{ section.settings.cta_url }}" class="kz-nav-cta" style="text-align:center;">{{ section.settings.cta_label }}</a>
+  </div>
+</header>
+
+<script>
+  (function () {
+    var nav = document.querySelector('.kz-nav');
+    if (!nav) return;
+
+    var scrolled = false;
+    var threshold = 10; // pixel dopo i quali scatta l'effetto
+
+    function onScroll() {
+      var y = window.scrollY || window.pageYOffset;
+      if (y > threshold && !scrolled) {
+        nav.classList.add('kz-scrolled');
+        scrolled = true;
+      } else if (y <= threshold && scrolled) {
+        nav.classList.remove('kz-scrolled');
+        scrolled = false;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll(); // applica subito se la pagina è già scrollata al caricamento
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "KZ Header",
+  "tag": "div",
+  "class": "kz-header-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "logo_text_1",
+      "label": "Logo — prima parte",
+      "default": "KOMBAT"
+    },
+    {
+      "type": "text",
+      "id": "logo_text_2",
+      "label": "Logo — seconda parte (rossa)",
+      "default": "ZONE"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Testo bottone CTA",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Link bottone CTA"
+    },
+    {
+      "type": "url",
+      "id": "search_url",
+      "label": "Destinazione icona di ricerca",
+      "info": "Scegli una collezione o pagina specifica. Se lasci vuoto, l'icona porta alla ricerca standard del negozio."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "nav_link",
+      "name": "Link navigazione",
+      "settings": [
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Testo link",
+          "default": "Guantoni"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "URL link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KZ Header",
+      "blocks": [
+        { "type": "nav_link", "settings": { "link_label": "Guantoni" } },
+        { "type": "nav_link", "settings": { "link_label": "Abbigliamento" } },
+        { "type": "nav_link", "settings": { "link_label": "Set completi" } },
+        { "type": "nav_link", "settings": { "link_label": "Personalizza" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

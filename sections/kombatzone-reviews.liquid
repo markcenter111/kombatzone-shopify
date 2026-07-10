@@ -1,0 +1,310 @@
+{% comment %}
+  KOMBAT ZONE — Recensioni / Social Proof
+  File: sections/kombatzone-reviews.liquid
+  Come usarlo: Online Store → Temi → Modifica codice → Sections → Add a new section → incolla questo file
+  Poi vai su Customize e aggiungi la sezione "KZ — Recensioni" dove preferisci
+  (consigliato: dopo i prodotti/personalizzazione, prima della sezione TikTok o della CTA finale).
+{% endcomment %}
+
+<style>
+  #kz-reviews-{{ section.id }} {
+    --bg0: #0a0a0a;
+    --bg2: #1a1a1a;
+    --bg3: #242424;
+    --red: #E8272A;
+    --gold: #C9992A;
+    --text: #F2F0EB;
+    --text-dim: #888880;
+    --text-muted: #4a4a44;
+    --border: rgba(255,255,255,0.07);
+    --ff-display: 'Barlow Condensed', sans-serif;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    padding-left: 32px;
+    padding-right: 32px;
+    background: {{ section.settings.bg_color }};
+  }
+  #kz-reviews-{{ section.id }} .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  #kz-reviews-{{ section.id }} .section-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+  #kz-reviews-{{ section.id }} .section-title {
+    font-family: var(--ff-display), sans-serif;
+    font-size: 42px;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: .01em;
+    color: var(--text);
+  }
+  #kz-reviews-{{ section.id }} .tp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #1a1a1a;
+    border: 1px solid rgba(0,183,74,0.3);
+    color: #00b74a;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 3px;
+    letter-spacing: .04em;
+  }
+  #kz-reviews-{{ section.id }} .tp-dot { width: 5px; height: 5px; border-radius: 50%; background: #00b74a; }
+
+  #kz-reviews-{{ section.id }} .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  @media (max-width: 800px) {
+    #kz-reviews-{{ section.id }} .reviews-grid { grid-template-columns: 1fr; }
+  }
+  #kz-reviews-{{ section.id }} .review-card {
+    background: var(--bg2);
+    padding: 28px;
+    position: relative;
+    border: 1px solid var(--border);
+  }
+  #kz-reviews-{{ section.id }} .stars { color: var(--gold); font-size: 11px; letter-spacing: 2px; margin-bottom: 10px; }
+  #kz-reviews-{{ section.id }} .review-quote {
+    font-size: 28px;
+    font-family: var(--ff-display), sans-serif;
+    font-weight: 900;
+    color: var(--red);
+    opacity: .4;
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  #kz-reviews-{{ section.id }} .review-text {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  #kz-reviews-{{ section.id }} .review-footer { display: flex; align-items: center; gap: 12px; }
+  #kz-reviews-{{ section.id }} .review-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--ff-display), sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-muted);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  #kz-reviews-{{ section.id }} .review-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  #kz-reviews-{{ section.id }} .review-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  #kz-reviews-{{ section.id }} .review-sport { font-size: 10px; color: var(--text-muted); letter-spacing: .06em; text-transform: uppercase; }
+</style>
+
+<div id="kz-reviews-{{ section.id }}">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">{{ section.settings.eyebrow }}</div>
+      <div class="section-title">{{ section.settings.title }}</div>
+    </div>
+    {% if section.settings.show_badge %}
+      <span class="tp-badge"><span class="tp-dot"></span>{{ section.settings.badge_text }}</span>
+    {% endif %}
+  </div>
+
+  <div class="reviews-grid">
+    {% for block in section.blocks %}
+      <div class="review-card" {{ block.shopify_attributes }}>
+        <div class="stars">
+          {% for i in (1..5) %}{% if i <= block.settings.stars %}★{% else %}☆{% endif %}{% endfor %}
+        </div>
+        <div class="review-quote">"</div>
+        <p class="review-text">{{ block.settings.text }}</p>
+        <div class="review-footer">
+          <div class="review-avatar">
+            {% if block.settings.avatar != blank %}
+              <img src="{{ block.settings.avatar | image_url: width: 100 }}" alt="{{ block.settings.name }}" loading="lazy">
+            {% else %}
+              {{ block.settings.initials }}
+            {% endif %}
+          </div>
+          <div>
+            <div class="review-name">{{ block.settings.name }}</div>
+            <div class="review-sport">{{ block.settings.sport_location }}</div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "KZ — Recensioni",
+  "tag": "section",
+  "class": "kz-reviews-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Colore di sfondo",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "header",
+      "content": "Altezza sezione"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Spazio sopra",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Spazio sotto",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "header",
+      "content": "Testi"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Recensioni verificate"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titolo",
+      "default": "Chi ci ha scelto"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Mostra badge a destra (es. Trustpilot)",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Testo badge",
+      "default": "Trustpilot 4.9 · 200+ recensioni"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Recensione",
+      "settings": [
+        {
+          "type": "range",
+          "id": "stars",
+          "label": "Stelle",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Testo recensione",
+          "default": "Scrivi qui la recensione del cliente."
+        },
+        {
+          "type": "image_picker",
+          "id": "avatar",
+          "label": "Foto cliente (opzionale)",
+          "info": "Se vuota, mostra le iniziali"
+        },
+        {
+          "type": "text",
+          "id": "initials",
+          "label": "Iniziali cliente",
+          "default": "AB"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Nome cliente",
+          "default": "Nome Cognome"
+        },
+        {
+          "type": "text",
+          "id": "sport_location",
+          "label": "Sport · Città",
+          "default": "MMA · Roma"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KZ — Recensioni",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "text": "Guantoni di qualità assurda per il prezzo. Li uso da 3 mesi in allenamento quotidiano — nessun problema. Spedizione velocissima dall'Italia.",
+            "initials": "MR",
+            "name": "Marco R.",
+            "sport_location": "Boxe · Roma"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "text": "Ho ordinato il set completo con personalizzazione. È arrivato in 2 giorni con il nome stampato perfettamente. Consiglio a chiunque faccia MMA.",
+            "initials": "DL",
+            "name": "Daniele L.",
+            "sport_location": "MMA · Milano"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "text": "Reso gestito in meno di 24 ore. Qualità dei materiali superiore alle aspettative — soprattutto gli shorts. Tornerò sicuramente.",
+            "initials": "SK",
+            "name": "Sara K.",
+            "sport_location": "Muay Thai · Torino"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

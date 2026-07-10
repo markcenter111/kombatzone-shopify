@@ -1,0 +1,378 @@
+/* =========================================================
+   KombatZone – Collection Page Styles
+   File: assets/kz-collection.css
+   ========================================================= */
+
+:root {
+  --kz-red:    #E8272A;
+  --kz-dark:   #0a0a0a;
+  --kz-card:   #141414;
+  --kz-border: #222;
+}
+
+/* ---------------------------------------------------------
+   Wrapper
+   --------------------------------------------------------- */
+.kz-catalog {
+  background: var(--kz-dark);
+  font-family: Arial, Helvetica, sans-serif;
+  color: #fff;
+  padding-bottom: 40px;
+}
+
+/* ---------------------------------------------------------
+   Breadcrumb
+   --------------------------------------------------------- */
+.kz-breadcrumb {
+  padding: 20px 24px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #666;
+}
+.kz-breadcrumb a {
+  color: #666;
+  text-decoration: none;
+}
+.kz-breadcrumb a:hover { color: #aaa; }
+.kz-breadcrumb__current {
+  color: var(--kz-red);
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------
+   Category Pills
+   --------------------------------------------------------- */
+.kz-cat-bar {
+  padding: 16px 24px 0;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.kz-cat-btn {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #aaa;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: .05em;
+  text-decoration: none;
+  transition: background .15s, color .15s, border-color .15s;
+  display: inline-block;
+}
+.kz-cat-btn:hover {
+  background: #2a2a2a;
+  color: #fff;
+}
+.kz-cat-btn--active,
+.kz-cat-btn--active:hover {
+  background: var(--kz-red);
+  border-color: var(--kz-red);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+
+/* ---------------------------------------------------------
+   Filter Bar
+   --------------------------------------------------------- */
+.kz-filter-bar {
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #1a1a1a;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+.kz-filter-bar__left,
+.kz-filter-bar__right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.kz-filter-bar__label { font-size: 12px; color: #666; }
+.kz-filter-bar__count { font-size: 12px; color: #555; }
+
+.kz-select {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #aaa;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color .15s;
+}
+.kz-select:focus { border-color: var(--kz-red); }
+
+/* ---------------------------------------------------------
+   Grid Size Toggle
+   --------------------------------------------------------- */
+.kz-grid-toggle {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.kz-grid-toggle__btn {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+  padding: 0;
+  flex-shrink: 0;
+}
+.kz-grid-toggle__btn:hover {
+  background: #2a2a2a;
+  border-color: #555;
+}
+.kz-grid-toggle__btn--active {
+  background: var(--kz-red);
+  border-color: var(--kz-red);
+}
+.kz-grid-toggle__btn svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+/* ---------------------------------------------------------
+   Product Grid
+   --------------------------------------------------------- */
+.kz-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  gap: 14px;
+  padding: 20px 24px 28px;
+  transition: grid-template-columns .2s;
+}
+
+/* Grid size variants */
+.kz-product-grid--sm { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+.kz-product-grid--md { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.kz-product-grid--lg { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+
+/* Card image scales with grid */
+.kz-product-grid--lg .kz-card__image-wrap { height: 220px; }
+.kz-product-grid--sm .kz-card__image-wrap { height: 120px; }
+.kz-product-grid--sm .kz-card__image-placeholder { font-size: 38px; }
+.kz-product-grid--lg .kz-card__image-placeholder { font-size: 72px; }
+.kz-product-grid--lg .kz-card__title   { font-size: 15px; }
+.kz-product-grid--lg .kz-card__price-current { font-size: 18px; }
+
+/* ---------------------------------------------------------
+   Product Card
+   --------------------------------------------------------- */
+.kz-card {
+  background: var(--kz-card);
+  border: 1px solid var(--kz-border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color .2s;
+  display: flex;
+  flex-direction: column;
+}
+.kz-card:hover { border-color: var(--kz-red); }
+
+.kz-card__image-wrap {
+  display: block;
+  background: #0f0f0f;
+  height: 148px;
+  position: relative;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.kz-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.kz-card__image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+}
+
+.kz-card__badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: .06em;
+  line-height: 1;
+}
+.kz-card__wishlist {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, .7);
+  border: 1px solid #333;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  line-height: 1;
+}
+.kz-card__wishlist:hover {
+  background: rgba(232, 39, 42, .6);
+  border-color: var(--kz-red);
+}
+.kz-card__wishlist.is-active {
+  color: var(--kz-red);
+}
+
+.kz-card__body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.kz-card__type {
+  font-size: 10px;
+  color: var(--kz-red);
+  font-weight: 700;
+  letter-spacing: .08em;
+  margin-bottom: 4px;
+}
+.kz-card__title {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+  line-height: 1.3;
+  text-decoration: none;
+  flex: 1;
+}
+.kz-card__title:hover { color: var(--kz-red); }
+
+.kz-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.kz-card__stars {
+  color: #F59E0B;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+.kz-card__review-count { font-size: 11px; color: #666; }
+
+.kz-card__price {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.kz-card__price-current {
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+}
+.kz-card__price-old {
+  font-size: 12px;
+  color: #555;
+  text-decoration: line-through;
+}
+
+.kz-card__atc {
+  width: 100%;
+  background: var(--kz-red);
+  border: none;
+  color: #fff;
+  padding: 9px 0;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: .06em;
+  transition: background .15s;
+}
+.kz-card__atc:hover:not(:disabled) { background: #c41f22; }
+.kz-card__atc:disabled {
+  background: #2a2a2a;
+  color: #555;
+  cursor: not-allowed;
+}
+.kz-card__atc--added {
+  background: #16a34a !important;
+}
+
+/* ---------------------------------------------------------
+   Empty state
+   --------------------------------------------------------- */
+.kz-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #555;
+  padding: 60px 0;
+  font-size: 14px;
+}
+
+/* ---------------------------------------------------------
+   Pagination
+   --------------------------------------------------------- */
+.kz-pagination {
+  display: flex;
+  justify-content: center;
+  padding: 20px 24px;
+  gap: 6px;
+}
+/* Shopify default_pagination output */
+.kz-pagination .pagination {
+  display: flex;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.kz-pagination .pagination span,
+.kz-pagination .pagination a {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #aaa;
+  padding: 8px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+  display: inline-block;
+  transition: border-color .15s, color .15s;
+}
+.kz-pagination .pagination a:hover {
+  border-color: var(--kz-red);
+  color: #fff;
+}
+.kz-pagination .pagination .current {
+  background: var(--kz-red);
+  border-color: var(--kz-red);
+  color: #fff;
+  font-weight: 700;
+}

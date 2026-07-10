@@ -1,0 +1,154 @@
+{% comment %}
+  Section: collezione-main.liquid
+  File:    sections/collezione-main.liquid
+
+  KombatZone — Shop our collections grid section.
+  Layout: 3 colonne × 2 righe, con colonna sinistra e destra tall (span 2).
+
+  - Card 1 (sinistra, tall)   → col 1, rows 1-2
+  - Card 2 (centro alto, sm)  → col 2, row 1
+  - Card 3 (destra, tall)     → col 3, rows 1-2
+  - Card 4 (centro basso, sm) → col 2, row 2
+
+  Richiede: assets/collezione-main.css, snippets/collezione-main-card.liquid
+{% endcomment %}
+
+{{ 'collezione-main.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign row_h    = section.settings.card_height | default: 240
+  assign row_h_px = row_h | append: 'px'
+-%}
+
+<section
+  class="kz-collections"
+  id="kz-collections-{{ section.id }}"
+  style="--kz-row-h: {{ row_h_px }};">
+
+  {%- if section.settings.heading_before != blank or section.settings.heading_highlight != blank -%}
+    <div class="kz-collections__header">
+      <h2 class="kz-collections__heading">
+        {{- section.settings.heading_before -}}
+        {%- if section.settings.heading_highlight != blank -%}
+          &nbsp;<span class="kz-collections__heading-highlight">{{ section.settings.heading_highlight }}</span>
+        {%- endif -%}
+      </h2>
+    </div>
+  {%- endif -%}
+
+  {%- if section.blocks.size > 0 -%}
+    <div class="kz-collections__grid">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign is_tall     = false
+          assign is_featured = false
+
+          case forloop.index0
+            when 0
+              assign is_tall     = true
+              assign is_featured = true
+            when 2
+              assign is_tall     = true
+          endcase
+        -%}
+
+        {%- render 'collezione-main-card',
+              block:       block,
+              is_tall:     is_tall,
+              is_featured: is_featured
+        -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+</section>
+
+{% schema %}
+{
+  "name": "KZ Collections",
+  "tag": "section",
+  "class": "kz-collections-section",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Testo"
+    },
+    {
+      "type": "text",
+      "id": "heading_before",
+      "label": "Titolo (parte normale)",
+      "default": "Shop our"
+    },
+    {
+      "type": "text",
+      "id": "heading_highlight",
+      "label": "Parola in evidenza (rossa)",
+      "default": "collections"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "card_height",
+      "label": "Altezza card (desktop)",
+      "min": 160,
+      "max": 480,
+      "step": 10,
+      "unit": "px",
+      "default": 240
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_card",
+      "name": "Collection Card",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collezione"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Etichetta (eyebrow sulla card)",
+          "info": "Usata anche come titolo fallback se la collezione non ha nome.",
+          "default": "MMA"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_count",
+          "label": "Mostra numero di prodotti",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KZ Collections",
+      "blocks": [
+        {
+          "type": "collection_card",
+          "settings": { "label": "MMA",       "show_count": true }
+        },
+        {
+          "type": "collection_card",
+          "settings": { "label": "Boxe",      "show_count": true }
+        },
+        {
+          "type": "collection_card",
+          "settings": { "label": "Sicurezza", "show_count": true }
+        },
+        {
+          "type": "collection_card",
+          "settings": { "label": "Wear",      "show_count": true }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

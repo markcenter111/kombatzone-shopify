@@ -1,0 +1,363 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;500;600&display=swap');
+
+  .kombatzone-wrapper {
+    --bg0: #0a0a0a;
+    --bg2: #1a1a1a;
+    --red: #E8272A;
+    --gold: #C9992A;
+    --text: #F2F0EB;
+    --text-dim: #888880;
+    --text-muted: #4a4a44;
+    --border: rgba(255,255,255,0.07);
+    --ff-display: 'Barlow Condensed', sans-serif;
+    --ff-body: 'Inter', sans-serif;
+
+    background: var(--bg0);
+    color: var(--text);
+    font-family: var(--ff-body);
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 32px 20px;
+    position: relative;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .kombatzone-wrapper * { 
+    margin: 0; padding: 0; box-sizing: border-box; 
+  }
+
+  .kombatzone-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 50%, rgba(232,39,42,0.07) 0%, transparent 65%),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 59px,
+        rgba(255,255,255,0.012) 59px,
+        rgba(255,255,255,0.012) 60px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .kombatzone-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent 0%, var(--red) 30%, var(--red) 70%, transparent 100%);
+  }
+
+  .kombatzone-wrapper .card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 580px;
+    text-align: center;
+  }
+
+  /* LOGO */
+  .kombatzone-wrapper .logo {
+    font-family: var(--ff-display);
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: .1em;
+    color: var(--text);
+    margin-bottom: 52px;
+  }
+  .kombatzone-wrapper .logo span { color: var(--red); }
+
+  /* BADGE */
+  .kombatzone-wrapper .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(232,39,42,0.1);
+    border: 1px solid rgba(232,39,42,0.25);
+    color: var(--red);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    margin-bottom: 28px;
+  }
+  .kombatzone-wrapper .badge-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .3; }
+  }
+
+  /* HEADLINE */
+  .kombatzone-wrapper .headline {
+    font-family: var(--ff-display);
+    font-size: 64px;
+    font-weight: 900;
+    line-height: .92;
+    text-transform: uppercase;
+    letter-spacing: -.01em;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+  .kombatzone-wrapper .headline em { font-style: normal; color: var(--red); }
+
+  /* SUBLINE */
+  .kombatzone-wrapper .subline {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    margin-bottom: 40px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .kombatzone-wrapper .subline strong { color: var(--text); }
+
+  /* FORM */
+  .kombatzone-wrapper .form-row {
+    display: flex;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .kombatzone-wrapper .email-input {
+    flex: 1;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-right: none;
+    color: var(--text);
+    font-family: var(--ff-body);
+    font-size: 14px;
+    padding: 15px 20px;
+    outline: none;
+    transition: border-color .15s;
+    -webkit-appearance: none;
+    min-width: 0;
+  }
+  .kombatzone-wrapper .email-input::placeholder { color: var(--text-muted); }
+  .kombatzone-wrapper .email-input:focus { border-color: var(--red); }
+  .kombatzone-wrapper .email-input.error { border-color: var(--red); background: rgba(232,39,42,0.05); }
+
+  .kombatzone-wrapper .btn-signup {
+    background: var(--red);
+    color: #fff;
+    font-family: var(--ff-body);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 15px 28px;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .15s, transform .1s;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .kombatzone-wrapper .btn-signup:hover { background: #c41f22; }
+  .kombatzone-wrapper .btn-signup:active { transform: scale(.98); }
+  .kombatzone-wrapper .btn-signup.loading { pointer-events: none; opacity: .7; }
+  .kombatzone-wrapper .btn-signup .btn-text { transition: opacity .2s; }
+  .kombatzone-wrapper .btn-signup .btn-loader {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity .2s;
+  }
+  .kombatzone-wrapper .btn-signup.loading .btn-text { opacity: 0; }
+  .kombatzone-wrapper .btn-signup.loading .btn-loader { opacity: 1; }
+  
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .kombatzone-wrapper .spinner {
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+  }
+
+  .kombatzone-wrapper .error-msg {
+    font-size: 11px;
+    color: var(--red);
+    text-align: left;
+    letter-spacing: .02em;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  /* TRUST ROW */
+  .kombatzone-wrapper .trust-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .kombatzone-wrapper .trust-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: .04em;
+  }
+  .kombatzone-wrapper .trust-pill svg {
+    width: 12px; height: 12px;
+    stroke: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .kombatzone-wrapper .trust-sep {
+    width: 1px; height: 12px;
+    background: var(--border);
+  }
+
+  /* SUCCESS */
+  .kombatzone-wrapper .success-icon {
+    width: 48px; height: 48px;
+    background: rgba(232,39,42,0.12);
+    border: 1px solid rgba(232,39,42,0.3);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+  }
+  .kombatzone-wrapper .success-icon svg { width: 20px; height: 20px; stroke: var(--red); }
+  .kombatzone-wrapper .success-title {
+    font-family: var(--ff-display);
+    font-size: 48px;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: .95;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .kombatzone-wrapper .success-title em { font-style: normal; color: var(--red); }
+  .kombatzone-wrapper .success-sub { font-size: 13px; color: var(--text-dim); line-height: 1.7; }
+
+  @media (max-width: 480px) {
+    .kombatzone-wrapper .headline { font-size: 48px; }
+    .kombatzone-wrapper .form-row { flex-direction: column; }
+    .kombatzone-wrapper .email-input { border-right: 1px solid var(--border); border-bottom: none; }
+    .kombatzone-wrapper .btn-signup { padding: 15px; }
+    .kombatzone-wrapper .trust-sep { display: none; }
+  }
+</style>
+
+<div class="kombatzone-wrapper">
+  <div class="card">
+    <div class="logo">KOMBAT<span>ZONE</span></div>
+
+    {%- form 'customer', id: 'KombatZoneNewsletter', class: 'newsletter-form' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+
+      {%- if form.posted_successfully? -%}
+        <!-- SUCCESS STATE -->
+        <div class="success-state">
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <h2 class="success-title">You're <em>in.</em></h2>
+          <p class="success-sub">You'll receive your promo code soon!</p>
+        </div>
+      {%- else -%}
+        <!-- FORM STATE -->
+        <div id="formState">
+          <div class="badge">
+            <div class="badge-dot"></div>
+            100 Pre-Launch Discount Codes
+          </div>
+
+          <h1 class="headline">
+            Subscribe &<br>
+            <em>save.</em>
+          </h1>
+
+          <p class="subline">
+            Subscribe to the newsletter and get <strong>10% off</strong> delivered directly to your inbox.
+          </p>
+
+          {%- if form.errors -%}
+            <div class="error-msg">
+              {%- for field in form.errors -%}
+                {{ form.errors.messages[field] }}
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+
+          <div class="form-row">
+            <input 
+              class="email-input {% if form.errors %}error{% endif %}" 
+              id="emailInput" 
+              type="email" 
+              name="contact[email]" 
+              placeholder="Email address" 
+              autocomplete="email" 
+              required 
+            />
+            <button class="btn-signup" id="signupBtn" type="submit">
+              <span class="btn-text">Sign up</span>
+              <span class="btn-loader"><div class="spinner"></div></span>
+            </button>
+          </div>
+
+          <div class="trust-row">
+            <div class="trust-pill">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              No spam, ever
+            </div>
+            <div class="trust-sep"></div>
+            <div class="trust-pill">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Exclusive drops
+            </div>
+            <div class="trust-sep"></div>
+            <div class="trust-pill">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              Unsubscribe anytime
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endform -%}
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const signupBtn = document.getElementById('signupBtn');
+    const form = document.getElementById('KombatZoneNewsletter');
+
+    if(form) {
+      form.addEventListener('submit', function() {
+        // Mostra il caricamento (spinner) in attesa del ricaricamento pagina di Shopify
+        if(signupBtn) {
+          signupBtn.classList.add('loading');
+        }
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "KombatZone Newsletter",
+  "settings": [],
+  "presets": [
+    {
+      "name": "KombatZone Newsletter",
+      "category": "Promotional"
+    }
+  ]
+}
+{% endschema %}

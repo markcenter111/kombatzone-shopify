@@ -1,0 +1,489 @@
+{% comment %}
+  KOMBAT ZONE — Sezione Prodotti "I più scelti"
+  File: sections/kombatzone-products.liquid
+{% endcomment %}
+
+{{ 'https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;500;600&display=swap' | stylesheet_tag }}
+
+<style>
+  .kzp-wrap {
+    background: #0a0a0a;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .kzp-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 40px;
+  }
+
+  .kzp-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #E8272A;
+    margin-bottom: 8px;
+  }
+
+  .kzp-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 42px;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: .01em;
+    color: #F2F0EB;
+  }
+
+  .kzp-see-all {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #888880;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: color .15s;
+    padding-bottom: 4px;
+  }
+
+  .kzp-see-all:hover { color: #F2F0EB; }
+
+  .kzp-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+
+  .kzp-card {
+    position: relative;
+    background: #1a1a1a;
+    overflow: hidden;
+    cursor: pointer;
+    display: block;
+    text-decoration: none;
+  }
+
+  .kzp-card.featured { grid-column: span 2; }
+
+  .kzp-img {
+    aspect-ratio: 3/4;
+    background: #242424;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .kzp-card.featured .kzp-img { aspect-ratio: 6/4; }
+
+  .kzp-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .kzp-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    opacity: .12;
+  }
+
+  .kzp-placeholder svg { width: 40px; height: 40px; stroke: #F2F0EB; }
+  .kzp-placeholder span {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #F2F0EB;
+  }
+
+  .kzp-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: #E8272A;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    z-index: 2;
+  }
+
+  .kzp-badge.gold { background: #C9992A; color: #1a0f00; }
+
+  .kzp-info {
+    padding: 14px 16px 18px;
+  }
+
+  .kzp-cat {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #4a4a44;
+    margin-bottom: 4px;
+  }
+
+  .kzp-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    margin-bottom: 8px;
+    line-height: 1.1;
+    color: #F2F0EB;
+  }
+
+  .kzp-pricing {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .kzp-price-now { font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #F2F0EB; }
+  .kzp-price-was { font-family: 'Inter', sans-serif; font-size: 12px; color: #4a4a44; text-decoration: line-through; }
+  .kzp-price-pct { font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; color: #E8272A; }
+
+  .kzp-hover-cta {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: #E8272A;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 12px;
+    text-align: center;
+    transform: translateY(100%);
+    transition: transform .2s ease;
+  }
+
+  .kzp-card:hover .kzp-hover-cta { transform: translateY(0); }
+
+  /* Spacing controls */
+  .kzp-spacing-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .kzp-spacing-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #4a4a44;
+  }
+
+  .kzp-sp-btn {
+    width: 28px;
+    height: 28px;
+    background: #1a1a1a;
+    border: 1px solid rgba(255,255,255,0.07);
+    color: #888880;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    transition: background .15s, color .15s;
+    flex-shrink: 0;
+  }
+
+  .kzp-sp-btn:hover { background: #242424; color: #F2F0EB; }
+
+  @media (max-width: 768px) {
+    .kzp-grid { grid-template-columns: repeat(2, 1fr); }
+    .kzp-card.featured { grid-column: span 2; }
+    .kzp-wrap { padding-left: 16px; padding-right: 16px; }
+  }
+</style>
+
+<div class="kzp-wrap" id="kzp-{{ section.id }}">
+
+
+  <div class="kzp-header">
+    <div>
+      <div class="kzp-eyebrow">{{ section.settings.eyebrow }}</div>
+      <div class="kzp-title">{{ section.settings.title }}</div>
+    </div>
+    {%- if section.settings.see_all_url != blank -%}
+      <a href="{{ section.settings.see_all_url }}" class="kzp-see-all">
+        {{ section.settings.see_all_label }}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    {%- endif -%}
+  </div>
+
+  <div class="kzp-grid">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'product_card' -%}
+
+        <a class="kzp-card{% if block.settings.featured %} featured{% endif %}"
+           href="{{ block.settings.product_url }}"
+           {{ block.shopify_attributes }}>
+
+          <div class="kzp-img">
+            {%- if block.settings.image != blank -%}
+              <img
+                src="{{ block.settings.image | image_url: width: 800 }}"
+                alt="{{ block.settings.name | escape }}"
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}"
+                loading="lazy"
+              >
+            {%- else -%}
+              <div class="kzp-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 3v18M16 3v18"/></svg>
+                <span>Foto prodotto</span>
+              </div>
+            {%- endif -%}
+
+            {%- if block.settings.badge_label != blank -%}
+              <div class="kzp-badge{% if block.settings.badge_gold %} gold{% endif %}">
+                {{ block.settings.badge_label }}
+              </div>
+            {%- endif -%}
+          </div>
+
+          <div class="kzp-info">
+            {%- if block.settings.category != blank -%}
+              <div class="kzp-cat">{{ block.settings.category }}</div>
+            {%- endif -%}
+            <div class="kzp-name">{{ block.settings.name }}</div>
+            <div class="kzp-pricing">
+              <span class="kzp-price-now">{{ block.settings.price_now }}</span>
+              {%- if block.settings.price_was != blank -%}
+                <span class="kzp-price-was">{{ block.settings.price_was }}</span>
+              {%- endif -%}
+              {%- if block.settings.price_pct != blank -%}
+                <span class="kzp-price-pct">{{ block.settings.price_pct }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+
+          <div class="kzp-hover-cta">{{ section.settings.cta_label }}</div>
+
+        </a>
+
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+</div>
+
+<script>
+(function() {
+  var wrap = document.getElementById('kzp-{{ section.id }}');
+  var btnPlus = document.getElementById('kzp-plus-{{ section.id }}');
+  var btnMinus = document.getElementById('kzp-minus-{{ section.id }}');
+  var step = 16;
+  var minPad = 0;
+  var maxPad = 160;
+
+  function getPad() {
+    return parseInt(wrap.style.paddingBottom) || {{ section.settings.padding_bottom }};
+  }
+
+  function setPad(val) {
+    val = Math.min(maxPad, Math.max(minPad, val));
+    wrap.style.paddingBottom = val + 'px';
+  }
+
+  btnPlus.addEventListener('click', function() { setPad(getPad() + step); });
+  btnMinus.addEventListener('click', function() { setPad(getPad() - step); });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "KZ Prodotti",
+  "tag": "section",
+  "class": "kz-products-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Testo sopra il titolo",
+      "default": "Bestseller"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titolo sezione",
+      "default": "I più scelti"
+    },
+    {
+      "type": "text",
+      "id": "see_all_label",
+      "label": "Testo link 'vedi tutto'",
+      "default": "Vedi tutto"
+    },
+    {
+      "type": "url",
+      "id": "see_all_url",
+      "label": "Link 'vedi tutto'"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Testo bottone hover prodotto",
+      "default": "Aggiungi al carrello"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Spazio sopra la sezione (px)",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Spazio sotto la sezione (px)",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Card prodotto",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "featured",
+          "label": "Card grande (occupa 2 colonne)",
+          "default": false
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Foto prodotto"
+        },
+        {
+          "type": "url",
+          "id": "product_url",
+          "label": "Link prodotto"
+        },
+        {
+          "type": "text",
+          "id": "category",
+          "label": "Categoria (es. MMA · Boxe)",
+          "default": "Boxe"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Nome prodotto",
+          "default": "Guantoni Pro Series"
+        },
+        {
+          "type": "text",
+          "id": "price_now",
+          "label": "Prezzo attuale",
+          "default": "€47"
+        },
+        {
+          "type": "text",
+          "id": "price_was",
+          "label": "Prezzo originale (opzionale)",
+          "default": "€72"
+        },
+        {
+          "type": "text",
+          "id": "price_pct",
+          "label": "Sconto % (opzionale, es. −35%)"
+        },
+        {
+          "type": "text",
+          "id": "badge_label",
+          "label": "Badge (opzionale, es. −35% o Set completo)"
+        },
+        {
+          "type": "checkbox",
+          "id": "badge_gold",
+          "label": "Badge colore oro (invece di rosso)",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KZ Prodotti",
+      "blocks": [
+        {
+          "type": "product_card",
+          "settings": {
+            "featured": true,
+            "category": "MMA · Boxe · Muay Thai",
+            "name": "Fight Starter Kit",
+            "price_now": "€84",
+            "price_was": "€139",
+            "price_pct": "−40%",
+            "badge_label": "Set completo",
+            "badge_gold": true
+          }
+        },
+        {
+          "type": "product_card",
+          "settings": {
+            "featured": false,
+            "category": "Boxe",
+            "name": "Guantoni Pro Series",
+            "price_now": "€47",
+            "price_was": "€72",
+            "badge_label": "−35%",
+            "badge_gold": false
+          }
+        },
+        {
+          "type": "product_card",
+          "settings": {
+            "featured": false,
+            "category": "MMA",
+            "name": "Shorts Combat",
+            "price_now": "€38",
+            "price_was": "€59",
+            "price_pct": "−35%",
+            "badge_gold": false
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

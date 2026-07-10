@@ -1,0 +1,613 @@
+{% comment %}
+{% endcomment %}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<style>
+  .onhow-countdown-section {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .onhow-countdown-heading {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: var(--onhow-heading-size, 28px);
+  }
+
+  .onhow-countdown-subheading {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: var(--onhow-subheading-size, 18px);
+    line-height: 1.6;
+  }
+
+  .onhow-countdown-container {
+    font-family: var(--font-body-family), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: calc(1.5rem * var(--onhow-size-multiplier, 1));
+    background: var(--onhow-background, linear-gradient(145deg, #f0f0f0, #ffffff));
+    border-radius: 16px;
+    box-shadow: 
+      0 10px 20px rgba(0, 0, 0, 0.05),
+      0 6px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    perspective: 1000px;
+  }
+
+  .onhow-countdown-container[data-animation="1"]:hover {
+    transform: translateY(-5px) rotateX(5deg);
+    box-shadow: 
+      0 15px 30px rgba(0, 0, 0, 0.08),
+      0 10px 10px rgba(0, 0, 0, 0.12);
+  }
+
+  .onhow-countdown {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .onhow-countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: calc(70px * var(--onhow-size-multiplier, 1));
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+  }
+
+  .onhow-countdown-container[data-animation="1"] .onhow-countdown-item:hover {
+    transform: translateZ(10px) scale(1.05);
+  }
+
+  .onhow-countdown-container[data-animation="1"] .onhow-countdown-item:hover .onhow-countdown-time {
+    transform: translateZ(15px) scale(1.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .onhow-countdown-container[data-animation="1"] .onhow-countdown-item:hover .onhow-countdown-label {
+    transform: translateZ(5px);
+    color: #444;
+  }
+
+  .onhow-countdown-time {
+    font-size: calc(2.56rem * var(--onhow-size-multiplier, 1));
+    font-weight: 700;
+    color: var(--onhow-timer-color, #000000);
+    padding: 0.5rem;
+    margin-bottom: 0.35rem;
+    position: relative;
+    transition: all 0.3s ease;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .onhow-countdown-time::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--onhow-timer-bg, rgba(255, 255, 255, 0.1));
+    border-radius: 8px;
+    transform: translateZ(-5px);
+    box-shadow: 
+      0 5px 15px rgba(0, 0, 0, 0.1),
+      0 3px 5px rgba(0, 0, 0, 0.12);
+    z-index: -1;
+  }
+
+  .onhow-countdown-label {
+    font-size: calc(1.25rem * var(--onhow-size-multiplier, 1));
+    color: var(--onhow-label-color, #666);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-top: 0.35rem;
+  }
+
+  .onhow-countdown-message {
+    display: none;
+    text-align: center;
+    font-size: calc(1.65rem * var(--onhow-size-multiplier, 1));
+    font-weight: 600;
+    margin-top: 2.8rem;
+    color: var(--onhow-message-color, #e74c3c);
+    animation: onhow-pulse 2s infinite;
+    text-shadow: 0 1px 3px rgba(231, 76, 60, 0.3);
+  }
+
+  @keyframes onhow-pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .onhow-countdown {
+      gap: 0.5rem;
+    }
+    
+    .onhow-countdown-item {
+      width: calc(52px * var(--onhow-size-multiplier, 1));
+    }
+    
+    .onhow-countdown-time {
+      font-size: calc(1.84rem * var(--onhow-size-multiplier, 1));
+    }
+    
+    .onhow-countdown-label {
+      font-size: calc(0.94rem * var(--onhow-size-multiplier, 1));
+    }
+  }
+</style>
+
+<div class="onhow-countdown-section section-{{ section.id }}-padding color-{{ section.settings.color_scheme }}">
+  <div class="page-width">
+    {%- if section.settings.show_heading and section.settings.heading != blank -%}
+      <h2 class="onhow-countdown-heading {{ section.settings.heading_size }}">
+        {{ section.settings.heading | escape }}
+      </h2>
+    {%- endif -%}
+    
+    {%- if section.settings.show_subheading and section.settings.subheading != blank -%}
+      <div class="onhow-countdown-subheading">
+        {{ section.settings.subheading }}
+      </div>
+    {%- endif -%}
+    
+    <div class="onhow-countdown-container"
+      data-target-date="{{ section.settings.target_date }}"
+      data-countdown-message="{{ section.settings.countdown_end_message | escape }}"
+      data-section-id="{{ section.id }}"
+      data-section-type="onhow-countdown"
+      data-onhow-animation="{% if section.settings.enable_animations %}1{% else %}0{% endif %}"
+      style="
+        --onhow-background: {{ section.settings.background_color }};
+        --onhow-timer-bg: {{ section.settings.timer_background_color }};
+        --onhow-timer-color: {{ section.settings.timer_text_color }};
+        --onhow-label-color: {{ section.settings.label_text_color }};
+        --onhow-message-color: {{ section.settings.message_text_color }};
+        --onhow-heading-size: {{ section.settings.heading_font_size }}px;
+        --onhow-subheading-size: {{ section.settings.subheading_font_size }}px;
+        --onhow-size-multiplier: {{ section.settings.countdown_size_multiplier | default: 1.0 | divided_by: 100.0 }};
+      "
+    >
+      <div class="onhow-countdown" id="onhow-countdown-{{ section.id }}">
+        {%- if section.settings.show_days -%}
+        <div class="onhow-countdown-item">
+          <div class="onhow-countdown-time" id="onhow-days-{{ section.id }}">00</div>
+          <div class="onhow-countdown-label">{{ section.settings.days_label }}</div>
+        </div>
+        {%- endif -%}
+        
+        {%- if section.settings.show_hours -%}
+        <div class="onhow-countdown-item">
+          <div class="onhow-countdown-time" id="onhow-hours-{{ section.id }}">00</div>
+          <div class="onhow-countdown-label">{{ section.settings.hours_label }}</div>
+        </div>
+        {%- endif -%}
+        
+        {%- if section.settings.show_minutes -%}
+        <div class="onhow-countdown-item">
+          <div class="onhow-countdown-time" id="onhow-minutes-{{ section.id }}">00</div>
+          <div class="onhow-countdown-label">{{ section.settings.minutes_label }}</div>
+        </div>
+        {%- endif -%}
+        
+        {%- if section.settings.show_seconds -%}
+        <div class="onhow-countdown-item">
+          <div class="onhow-countdown-time" id="onhow-seconds-{{ section.id }}">00</div>
+          <div class="onhow-countdown-label">{{ section.settings.seconds_label }}</div>
+        </div>
+        {%- endif -%}
+      </div>
+      
+      <div class="onhow-countdown-message" id="onhow-countdown-message-{{ section.id }}">
+        {{ section.settings.countdown_end_message }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  class OnhowCountdownTimer {
+    constructor(container) {
+      this.container = container;
+      this.sectionId = this.container.dataset.sectionId;
+      this.countdown = document.getElementById(`onhow-countdown-${this.sectionId}`);
+      this.message = document.getElementById(`onhow-countdown-message-${this.sectionId}`);
+      this.daysElement = document.getElementById(`onhow-days-${this.sectionId}`);
+      this.hoursElement = document.getElementById(`onhow-hours-${this.sectionId}`);
+      this.minutesElement = document.getElementById(`onhow-minutes-${this.sectionId}`);
+      this.secondsElement = document.getElementById(`onhow-seconds-${this.sectionId}`);
+      
+      this.targetDateString = this.container.dataset.targetDate;
+      this.endMessage = this.container.dataset.countdownMessage;
+      this.animationsEnabled = this.container.dataset.onhowAnimation === '1';
+      
+      this.container.setAttribute('data-animation', this.animationsEnabled ? '1' : '0');
+      
+      this.countdownDate = null;
+      this.countdownTimer = null;
+      
+      this.initCountdown();
+    }
+    
+    initCountdown() {
+      // Imposta la data target ricavata dalle impostazioni di Shopify
+      this.countdownDate = new Date(this.targetDateString).getTime();
+      
+      // Controlla se la data è non valida o se è già passata
+      if (isNaN(this.countdownDate) || this.countdownDate <= new Date().getTime()) {
+        this.showEndMessage();
+        return;
+      }
+      
+      this.startCountdown();
+    }
+    
+    startCountdown() {
+      if (this.countdownTimer) {
+        clearInterval(this.countdownTimer);
+      }
+      
+      this.updateCountdown();
+      
+      this.countdownTimer = setInterval(() => {
+        this.updateCountdown();
+      }, 1000);
+    }
+    
+    updateCountdown() {
+      const now = new Date().getTime();
+      const distance = this.countdownDate - now;
+      
+      if (distance < 0) {
+        this.showEndMessage();
+        return;
+      }
+      
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      
+      if (this.daysElement) {
+        this.daysElement.textContent = days.toString().padStart(2, '0');
+      }
+      
+      if (this.hoursElement) {
+        this.hoursElement.textContent = hours.toString().padStart(2, '0');
+      }
+      
+      if (this.minutesElement) {
+        this.minutesElement.textContent = minutes.toString().padStart(2, '0');
+      }
+      
+      if (this.secondsElement) {
+        this.secondsElement.textContent = seconds.toString().padStart(2, '0');
+      }
+    }
+    
+    showEndMessage() {
+      clearInterval(this.countdownTimer);
+      
+      if (this.countdown) {
+        this.countdown.style.display = 'none';
+      }
+      
+      if (this.message) {
+        this.message.style.display = 'block';
+      }
+    }
+    
+    unload() {
+      if (this.countdownTimer) {
+        clearInterval(this.countdownTimer);
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const countdownContainers = document.querySelectorAll('[data-section-type="onhow-countdown"]');
+    
+    if (countdownContainers.length > 0) {
+      window.onhowCountdowns = {};
+      
+      countdownContainers.forEach(container => {
+        const sectionId = container.dataset.sectionId;
+        window.onhowCountdowns[sectionId] = new OnhowCountdownTimer(container);
+      });
+    }
+  });
+
+  document.addEventListener('shopify:section:load', (event) => {
+    const container = event.target.querySelector('[data-section-type="onhow-countdown"]');
+    
+    if (container) {
+      const sectionId = container.dataset.sectionId;
+      window.onhowCountdowns = window.onhowCountdowns || {};
+      window.onhowCountdowns[sectionId] = new OnhowCountdownTimer(container);
+    }
+  });
+
+  document.addEventListener('shopify:section:unload', (event) => {
+    const container = event.target.querySelector('[data-section-type="onhow-countdown"]');
+    
+    if (container) {
+      const sectionId = container.dataset.sectionId;
+      
+      if (window.onhowCountdowns && window.onhowCountdowns[sectionId]) {
+        window.onhowCountdowns[sectionId].unload();
+        delete window.onhowCountdowns[sectionId];
+      }
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Countdown Timer",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Show heading",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Coming Soon"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "Small"
+        },
+        {
+          "value": "h1",
+          "label": "Large"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subheading",
+      "label": "Show subheading",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "<p>Opening very soon, so dont miss out and subscribe to our newsletter</p>"
+    },
+    {
+      "type": "header",
+      "content": "Countdown Settings"
+    },
+    {
+      "type": "text",
+      "id": "target_date",
+      "label": "Data di Fine (Target Date)",
+      "info": "Formato: AAAA-MM-GGT00:00:00 (es. 2026-05-01T00:00:00 per il 1° Maggio 2026)",
+      "default": "2026-05-01T00:00:00"
+    },
+    {
+      "type": "text",
+      "id": "countdown_end_message",
+      "label": "End message",
+      "default": "Whooha! The Wait Is Over"
+    },
+    {
+      "type": "header",
+      "content": "Display Options"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_days",
+      "label": "Show days",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "days_label",
+      "label": "Days label",
+      "default": "Days"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_hours",
+      "label": "Show hours",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "hours_label",
+      "label": "Hours label",
+      "default": "Hours"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_minutes",
+      "label": "Show minutes",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "minutes_label",
+      "label": "Minutes label",
+      "default": "Minutes"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_seconds",
+      "label": "Show seconds",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "seconds_label",
+      "label": "Seconds label",
+      "default": "Seconds"
+    },
+    {
+      "type": "header",
+      "content": "Style Settings"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "background_color",
+      "label": "Container background (color or gradient)",
+      "default": "linear-gradient(145deg, #f0f0f0, #ffffff)",
+      "info": "Enter a color code or CSS gradient"
+    },
+    {
+      "type": "text",
+      "id": "timer_background_color",
+      "label": "Timer background",
+      "default": "rgba(255, 255, 255, 0.1)",
+      "info": "Enter a color code or rgba value"
+    },
+    {
+      "type": "color",
+      "id": "timer_text_color",
+      "label": "Timer text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "label_text_color",
+      "label": "Label text color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "message_text_color",
+      "label": "End message color",
+      "default": "#e74c3c"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animations",
+      "label": "Enable animations",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "countdown_size_multiplier",
+      "min": 50,
+      "max": 150,
+      "step": 5,
+      "unit": "%",
+      "label": "Countdown size",
+      "default": 100,
+      "info": "Resize the entire countdown timer (excluding heading and subheading)"
+    },
+    {
+      "type": "header",
+      "content": "Text Sizing"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "min": 16,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading font size",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "subheading_font_size",
+      "min": 12,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading font size",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Countdown Timer",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

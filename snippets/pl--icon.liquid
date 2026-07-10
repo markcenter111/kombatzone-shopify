@@ -1,0 +1,59 @@
+{% comment %}
+  Snippet: Icon
+  Version: 0.5.0
+  Dependencies:
+    Blocks: 
+    Snippets: 
+    Assets:
+  ===================================================
+  IMPORTANT - PLEASE READ BEFORE MODIFYING THIS FILE
+  ===================================================
+
+  This is a Pent Library Snippet.
+  - Please report bugs to support@pentlibrary.com. Include the block ID and version in the email.
+  - Modifying the file may break the block, edit at own risk
+  - Visit our docs: https://www.pentlibrary.com/docs
+{% endcomment %}
+
+{%- doc -%}
+  Renders an icon.
+
+  @param {boolean} custom_icon - Whether to render a custom icon.
+  @param {string} icon_type - ['image'|'svg'] The type of icon to render.
+  @param {image} [custom_image_icon] - The default icon to render when icon_type is 'image'.
+  @param {string} [custom_svg_icon] - The default SVG icon to render when icon_type is 'svg'.
+  @param {color} [custom_svg_icon_color] - The color of the icon to render when icon_type is 'svg'.
+  @param {string} [default_svg] - The default svg icon to render when no icon is provided. Provide just the asset name. Defaults to 'pl--action-placeholder.svg'.
+  @param {string} [alt] - Alt text for image icons
+
+  @example
+  {% render 'pl--icon-new-test', 
+    custom_icon: true,
+    icon_type: 'image',
+    custom_image_icon: 'search.png',
+    default_svg: 'pl--icon-arrow-left.svg',
+    alt: 'Search icon'
+  %}
+{%- enddoc -%}
+
+{%- if custom_icon and icon_type == 'image' and custom_image_icon != blank -%}
+  <!-- Image icon logic -->
+  {{
+    custom_image_icon
+    | image_url: width: 500
+    | image_tag: widths: '50, 100, 200, 300, 400, 500', alt: alt
+    | default: custom_image_icon.alt
+    | default: 'Icon'
+  }}
+{% elsif custom_icon and icon_type == 'svg' and custom_svg_icon != blank %}
+  <!-- SVG icon logic -->
+  <span style="color: {{ custom_svg_icon_color | default: 'currentColor' }};">
+    {{ custom_svg_icon }}
+  </span>
+{% else %}
+  <!-- Fallback logic -->
+  {% assign fallback_icon = default_svg | default: 'pl--action-placeholder.svg' %}
+  <span>
+    {{ fallback_icon | inline_asset_content }}
+  </span>
+{% endif %}

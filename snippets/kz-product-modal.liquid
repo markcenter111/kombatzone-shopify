@@ -1,0 +1,572 @@
+{% comment %}
+  KOMBAT ZONE — Product Quick-Buy Modal
+  File: snippets/kz-product-modal.liquid
+  Includi in theme.liquid prima di </body>:
+    {% render 'kz-product-modal' %}
+    <script src="{{ 'kz-product-modal.js' | asset_url }}" defer></script>
+{% endcomment %}
+
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ══════════════════════════════════════════
+     CONFIGURAZIONE RAPIDA — modifica qui
+     ══════════════════════════════════════════ */
+  :root {
+    --kz-modal-max-width: 1200px;  /* larghezza massima modal */
+    --kz-modal-min-height: 520px;  /* altezza minima modal */
+    --kz-modal-img-border: 5px solid #111; /* bordo immagine principale */
+    --kz-modal-slide-speed: 0.4s;  /* velocità transizione slideshow */
+  }
+
+  /* ── OVERLAY ── */
+  #kz-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 999999;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 12px;
+    overflow-y: auto;
+  }
+  #kz-modal-overlay.open { display: flex; }
+
+  /* rimosso: ora gestito nel blocco responsive principale sotto */
+
+  /* ── MODAL ── */
+  .kz-modal {
+    background: #111;
+    border: 0px solid #000;
+    width: 100%;
+    max-width: var(--kz-modal-max-width);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    margin: auto;
+    font-family: 'Inter', sans-serif;
+  }
+  .kz-modal-inner {
+    display: flex;
+    flex-direction: row;
+    min-height: var(--kz-modal-min-height);
+  }
+
+  /* ── CLOSE — assoluto dentro kz-modal-left ── */
+  .kz-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.6);
+    border: 1.5px solid rgba(255,255,255,0.25);
+    border-radius: 50%;
+    color: transparent;
+    cursor: pointer;
+    font-size: 0;
+    line-height: 1;
+    z-index: 11;
+    transition: background .25s ease, border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+  }
+  .kz-modal-close::before,
+  .kz-modal-close::after {
+    content: '';
+    position: absolute;
+    width: 13px;
+    height: 1.5px;
+    background: #fff;
+    border-radius: 1px;
+    top: 50%;
+    left: 50%;
+    transform-origin: center center;
+  }
+  .kz-modal-close::before { transform: translate(-50%, -50%) rotate(45deg); }
+  .kz-modal-close::after  { transform: translate(-50%, -50%) rotate(-45deg); }
+  .kz-modal-close:hover {
+    background: #E8272A;
+    border-color: #E8272A;
+    transform: scale(1.12) rotate(90deg);
+    box-shadow: 0 0 14px rgba(232,39,42,0.6);
+  }
+  .kz-modal-close:active {
+    transform: scale(0.95) rotate(90deg);
+    box-shadow: 0 0 6px rgba(232,39,42,0.4);
+  }
+
+  /* ── LEFT ── */
+  .kz-modal-left {
+    width: 52%;
+    background: #0d0d0d;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .kz-modal-badge-new {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: #E8272A;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    padding: 3px 8px;
+    text-transform: uppercase;
+    z-index: 2;
+  }
+  .kz-modal-img-wrap {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0d0d0d;
+    overflow: hidden;
+    border: var(--kz-modal-img-border);
+    box-sizing: border-box;
+    position: relative;
+    cursor: pointer;
+  }
+  /* gradient scuro in cima per leggibilità di barra e X */
+  .kz-modal-img-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 38%);
+    z-index: 2;
+    pointer-events: none;
+  }
+  .kz-modal-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity var(--kz-modal-slide-speed) ease;
+    pointer-events: none;
+  }
+  .kz-modal-img-wrap img.kz-fade { opacity: 0; }
+
+  /* ── PROGRESS BAR — sopra l'immagine, dentro kz-modal-left ── */
+  .kz-modal-progress {
+    position: absolute;
+    top: 14px;
+    left: 12px;
+    right: 52px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .kz-modal-progress-seg {
+    flex: 1;
+    height: 3px;
+    background: rgba(255,255,255,0.28);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .kz-modal-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #E8272A;
+    border-radius: 2px;
+  }
+  @keyframes kz-progress-grow {
+    from { width: 0%; }
+    to   { width: 100%; }
+  }
+  .kz-modal-thumbs {
+    display: flex;
+    gap: 6px;
+    padding: 10px 12px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .kz-modal-thumb {
+    width: 44px;
+    height: 44px;
+    background: #1a1a1a;
+    border: 1px solid rgba(255,255,255,0.07);
+    cursor: pointer;
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: border-color .15s;
+  }
+  .kz-modal-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .kz-modal-thumb.active { border-color: #E8272A; }
+  .kz-modal-urgency {
+    background: #1a0a0a;
+    border-top: 1px solid rgba(232,39,42,0.2);
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .kz-modal-urgency-dot {
+    width: 7px;
+    height: 7px;
+    background: #E8272A;
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: kz-pulse 1.5s infinite;
+  }
+  @keyframes kz-pulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: .4; }
+  }
+  .kz-modal-urgency-text {
+    font-size: 11px;
+    color: #F2F0EB;
+    font-weight: 600;
+    letter-spacing: .04em;
+  }
+  .kz-modal-urgency-text #kz-modal-viewers {
+    color: #FF4548;
+    font-weight: 800;
+    letter-spacing: .04em;
+  }
+
+  /* ── RIGHT ── */
+  .kz-modal-right {
+    width: 48%;
+    padding: 18px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    overflow-y: visible;
+    border-left: 1px solid rgba(255,255,255,0.06);
+  }
+  .kz-modal-category {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    color: #888880;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .kz-modal-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: #F2F0EB;
+    text-transform: uppercase;
+    line-height: 1.05;
+    margin-bottom: 10px;
+  }
+  .kz-modal-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .kz-modal-price {
+    font-size: 26px;
+    font-weight: 800;
+    color: #F2F0EB;
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+  .kz-modal-price-old {
+    font-size: 14px;
+    color: #555;
+    text-decoration: line-through;
+  }
+  .kz-modal-price-save {
+    font-size: 11px;
+    font-weight: 800;
+    color: #fff;
+    background: #E8272A;
+    padding: 3px 8px;
+    border-radius: 3px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .kz-modal-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 12px 0;
+  }
+  .kz-modal-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    color: #888880;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  /* ── VARIANTI ── */
+  .kz-modal-variants {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .kz-modal-var-btn {
+    background: #1a1a1a;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 3px;
+    color: #F2F0EB;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    padding: 7px 14px;
+    cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif;
+    text-transform: uppercase;
+    transition: all .15s;
+  }
+  .kz-modal-var-btn:hover:not(.unavailable):not(.active) {
+    border-color: rgba(232,39,42,0.5);
+    background: #1f1f1f;
+  }
+  .kz-modal-var-btn.active { border-color: #E8272A; color: #E8272A; background: rgba(232,39,42,0.1); }
+  .kz-modal-var-btn.unavailable { opacity: .35; text-decoration: line-through; cursor: not-allowed; }
+
+  /* ── STOCK ── */
+  .kz-modal-stock-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+  .kz-modal-stock-label {
+    font-size: 9px;
+    color: #E8272A;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .kz-modal-stock-num { font-size: 9px; color: #888880; }
+  .kz-modal-stock-bar {
+    height: 3px;
+    background: rgba(255,255,255,0.08);
+    margin-bottom: 14px;
+  }
+  .kz-modal-stock-fill { height: 3px; background: #E8272A; transition: width .4s; }
+
+  /* ── CTA ── */
+  .kz-modal-cta {
+    width: 100%;
+    background: #E8272A;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    padding: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 14px rgba(232,39,42,0.35);
+    transition: background .15s, transform .15s, box-shadow .15s;
+  }
+  .kz-modal-cta:hover {
+    background: #c41f22;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(232,39,42,0.45);
+  }
+  .kz-modal-cta:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(232,39,42,0.35); }
+  .kz-modal-cta:disabled { background: #444; cursor: not-allowed; transform: none; box-shadow: none; }
+  .kz-modal-cta-secondary {
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 4px;
+    color: #888880;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    padding: 9px;
+    cursor: pointer;
+    margin-bottom: 14px;
+    transition: all .15s;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+  }
+  .kz-modal-cta-secondary:hover { border-color: rgba(255,255,255,0.3); color: #F2F0EB; background: rgba(255,255,255,0.03); }
+
+  /* ── TRUST ── */
+  .kz-modal-trust {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .kz-modal-trust-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    flex: 1;
+    min-width: 56px;
+  }
+  .kz-modal-trust-icon { font-size: 16px; color: #888880; }
+  .kz-modal-trust-item span {
+    font-size: 8px;
+    color: #888880;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  /* ── TOAST ── */
+  #kz-modal-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #1a1a1a;
+    border: 1px solid rgba(232,39,42,0.4);
+    color: #F2F0EB;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 12px 20px;
+    z-index: 9999;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all .3s;
+    pointer-events: none;
+  }
+  #kz-modal-toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── RESPONSIVE MOBILE ── */
+  @media (max-width: 600px) {
+    /* Overlay: bottom sheet con overlay visibile sopra */
+    #kz-modal-overlay {
+      padding: 0;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    /* Modal: bottom sheet con angoli arrotondati in alto */
+    .kz-modal {
+      width: 100%;
+      max-width: 100%;
+      min-height: unset;
+      max-height: 92dvh;
+      border-radius: 18px 18px 0 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .kz-modal-inner { flex-direction: column; }
+    .kz-modal-left, .kz-modal-right { width: 100%; }
+    .kz-modal-img-wrap { aspect-ratio: 4/3; }
+    .kz-modal-right { max-height: none; padding: 16px 16px 24px; }
+    .kz-modal-close { top: 10px; right: 10px; width: 28px; height: 28px; }
+    .kz-modal-progress { top: 10px; right: 48px; }
+  }
+</style>
+
+<!-- OVERLAY -->
+<div id="kz-modal-overlay" role="dialog" aria-modal="true" aria-label="Dettaglio prodotto">
+  <div class="kz-modal">
+
+    <div class="kz-modal-inner">
+      <!-- LEFT: immagini -->
+      <div class="kz-modal-left">
+        <div class="kz-modal-badge-new" id="kz-modal-badge" style="display:none">Nuovo</div>
+        <!-- progress e close sono figli diretti di kz-modal-left (position:relative) -->
+        <!-- così float sopra l'immagine senza essere clippati da overflow:hidden -->
+        <div class="kz-modal-progress" id="kz-modal-progress"></div>
+        <button class="kz-modal-close" id="kz-modal-close" aria-label="Chiudi"></button>
+        <div class="kz-modal-img-wrap" id="kz-modal-img-wrap">
+          <img id="kz-modal-main-img" src="" alt="" loading="lazy">
+        </div>
+        <div class="kz-modal-thumbs" id="kz-modal-thumbs"></div>
+        <div class="kz-modal-urgency">
+          <div class="kz-modal-urgency-dot"></div>
+          <div class="kz-modal-urgency-text" id="kz-modal-urgency-text">
+            <span id="kz-modal-viewers">12 persone</span> stanno guardando questo prodotto
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: info + acquisto -->
+      <div class="kz-modal-right">
+        <div class="kz-modal-category" id="kz-modal-category"></div>
+        <div class="kz-modal-title" id="kz-modal-title"></div>
+
+        <div class="kz-modal-price-row">
+          <span class="kz-modal-price" id="kz-modal-price"></span>
+          <span class="kz-modal-price-old" id="kz-modal-price-old" style="display:none"></span>
+          <span class="kz-modal-price-save" id="kz-modal-price-save" style="display:none"></span>
+        </div>
+
+        <div class="kz-modal-divider"></div>
+
+        <!-- Varianti -->
+        <div id="kz-modal-variants-wrap" style="display:none">
+          <div class="kz-modal-label" id="kz-modal-variants-label">Taglia</div>
+          <div class="kz-modal-variants" id="kz-modal-variants"></div>
+          <div class="kz-modal-divider"></div>
+        </div>
+
+        <!-- Stock bar -->
+        <div id="kz-modal-stock-wrap" style="display:none">
+          <div class="kz-modal-stock-meta">
+            <span class="kz-modal-stock-label">⚠ Quasi esaurito</span>
+            <span class="kz-modal-stock-num" id="kz-modal-stock-num"></span>
+          </div>
+          <div class="kz-modal-stock-bar">
+            <div class="kz-modal-stock-fill" id="kz-modal-stock-fill"></div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <button class="kz-modal-cta" id="kz-modal-add-btn">
+          Aggiungi al carrello
+        </button>
+        <a class="kz-modal-cta-secondary" id="kz-modal-product-link" href="#">
+          Vedi pagina prodotto completa →
+        </a>
+
+        <!-- Trust badges -->
+        <div class="kz-modal-trust">
+          <div class="kz-modal-trust-item">
+            <span class="kz-modal-trust-icon"></span>
+            <span>Spedizione gratuita sopra €60</span>
+          </div>
+          <div class="kz-modal-trust-item">
+            <span class="kz-modal-trust-icon"></span>
+            <span>Reso gratuito 30 giorni</span>
+          </div>
+          <div class="kz-modal-trust-item">
+            <span class="kz-modal-trust-icon"></span>
+            <span>Pagamento sicuro</span>
+          </div>
+          <div class="kz-modal-trust-item">
+            <span class="kz-modal-trust-icon"></span>
+            <span>Ordina entro 2h per oggi</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST notifica -->
+<div id="kz-modal-toast">✓ Prodotto aggiunto al carrello</div>

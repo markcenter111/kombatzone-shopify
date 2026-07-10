@@ -1,0 +1,57 @@
+{
+  "sections": {
+    "main": {
+      "type": "kz2-collection",
+      "blocks": {
+        "cat-guanti-mma": {
+          "type": "category",
+          "settings": {
+            "label": "GUANTI MMA",
+            "tag": "guanti-mma"
+          }
+        },
+        "cat-guanti-boxe": {
+          "type": "category",
+          "settings": {
+            "label": "GUANTI BOXE",
+            "tag": "guanti-boxe"
+          }
+        },
+        "cat-protezioni": {
+          "type": "category",
+          "settings": {
+            "label": "PROTEZIONI",
+            "tag": "protezioni"
+          }
+        },
+        "cat-abbigliamento": {
+          "type": "category",
+          "settings": {
+            "label": "ABBIGLIAMENTO",
+            "tag": "abbigliamento"
+          }
+        },
+        "cat-sacchi": {
+          "type": "category",
+          "settings": {
+            "label": "SACCHI",
+            "tag": "sacchi"
+          }
+        }
+      },
+      "block_order": [
+        "cat-guanti-mma",
+        "cat-guanti-boxe",
+        "cat-protezioni",
+        "cat-abbigliamento",
+        "cat-sacchi"
+      ],
+      "settings": {
+        "products_per_page": 24,
+        "vendors": "Venum, Hayabusa, Leone, Cleto Reyes",
+        "sizes": "S / 8 oz, M / 10 oz, L / 12 oz, XL / 14 oz"
+      }
+    }
+  },
+  "order": ["main"]
+}

@@ -1,0 +1,428 @@
+{% comment %}
+  Kombat Zone — Sezione FAQ
+  Shopify Section · faq.liquid
+{% endcomment %}
+
+<section
+  class="kz-faq-section"
+  style="
+    padding: {{ section.settings.padding_top }}px 32px {{ section.settings.padding_bottom }}px;
+    background: {{ section.settings.bg_color }};
+    {% if section.settings.top_border %}border-top: 1px solid rgba(255,255,255,0.07);{% endif %}
+  "
+>
+  {% if section.settings.eyebrow != blank %}
+    <div class="kz-section-eyebrow">{{ section.settings.eyebrow }}</div>
+  {% endif %}
+
+  {% if section.settings.title != blank %}
+    <div class="kz-section-title">{{ section.settings.title }}</div>
+  {% endif %}
+
+  {% if section.settings.subtitle != blank %}
+    <p class="kz-faq-subtitle">{{ section.settings.subtitle }}</p>
+  {% endif %}
+
+  <div
+    class="kz-faq-grid"
+    style="grid-template-columns: repeat({{ section.settings.columns }}, 1fr);"
+  >
+    {% for block in section.blocks %}
+      {% if block.type == 'faq_item' %}
+        <div
+          class="kz-faq-item{% if section.settings.accordion %} kz-faq-accordion{% endif %}"
+          {{ block.shopify_attributes }}
+        >
+          <div class="kz-faq-q" {% if section.settings.accordion %}role="button" aria-expanded="false" tabindex="0"{% endif %}>
+            <span>{{ block.settings.question }}</span>
+            {% if section.settings.accordion %}
+              <span class="kz-faq-icon" aria-hidden="true">+</span>
+            {% endif %}
+          </div>
+          <div class="kz-faq-a"{% if section.settings.accordion %} hidden{% endif %}>
+            {{ block.settings.answer }}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  {% if section.settings.show_cta %}
+    <div class="kz-faq-cta-wrap">
+      {% if section.settings.cta_text != blank %}
+        <p class="kz-faq-cta-text">{{ section.settings.cta_text }}</p>
+      {% endif %}
+      {% if section.settings.cta_label != blank and section.settings.cta_url != blank %}
+        <a href="{{ section.settings.cta_url }}" class="kz-faq-cta-btn">
+          {{ section.settings.cta_label }}
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+</section>
+
+{% stylesheet %}
+  /* ── CSS VARIABLES (ereditati dal tema se già presenti) ── */
+  .kz-faq-section {
+    --kz-bg0: #0a0a0a;
+    --kz-bg1: #111111;
+    --kz-bg2: #1a1a1a;
+    --kz-red: #E8272A;
+    --kz-gold: #C9992A;
+    --kz-text: #F2F0EB;
+    --kz-text-dim: #888880;
+    --kz-text-muted: #4a4a44;
+    --kz-border: rgba(255,255,255,0.07);
+    --kz-ff-display: 'Barlow Condensed', sans-serif;
+    --kz-ff-body: 'Inter', sans-serif;
+    font-family: var(--kz-ff-body);
+  }
+
+  /* ── EYEBROW & TITLE ── */
+  .kz-section-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--kz-red);
+    margin-bottom: 8px;
+  }
+  .kz-section-title {
+    font-family: var(--kz-ff-display);
+    font-size: 42px;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: .01em;
+    color: var(--kz-text);
+    margin-bottom: 8px;
+  }
+  .kz-faq-subtitle {
+    font-size: 13px;
+    color: var(--kz-text-dim);
+    line-height: 1.7;
+    max-width: 520px;
+    margin-bottom: 0;
+  }
+
+  /* ── GRID ── */
+  .kz-faq-grid {
+    display: grid;
+    gap: 2px;
+    margin-top: 40px;
+  }
+
+  /* ── ITEM ── */
+  .kz-faq-item {
+    background: var(--kz-bg2);
+    border: 1px solid var(--kz-border);
+    padding: 24px 28px;
+    transition: border-color .2s;
+  }
+  .kz-faq-item:hover {
+    border-color: rgba(232,39,42,0.3);
+  }
+
+  /* ── QUESTION ── */
+  .kz-faq-q {
+    font-family: var(--kz-ff-display);
+    font-size: 17px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    color: var(--kz-text);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .kz-faq-accordion .kz-faq-q {
+    cursor: pointer;
+    margin-bottom: 0;
+  }
+  .kz-faq-accordion .kz-faq-q:focus-visible {
+    outline: 2px solid var(--kz-red);
+    outline-offset: 2px;
+  }
+
+  /* ── ICON ── */
+  .kz-faq-icon {
+    color: var(--kz-red);
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: transform .2s;
+    line-height: 1;
+  }
+  .kz-faq-accordion.is-open .kz-faq-icon {
+    transform: rotate(45deg);
+  }
+
+  /* ── ANSWER ── */
+  .kz-faq-a {
+    font-size: 12px;
+    color: var(--kz-text-dim);
+    line-height: 1.7;
+  }
+  .kz-faq-accordion .kz-faq-a {
+    margin-top: 12px;
+    overflow: hidden;
+  }
+  .kz-faq-accordion .kz-faq-a[hidden] {
+    display: none;
+  }
+
+  /* ── CTA STRIP ── */
+  .kz-faq-cta-wrap {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 20px 24px;
+    background: var(--kz-bg2);
+    border: 1px solid var(--kz-border);
+    flex-wrap: wrap;
+  }
+  .kz-faq-cta-text {
+    font-size: 13px;
+    color: var(--kz-text-dim);
+    margin: 0;
+  }
+  .kz-faq-cta-btn {
+    background: var(--kz-red);
+    color: #fff;
+    font-family: var(--kz-ff-body);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 12px 24px;
+    text-decoration: none;
+    white-space: nowrap;
+    display: inline-block;
+    transition: opacity .15s;
+  }
+  .kz-faq-cta-btn:hover { opacity: .85; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .kz-faq-section { padding-left: 16px !important; padding-right: 16px !important; }
+    .kz-faq-grid { grid-template-columns: 1fr !important; }
+    .kz-section-title { font-size: 32px; }
+    .kz-faq-cta-wrap { flex-direction: column; align-items: flex-start; }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', function () {
+    var items = document.querySelectorAll('.kz-faq-accordion .kz-faq-q');
+    items.forEach(function (q) {
+      q.addEventListener('click', toggle);
+      q.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle.call(q); }
+      });
+    });
+
+    function toggle() {
+      var item   = this.closest('.kz-faq-item');
+      var answer = item.querySelector('.kz-faq-a');
+      var isOpen = item.classList.contains('is-open');
+
+      // Chiudi tutti gli altri se è abilitato il comportamento "solo uno aperto"
+      if (!isOpen) {
+        document.querySelectorAll('.kz-faq-accordion.is-open').forEach(function (el) {
+          el.classList.remove('is-open');
+          el.querySelector('.kz-faq-q').setAttribute('aria-expanded', 'false');
+          el.querySelector('.kz-faq-a').hidden = true;
+        });
+      }
+
+      item.classList.toggle('is-open', !isOpen);
+      this.setAttribute('aria-expanded', String(!isOpen));
+      answer.hidden = isOpen;
+    }
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "FAQ",
+  "tag": "section",
+  "class": "kz-section-faq",
+  "max_blocks": 20,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Intestazione sezione"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Testo eyebrow",
+      "default": "Hai dubbi?"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titolo",
+      "default": "Domande frequenti"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Sottotitolo (opzionale)"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Colonne (desktop)",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "checkbox",
+      "id": "accordion",
+      "label": "Abilita accordion (apri/chiudi al click)",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Stile e spaziatura"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Colore sfondo",
+      "default": "#111111"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding superiore (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding inferiore (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 64
+    },
+    {
+      "type": "checkbox",
+      "id": "top_border",
+      "label": "Bordo superiore",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "CTA in fondo"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Mostra striscia CTA",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Testo CTA",
+      "default": "Non hai trovato risposta? Contattaci direttamente."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Etichetta pulsante CTA",
+      "default": "Contattaci"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "URL pulsante CTA"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "Domanda & Risposta",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Domanda",
+          "default": "Quanto tempo ci vuole per la personalizzazione?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Risposta",
+          "default": "<p>La personalizzazione è inclusa in ogni ordine e non allunga i tempi di spedizione. Il tuo prodotto viene personalizzato e spedito entro 48 ore lavorative dall'ordine.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Quanto tempo ci vuole per la personalizzazione?",
+            "answer": "<p>La personalizzazione è inclusa in ogni ordine e non allunga i tempi di spedizione. Il tuo prodotto viene personalizzato e spedito entro 48 ore lavorative dall'ordine.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Come scelgo la taglia giusta dei guantoni?",
+            "answer": "<p>I guantoni da boxe si scelgono in base al peso corporeo e all'uso. Per allenamento generale: 10–12 oz sotto i 70 kg, 14–16 oz sopra. Contattaci e ti guidiamo nella scelta.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Spedite in tutta Europa?",
+            "answer": "<p>Sì, spediamo in tutta l'UE. I tempi sono 48–72 ore lavorative per l'Italia, 3–5 giorni per il resto d'Europa. La spedizione è gratuita sopra €60.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Posso cambiare o restituire un prodotto personalizzato?",
+            "answer": "<p>Accettiamo resi e cambi entro 30 giorni per problemi di taglia o difetti. I prodotti personalizzati con nome/numero non sono rimborsabili salvo difetti di produzione.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Quali metodi di pagamento accettate?",
+            "answer": "<p>Accettiamo tutte le principali carte di credito e debito (Visa, Mastercard), PayPal, Apple Pay e Google Pay. Il pagamento è sempre protetto con crittografia SSL.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "I prodotti sono adatti per uso professionale?",
+            "answer": "<p>Sì, i nostri prodotti sono utilizzati da atleti professionisti e amatori. I materiali sono scelti per resistere a sessioni intensive. Molti nostri ambassador si allenano con il nostro gear ogni giorno.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

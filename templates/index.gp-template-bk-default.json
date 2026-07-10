@@ -1,0 +1,381 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "kombatzone_hero_teEktc": {
+      "type": "kombatzone-hero",
+      "blocks": {
+        "stat_3VFPDf": {
+          "type": "stat",
+          "settings": {
+            "stat_number": "1.200+",
+            "stat_label": "Atleti attivi"
+          }
+        },
+        "stat_UD7VHR": {
+          "type": "stat",
+          "settings": {
+            "stat_number": "4.9",
+            "stat_label": "Rating medio"
+          }
+        },
+        "stat_iHkzDV": {
+          "type": "stat",
+          "settings": {
+            "stat_number": "48h",
+            "stat_label": "Spedizione EU"
+          }
+        }
+      },
+      "block_order": [
+        "stat_3VFPDf",
+        "stat_UD7VHR",
+        "stat_iHkzDV"
+      ],
+      "name": "KZ Hero",
+      "settings": {
+        "eyebrow": "Attrezzatura da combattimento",
+        "title_line1": "Entra",
+        "title_line2": "nell'arena.",
+        "subtitle": "Gear professionale per chi prende il proprio sport sul serio. MMA, Boxe, Muay Thai senza compromessi.",
+        "cta_primary_label": "Scopri la collezione",
+        "cta_primary_url": "",
+        "cta_ghost_label": "Personalizza il tuo set",
+        "cta_ghost_url": "",
+        "bg_image": "shopify://shop_images/nc.jpg"
+      }
+    },
+    "trust_strip_R9jNjY": {
+      "type": "trust-strip",
+      "blocks": {
+        "trust_item_gWUyiY": {
+          "type": "trust_item",
+          "settings": {
+            "label": "Reso gratuito",
+            "highlight": "30 giorni"
+          }
+        },
+        "trust_item_pRiJKk": {
+          "type": "trust_item",
+          "settings": {
+            "label": "Spedito dall'Italia in",
+            "highlight": "48–72h"
+          }
+        },
+        "trust_item_Pn99ic": {
+          "type": "trust_item",
+          "settings": {
+            "label": "Personalizzazione",
+            "highlight": "gratis su ogni prodotto"
+          }
+        },
+        "trust_item_LdJqGy": {
+          "type": "trust_item",
+          "settings": {
+            "label": "Pagamento sicuro PayPal · Apple Pay ·",
+            "highlight": "Visa"
+          }
+        }
+      },
+      "block_order": [
+        "trust_item_gWUyiY",
+        "trust_item_pRiJKk",
+        "trust_item_Pn99ic",
+        "trust_item_LdJqGy"
+      ],
+      "name": "Trust Strip",
+      "settings": {
+        "background_color": "#111111",
+        "accent_color": "#e8272a",
+        "text_color": "#888880",
+        "scroll_speed": 30
+      }
+    },
+    "kombatzone_products_7qQ4EE": {
+      "type": "kombatzone-products",
+      "blocks": {
+        "product_card_BaeRGG": {
+          "type": "product_card",
+          "settings": {
+            "featured": true,
+            "product_url": "",
+            "category": "MMA · Boxe · Muay Thai",
+            "name": "Fight Starter Kit",
+            "price_now": "€84",
+            "price_was": "€139",
+            "price_pct": "−40%",
+            "badge_label": "Set completo",
+            "badge_gold": true
+          }
+        },
+        "product_card_wFdHhw": {
+          "type": "product_card",
+          "settings": {
+            "featured": false,
+            "product_url": "",
+            "category": "Boxe",
+            "name": "Guantoni Pro Series",
+            "price_now": "€47",
+            "price_was": "€72",
+            "price_pct": "",
+            "badge_label": "−35%",
+            "badge_gold": false
+          }
+        },
+        "product_card_eHRrAc": {
+          "type": "product_card",
+          "settings": {
+            "featured": false,
+            "product_url": "",
+            "category": "MMA",
+            "name": "Shorts Combat",
+            "price_now": "€38",
+            "price_was": "€59",
+            "price_pct": "−35%",
+            "badge_label": "",
+            "badge_gold": false
+          }
+        }
+      },
+      "block_order": [
+        "product_card_BaeRGG",
+        "product_card_wFdHhw",
+        "product_card_eHRrAc"
+      ],
+      "name": "KZ Prodotti",
+      "settings": {
+        "eyebrow": "Bestseller",
+        "title": "I più scelti",
+        "see_all_label": "Vedi tutto",
+        "see_all_url": "",
+        "cta_label": "Aggiungi al carrello",
+        "padding_top": 64,
+        "padding_bottom": 24
+      }
+    },
+    "kombatzone_diff_band_JzdrTL": {
+      "type": "kombatzone-diff-band",
+      "blocks": {
+        "diff_item_8TFBAP": {
+          "type": "diff_item",
+          "settings": {
+            "icon": "✦",
+            "title": "Nome gratis",
+            "desc": "Personalizzazione inclusa su ogni ordine — nessun costo extra."
+          }
+        },
+        "diff_item_WAULEY": {
+          "type": "diff_item",
+          "settings": {
+            "icon": "⚡",
+            "title": "Spedizione EU",
+            "desc": "Magazzino in Europa. Consegna in 48–72 ore lavorative."
+          }
+        },
+        "diff_item_Rk89iH": {
+          "type": "diff_item",
+          "settings": {
+            "icon": "↩",
+            "title": "Reso 30 giorni",
+            "desc": "Taglia sbagliata? Cambi o rimborso senza domande."
+          }
+        }
+      },
+      "block_order": [
+        "diff_item_8TFBAP",
+        "diff_item_WAULEY",
+        "diff_item_Rk89iH"
+      ],
+      "name": "KZ Vantaggi",
+      "settings": {
+        "bg_color": "#e8272a",
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    },
+    "kombatzone_customization_CBPTEC": {
+      "type": "kombatzone-customization",
+      "blocks": {
+        "step_rXiky9": {
+          "type": "step",
+          "settings": {
+            "text": "Scegli il prodotto"
+          }
+        },
+        "step_xDEtpY": {
+          "type": "step",
+          "settings": {
+            "text": "Inserisci il testo nella nota dell'ordine"
+          }
+        },
+        "step_DA3nN6": {
+          "type": "step",
+          "settings": {
+            "text": "Noi personalizziamo e spediamo — senza costi extra"
+          }
+        }
+      },
+      "block_order": [
+        "step_rXiky9",
+        "step_xDEtpY",
+        "step_DA3nN6"
+      ],
+      "name": "KZ — Personalizzazione",
+      "settings": {
+        "bg_color": "#111111",
+        "visual_image": "shopify://shop_images/C607F695-7A69-4AD0-9B6A-AFC98A7A858A.jpg",
+        "show_name_preview": true,
+        "name_preview_text": "IL TUO NOME",
+        "show_free_badge": true,
+        "free_badge_text": "Gratis",
+        "tag": "Esclusiva Kombat Zone",
+        "title_line1": "Il tuo gear,",
+        "title_line2": "la tua firma.",
+        "description": "Ogni prodotto Kombat Zone può essere personalizzato con il tuo nome, nickname o numero. Zero costo aggiuntivo. Pronto in 2 giorni.",
+        "button_text": "Personalizza il tuo set",
+        "button_link": ""
+      }
+    },
+    "kombatzone_reviews_CFpNP9": {
+      "type": "kombatzone-reviews",
+      "blocks": {
+        "review_fQxgby": {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "text": "Guantoni di qualità assurda per il prezzo. Li uso da 3 mesi in allenamento quotidiano — nessun problema. Spedizione velocissima dall'Italia.",
+            "initials": "MR",
+            "name": "Marco R.",
+            "sport_location": "Boxe · Roma"
+          }
+        },
+        "review_TETWWX": {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "text": "Ho ordinato il set completo con personalizzazione. È arrivato in 2 giorni con il nome stampato perfettamente. Consiglio a chiunque faccia MMA.",
+            "initials": "DL",
+            "name": "Daniele L.",
+            "sport_location": "MMA · Milano"
+          }
+        },
+        "review_We8c4y": {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "text": "Reso gestito in meno di 24 ore. Qualità dei materiali superiore alle aspettative — soprattutto gli shorts. Tornerò sicuramente.",
+            "initials": "SK",
+            "name": "Sara K.",
+            "sport_location": "Muay Thai · Torino"
+          }
+        }
+      },
+      "block_order": [
+        "review_fQxgby",
+        "review_TETWWX",
+        "review_We8c4y"
+      ],
+      "name": "KZ — Recensioni",
+      "settings": {
+        "bg_color": "#0a0a0a",
+        "padding_top": 64,
+        "padding_bottom": 64,
+        "eyebrow": "Recensioni verificate",
+        "title": "Chi ci ha scelto",
+        "show_badge": true,
+        "badge_text": "Trustpilot 4.9 · 200+ recensioni"
+      }
+    },
+    "kombatzone_tiktok_kCjkUr": {
+      "type": "kombatzone-tiktok",
+      "blocks": {
+        "video_eTF8Lt": {
+          "type": "video",
+          "settings": {
+            "video_url": "",
+            "caption": "UFC Full Kit unboxing — guantoni + shorts + borsa 🥊 #mma #ufc",
+            "views": "124K",
+            "badge": "trending"
+          }
+        },
+        "video_KhtFN6": {
+          "type": "video",
+          "settings": {
+            "video_url": "",
+            "caption": "Personalizzazione gratis su ogni ordine 👊 #boxe #kombatzone",
+            "views": "58K",
+            "badge": "new"
+          }
+        },
+        "video_gmYLKc": {
+          "type": "video",
+          "settings": {
+            "video_url": "",
+            "caption": "Muay Thai training con i nostri shorts 🔴 #muaythai #training",
+            "views": "91K",
+            "badge": ""
+          }
+        },
+        "video_8hpdVC": {
+          "type": "video",
+          "settings": {
+            "video_url": "",
+            "caption": "Set completo a €84 — qualità da pro 💪 #mma #gear #kombatzone",
+            "views": "37K",
+            "badge": ""
+          }
+        }
+      },
+      "block_order": [
+        "video_eTF8Lt",
+        "video_KhtFN6",
+        "video_gmYLKc",
+        "video_8hpdVC"
+      ],
+      "name": "KZ TikTok",
+      "settings": {
+        "profile_image": "shopify://shop_images/kz.png",
+        "avatar_initials": "KZ",
+        "eyebrow": "Seguici su TikTok",
+        "handle": "@kombatzoneofficial",
+        "tiktok_url": "",
+        "followers": "18K",
+        "likes": "540K",
+        "follow_btn_text": "Segui su TikTok",
+        "bg_color": "#0a0a0a",
+        "padding_top": 52,
+        "padding_bottom": 52
+      }
+    },
+    "kombatzone_footer_cta_Q3HDUy": {
+      "type": "kombatzone-footer-cta",
+      "name": "KZ — CTA finale",
+      "settings": {
+        "bg_color": "#111111",
+        "padding_top": 48,
+        "padding_bottom": 48,
+        "title": "Pronto a combattere?",
+        "subtitle": "Spedizione gratuita sopra €60 · Reso 30 giorni · Personalizzazione inclusa",
+        "button_text": "Shop Now",
+        "button_link": ""
+      }
+    }
+  },
+  "order": [
+    "kombatzone_hero_teEktc",
+    "trust_strip_R9jNjY",
+    "kombatzone_products_7qQ4EE",
+    "kombatzone_diff_band_JzdrTL",
+    "kombatzone_customization_CBPTEC",
+    "kombatzone_reviews_CFpNP9",
+    "kombatzone_tiktok_kCjkUr",
+    "kombatzone_footer_cta_Q3HDUy"
+  ]
+}

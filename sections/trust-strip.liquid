@@ -1,0 +1,236 @@
+{% comment %}
+  ╔══════════════════════════════════════════════════════════╗
+  ║  KOMBAT ZONE — Trust Strip (liquid ticker)               ║
+  ║  Section: sections/trust-strip.liquid                    ║
+  ╚══════════════════════════════════════════════════════════╝
+{% endcomment %}
+
+<div class="kz-trust-strip" id="kz-trust-{{ section.id }}">
+  <div class="kz-trust-track">
+
+    {% for block in section.blocks %}
+      {% if block.type == 'trust_item' %}
+        <div class="kz-trust-item" {{ block.shopify_attributes }}>
+          <span class="kz-trust-dot"></span>
+          {{ block.settings.label }}
+          {% if block.settings.highlight != blank %}
+            <strong>{{ block.settings.highlight }}</strong>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    {% comment %} Duplicato per il loop seamless {% endcomment %}
+    {% for block in section.blocks %}
+      {% if block.type == 'trust_item' %}
+        <div class="kz-trust-item" aria-hidden="true">
+          <span class="kz-trust-dot"></span>
+          {{ block.settings.label }}
+          {% if block.settings.highlight != blank %}
+            <strong>{{ block.settings.highlight }}</strong>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+
+  </div>
+</div>
+
+<style>
+  #kz-trust-{{ section.id }} {
+    --kz-bg:      {{ section.settings.background_color }};
+    --kz-red:     {{ section.settings.accent_color }};
+    --kz-text:    {{ section.settings.text_color }};
+    --kz-speed:   {{ section.settings.scroll_speed }}s;
+  }
+
+  .kz-trust-strip {
+    background: var(--kz-bg);
+    border-top: 1px solid rgba(255,255,255,0.07);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    overflow: hidden;
+    position: relative;
+    height: 48px;
+    display: flex;
+    align-items: center;
+  }
+
+  .kz-trust-strip::before,
+  .kz-trust-strip::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 80px;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .kz-trust-strip::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--kz-bg) 0%, transparent 100%);
+  }
+  .kz-trust-strip::after {
+    right: 0;
+    background: linear-gradient(270deg, var(--kz-bg) 0%, transparent 100%);
+  }
+
+  .kz-trust-track {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    will-change: transform;
+    animation: kz-trust-scroll var(--kz-speed) linear infinite;
+  }
+
+  @keyframes kz-trust-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .kz-trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 36px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--kz-text);
+    flex-shrink: 0;
+    transition: opacity 0.2s;
+    font-family: inherit;
+  }
+
+  .kz-trust-item:hover {
+    opacity: 1;
+    color: #F2F0EB;
+  }
+
+  .kz-trust-item strong {
+    color: #F2F0EB;
+    font-weight: 600;
+  }
+
+  .kz-trust-dot {
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--kz-red);
+    opacity: 0.8;
+    flex-shrink: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kz-trust-track {
+      animation: none;
+      flex-wrap: wrap;
+      white-space: normal;
+      height: auto;
+      padding: 12px 0;
+    }
+    .kz-trust-strip {
+      height: auto;
+    }
+    .kz-trust-strip::before,
+    .kz-trust-strip::after {
+      display: none;
+    }
+    .kz-trust-item[aria-hidden="true"] {
+      display: none;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Trust Strip",
+  "tag": "section",
+  "class": "kz-section-trust-strip",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Colore sfondo",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Colore pallino accent",
+      "default": "#E8272A"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Colore testo",
+      "default": "#888880"
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "label": "Velocità scorrimento (secondi)",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "default": 28
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust_item",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Testo",
+          "default": "Reso gratuito"
+        },
+        {
+          "type": "text",
+          "id": "highlight",
+          "label": "Parola in evidenza (opzionale)",
+          "default": "30 giorni"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust Strip",
+      "blocks": [
+        {
+          "type": "trust_item",
+          "settings": {
+            "label": "Reso gratuito",
+            "highlight": "30 giorni"
+          }
+        },
+        {
+          "type": "trust_item",
+          "settings": {
+            "label": "Spedito dall'Italia in",
+            "highlight": "48–72h"
+          }
+        },
+        {
+          "type": "trust_item",
+          "settings": {
+            "label": "Personalizzazione",
+            "highlight": "gratis su ogni prodotto"
+          }
+        },
+        {
+          "type": "trust_item",
+          "settings": {
+            "label": "Pagamento sicuro — PayPal · Apple Pay ·",
+            "highlight": "Visa"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
