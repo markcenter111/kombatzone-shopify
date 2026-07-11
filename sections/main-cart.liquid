@@ -325,4 +325,355 @@
   }
   #shopify-section-{{ section.id }} .kz-coupon-input:focus { border-color: rgba(232,39,42,0.5); }
   #shopify-section-{{ section.id }} .kz-coupon-input::placeholder { color: #4a4a44; }
-  #shopify-sec
+  #shopify-section-{{ section.id }} .kz-coupon-btn {
+    background: #1a1a1a;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 0 4px 4px 0;
+    color: #888880;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 9px 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .15s, color .15s;
+  }
+  #shopify-section-{{ section.id }} .kz-coupon-btn:hover { background: #242424; color: #F2F0EB; }
+  #shopify-section-{{ section.id }} .kz-coupon-btn.is-loading { opacity: .6; cursor: wait; }
+  #shopify-section-{{ section.id }} .kz-coupon-msg {
+    font-size: 11px;
+    margin: -10px 0 14px;
+    display: none;
+  }
+  #shopify-section-{{ section.id }} .kz-coupon-msg.show { display: block; }
+  #shopify-section-{{ section.id }} .kz-coupon-msg.success { color: #7cd992; }
+  #shopify-section-{{ section.id }} .kz-coupon-msg.error { color: #e57373; }
+  #shopify-section-{{ section.id }} .kz-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 12px;
+  }
+  #shopify-section-{{ section.id }} .kz-summary-label { color: #888880; }
+  #shopify-section-{{ section.id }} .kz-summary-val { color: #F2F0EB; font-weight: 500; }
+  #shopify-section-{{ section.id }} .kz-summary-val.green { color: #4cbb7a; }
+  #shopify-section-{{ section.id }} .kz-summary-val.red { color: #E8272A; }
+  #shopify-section-{{ section.id }} .kz-summary-hype {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(76,187,122,0.08);
+    border: 1px solid rgba(76,187,122,0.2);
+    color: #4cbb7a;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    padding: 8px 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+  }
+  #shopify-section-{{ section.id }} .kz-summary-hype i { font-size: 13px; }
+  #shopify-section-{{ section.id }} .kz-summary-hype strong { font-weight: 800; }
+  #shopify-section-{{ section.id }} .kz-summary-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 14px 0 16px;
+  }
+  #shopify-section-{{ section.id }} .kz-total-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: #F2F0EB;
+  }
+  #shopify-section-{{ section.id }} .kz-total-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: #F2F0EB;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .kz-checkout-btn {
+    width: 100%;
+    background: #E8272A;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+  }
+  #shopify-section-{{ section.id }} .kz-checkout-btn:hover {
+    background: #c41f22;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(232,39,42,0.35);
+  }
+  #shopify-section-{{ section.id }} .kz-checkout-btn:active { transform: translateY(0); box-shadow: none; }
+  #shopify-section-{{ section.id }} .kz-paypal-btn-wrap { margin-bottom: 16px; }
+  #shopify-section-{{ section.id }} .kz-trust-mini {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  #shopify-section-{{ section.id }} .kz-trust-mini-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    color: #888880;
+    letter-spacing: .04em;
+  }
+  #shopify-section-{{ section.id }} .kz-trust-mini-item i { color: #E8272A; font-size: 14px; }
+  #shopify-section-{{ section.id }} .kz-progress-bar-wrap { background: #1a1a1a; height: 3px; margin: 0 0 6px; }
+  #shopify-section-{{ section.id }} .kz-progress-bar { background: #E8272A; height: 3px; transition: background .2s; }
+  #shopify-section-{{ section.id }} .kz-progress-bar.is-complete { background: #4cbb7a; }
+  #shopify-section-{{ section.id }} .kz-free-shipping-msg {
+    font-size: 10px;
+    color: #888880;
+    letter-spacing: .04em;
+    margin-bottom: 16px;
+  }
+  #shopify-section-{{ section.id }} .kz-free-shipping-msg strong { color: #4cbb7a; }
+  /*
+    Le regole .kz-card / .kz-also-* qui sotto NON sono scoperte a
+    #shopify-section-{{ section.id }} perché le card vengono iniettate via
+    fetch (section.id diverso). Usano le stesse classi della collection page
+    (kz2-collection.css) così la card è identica pixel per pixel.
+    Se kz2-collection.css è già caricato globalmente nel layout, questo
+    blocco è ridondante ma non causa conflitti.
+  */
+
+  /* ── Variabili condivise (no-op se già definite da kz2-collection.css) ── */
+  :root {
+    --kz-red:    #E8272A;
+    --kz-dark:   #0a0a0a;
+    --kz-card:   #141414;
+    --kz-border: #222;
+  }
+
+  /* ── Sezione contenitore upsell ── */
+  .kz-also-like {
+    padding: 18px 24px 22px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    background: linear-gradient(180deg, rgba(232,39,42,0.04), transparent 60%);
+  }
+  .kz-also-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    gap: 10px;
+  }
+  .kz-also-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: .01em;
+    text-transform: uppercase;
+    color: #F2F0EB;
+    margin: 0;
+  }
+  .kz-also-title span { color: #E8272A; }
+  .kz-also-subtitle {
+    font-size: 10.5px;
+    color: #888880;
+    letter-spacing: .01em;
+    margin: 0 0 12px;
+  }
+  .kz-also-scroll-wrap { position: relative; }
+  .kz-also-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    background: #1a1a1a;
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #888880;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: color .15s, background .15s;
+  }
+  .kz-also-arrow:hover { background: #242424; color: #F2F0EB; }
+  .kz-also-arrow.left  { left: -10px; }
+  .kz-also-arrow.right { right: -10px; }
+  .kz-also-arrow[hidden] { display: none; }
+
+  /* Griglia orizzontale scrollabile */
+  .kz-also-grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 4px;
+  }
+  .kz-also-grid::-webkit-scrollbar { display: none; }
+  .kz-also-grid > * { display: contents; }
+
+  /* Larghezza fissa card nel carrello — Liquid token */
+  .kz-also-grid .kz-also-card {
+    flex: 0 0 {{ section.settings.upsell_card_size }}px !important;
+    min-width: 0;
+    display: flex !important;
+  }
+  .kz-also-grid.kz-size-normal .kz-also-card { flex-basis: 160px !important; }
+
+  /* ── Card identica a kz2-product-card ── */
+  .kz-card {
+    background: var(--kz-card);
+    border: 1px solid var(--kz-border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color .2s;
+    display: flex;
+    flex-direction: column;
+  }
+  .kz-card:hover { border-color: var(--kz-red); }
+
+  .kz-card__image-wrap {
+    display: block;
+    background: #0f0f0f;
+    position: relative;
+    text-decoration: none;
+    flex-shrink: 0;
+    aspect-ratio: 1 / 1;
+    height: auto;
+    border-radius: 10px 10px 0 0;
+    overflow: hidden;
+  }
+  .kz-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .kz-card__image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 52px;
+  }
+  .kz-card__image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 45%;
+    background: linear-gradient(transparent, var(--kz-card));
+    pointer-events: none;
+    z-index: 1;
+  }
+  .kz-card__badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: .06em;
+    line-height: 1;
+    z-index: 2;
+  }
+  .kz-card__bestseller-label {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    background: var(--kz-red);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    text-align: center;
+    padding: 4px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    z-index: 3;
+  }
+  .kz-card__stock-badge {
+    position: absolute;
+    bottom: 8px; left: 8px;
+    background: rgba(10,10,10,.88);
+    border: 0.5px solid var(--kz-red);
+    color: #e57373;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 99px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    letter-spacing: .03em;
+  }
+  .kz-card__stock-badge svg { width: 10px; height: 10px; flex-shrink: 0; }
+
+  /* FAB carrello — identico alla collection */
+  @keyframes kz-fab-enter {
+    from { opacity: 0; transform: scale(0.6); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  .kz-card__cart-fab {
+    position: absolute;
+    bottom: 10px; right: 10px;
+    z-index: 4;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.6);
+    border: 1.5px solid rgba(255,255,255,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    animation: kz-fab-enter 0.3s cubic-bezier(.4,0,.2,1) 0.3s both;
+    transition: background .25s ease, border-color .25s ease,
+                transform .25s ease, box-shadow .25s ease;
+    padding: 0;
+  }
+  .kz-card__cart-fab:hover {
+    background: #E8272A;
+    border-color: #E8272A;
+    transform: scale(1.12);
+    box-shadow: 0 0 14px rgba(232,39,42,0.6);
+  }
+  .kz-card__cart-fab:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 6px rgba(232,39,42,0.4);
+  }
+  .kz-card__cart-fab:disabled {
+    background: rgba(0,0,0,0.6) !important;
+    border-color: rgba(255,255,255,0.1) !important;
+    box-shadow: none !important;
+    cursor: not-allowed;
+    opacity: 0.4;
+    animation: none;
+  
