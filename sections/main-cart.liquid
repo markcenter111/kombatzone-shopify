@@ -1216,7 +1216,7 @@
       });
 
       function kzFormatMoney(cents) {
-        return '€' + (cents / 100).toFixed(2).replace('.', ',');
+        return '\u20AC' + (cents / 100).toFixed(2).replace('.', ',');
       }
 
       document.addEventListener('submit', function (e) {
@@ -1525,8 +1525,8 @@
       "blocks": [
         { "type": "trust_badge", "settings": { "icon": "shield-check", "text": "Pagamento sicuro SSL" } },
         { "type": "trust_badge", "settings": { "icon": "truck", "text": "Spedizione in 48–72h dall'Italia" } },
-        { "type": "trust_badge", "settings": { "icon": "pencil", "text": "Personalizzazione inclusa" } },
-        { "type": "trust_badge", "settings": { "icon": "refresh", "text": "Reso gratuito entro 30 giorni" } }
+        { "type": "trust_badge", "settings": { "icon": "refresh", "text": "Reso gratuito entro 30 giorni" } },
+        { "type": "trust_badge", "settings": { "icon": "pencil", "text": "Personalizzazione inclusa" } }
       ]
     }
   ]
