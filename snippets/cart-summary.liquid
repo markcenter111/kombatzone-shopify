@@ -136,7 +136,9 @@
     <span class="kz-payment-label">Pagamenti accettati</span>
     <div class="kz-payment-icons">
       {%- for type in shop.enabled_payment_types -%}
-        {{ type | payment_type_svg_tag: class: 'kz-pay-badge' }}
+        {%- unless forloop.index == 3 -%}
+          {{ type | payment_type_svg_tag: class: 'kz-pay-badge' }}
+        {%- endunless -%}
       {%- endfor -%}
     </div>
   </div>

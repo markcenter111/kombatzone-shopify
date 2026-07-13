@@ -1004,7 +1004,7 @@
         {%- endif -%}
 
         <div style="padding: 10px 24px 0; background: #0a0a0a;">
-          <div class="kz-progress-bar-wrap"><div class="kz-progress-bar{% if remaining_cents == 0 %} is-complete{% endif %}" style="width: {{ progress_pct }}%;"><span class="kz-progress-truck" aria-hidden="true"><i class="ti ti-truck"></i></span></div></div>
+          <div class="kz-progress-bar-wrap"><div class="kz-progress-bar{% if remaining_cents == 0 %} is-complete{% endif %}" style="width: {{ progress_pct }}%;"><span class="kz-progress-truck" aria-hidden="true"><i class="ti ti-truck-delivery"></i></span></div></div>
           <div class="kz-free-shipping-msg" data-free-shipping-msg>
             {%- if remaining_cents > 0 -%}
               Aggiungi <strong>{{ remaining_cents | money }} di prodotti</strong> per la spedizione gratuita
