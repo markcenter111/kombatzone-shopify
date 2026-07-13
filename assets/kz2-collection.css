@@ -204,9 +204,8 @@
   flex-direction: column;
 }
 .kz-card:hover {
-  border-color: var(--kz-red);
   transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, .45), 0 0 0 1px rgba(232, 39, 42, .12);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .45);
 }
 
 .kz-card__image-wrap {
