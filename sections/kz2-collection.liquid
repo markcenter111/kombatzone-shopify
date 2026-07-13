@@ -147,6 +147,7 @@
             {%- if collection.sort_by == option.value %} selected{%- endif %}>
             {%- case option.value -%}
               {%- when 'manual' -%}In evidenza
+              {%- when 'relevance' -%}Più pertinenti
               {%- when 'best-selling' -%}Più venduti
               {%- when 'title-ascending' -%}Nome A–Z
               {%- when 'title-descending' -%}Nome Z–A
@@ -267,6 +268,65 @@
 <script src="{{ 'kz-product-modal.js' | asset_url }}" defer></script>
 
 <script>
+  /* Dropdown custom: sostituisce le <select> native con menu in stile brand */
+  (function () {
+    var CARET = '<svg class="kz-dd-caret" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>';
+
+    function closeAll(except) {
+      document.querySelectorAll('.kz-dd.open').forEach(function (d) {
+        if (d !== except) {
+          d.classList.remove('open');
+          var b = d.querySelector('.kz-dd-btn');
+          if (b) b.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    document.querySelectorAll('select.kz-select').forEach(function (sel) {
+      var dd = document.createElement('div');
+      dd.className = 'kz-dd';
+      if (sel.closest('.kz-filter-bar__right')) dd.classList.add('kz-dd--right');
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'kz-dd-btn';
+      btn.setAttribute('aria-haspopup', 'listbox');
+      btn.setAttribute('aria-expanded', 'false');
+      var selOpt = sel.options[sel.selectedIndex];
+      btn.innerHTML = '<span class="kz-dd-label"></span>' + CARET;
+      btn.querySelector('.kz-dd-label').textContent = selOpt ? selOpt.text.trim() : '';
+
+      var panel = document.createElement('div');
+      panel.className = 'kz-dd-panel';
+      panel.setAttribute('role', 'listbox');
+      Array.prototype.forEach.call(sel.options, function (o) {
+        var it = document.createElement('button');
+        it.type = 'button';
+        it.className = 'kz-dd-opt' + (o.selected ? ' is-selected' : '');
+        it.setAttribute('role', 'option');
+        if (o.selected) it.setAttribute('aria-selected', 'true');
+        it.textContent = o.text.trim();
+        it.addEventListener('click', function () { window.location = o.value; });
+        panel.appendChild(it);
+      });
+
+      dd.appendChild(btn);
+      dd.appendChild(panel);
+      sel.parentNode.insertBefore(dd, sel);
+      sel.style.display = 'none';
+
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        closeAll(dd);
+        var open = dd.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    });
+
+    document.addEventListener('click', function () { closeAll(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(); });
+  })();
+
   /* Reveal card allo scroll: fade-up con stagger quando entrano nel viewport */
   (function () {
     if (!('IntersectionObserver' in window)) return;

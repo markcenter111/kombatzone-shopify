@@ -957,3 +957,89 @@ a.kz-page-dot:hover {
   .kz-card:hover { transform: none; }
   .kz-card:hover .kz-card__image { transform: none; }
 }
+
+
+/* =========================================================
+   Dropdown custom (sostituisce le <select> native via JS)
+   ========================================================= */
+.kz-dd { position: relative; display: inline-block; }
+.kz-dd-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #ccc;
+  cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s;
+}
+.kz-dd-btn:hover { border-color: #555; color: #fff; }
+.kz-dd.open .kz-dd-btn { border-color: var(--kz-red); color: #fff; }
+.kz-dd-caret {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  transition: transform .2s ease;
+  color: #777;
+}
+.kz-dd.open .kz-dd-caret { transform: rotate(180deg); color: var(--kz-red); }
+.kz-dd-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: max(100%, 190px);
+  background: #161616;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 6px;
+  z-index: 60;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .65);
+  opacity: 0;
+  transform: translateY(-6px) scale(.98);
+  transform-origin: top;
+  pointer-events: none;
+  transition: opacity .16s ease, transform .16s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.kz-dd--right .kz-dd-panel { left: auto; right: 0; }
+.kz-dd.open .kz-dd-panel { opacity: 1; transform: none; pointer-events: auto; }
+.kz-dd-opt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #aaa;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .12s, color .12s;
+}
+.kz-dd-opt:hover { background: rgba(232, 39, 42, .12); color: #fff; }
+.kz-dd-opt.is-selected { color: #fff; font-weight: 600; }
+.kz-dd-opt.is-selected::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--kz-red);
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(232, 39, 42, .8);
+}
