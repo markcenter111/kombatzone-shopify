@@ -46,6 +46,20 @@
   </form>
   <div class="kz-coupon-msg" data-coupon-msg></div>
 
+  {%- capture kz_coupon_tags -%}
+    {%- for application in cart.discount_applications -%}
+      {%- if application.type == 'discount_code' -%}
+        <div class="kz-coupon-tag">
+          <span class="kz-coupon-tag-code">{{ application.title }}</span>
+          <button type="button" class="kz-coupon-tag-x" data-coupon-remove aria-label="Rimuovi codice sconto {{ application.title | escape }}">&times;</button>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- if kz_coupon_tags contains 'kz-coupon-tag' -%}
+    <div class="kz-coupon-tags">{{ kz_coupon_tags }}</div>
+  {%- endif -%}
+
   <div class="kz-summary-row">
     <span class="kz-summary-label">Subtotale ({{ cart.item_count }} articol{% if cart.item_count == 1 %}o{% else %}i{% endif %})</span>
     <span class="kz-summary-val">{{ cart.original_total_price | money }}</span>

@@ -380,6 +380,47 @@
   #shopify-section-{{ section.id }} .kz-coupon-msg.show { display: block; }
   #shopify-section-{{ section.id }} .kz-coupon-msg.success { color: #7cd992; }
   #shopify-section-{{ section.id }} .kz-coupon-msg.error { color: #e57373; }
+  #shopify-section-{{ section.id }} .kz-coupon-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0 4px;
+  }
+  #shopify-section-{{ section.id }} .kz-coupon-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(232,39,42,0.07);
+    border: 1px solid #E8272A;
+    border-radius: 99px;
+    padding: 5px 6px 5px 14px;
+  }
+  #shopify-section-{{ section.id }} .kz-coupon-tag-code {
+    font-family: 'Inter', sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #E8272A;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .kz-coupon-tag-x {
+    background: none;
+    border: none;
+    color: #E8272A;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    transition: background .15s, color .15s;
+  }
+  #shopify-section-{{ section.id }} .kz-coupon-tag-x:hover { background: #E8272A; color: #fff; }
   #shopify-section-{{ section.id }} .kz-summary-row {
     display: flex;
     justify-content: space-between;
@@ -1364,6 +1405,23 @@
       function kzFormatMoney(cents) {
         return '\u20AC' + (cents / 100).toFixed(2).replace('.', ',');
       }
+
+      document.addEventListener('click', function (e) {
+        var removeBtn = e.target.closest('[data-coupon-remove]');
+        if (!removeBtn) return;
+        removeBtn.disabled = true;
+        removeBtn.style.opacity = '.5';
+        fetch('/cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ discount: '' })
+        })
+          .then(function () { refreshSection(); })
+          .catch(function () {
+            removeBtn.disabled = false;
+            removeBtn.style.opacity = '';
+          });
+      });
 
       document.addEventListener('submit', function (e) {
         var couponForm = e.target.closest('[data-coupon-form]');
