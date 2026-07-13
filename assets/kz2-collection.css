@@ -971,11 +971,10 @@ a.kz-page-dot:hover {
   border: 1px solid #333;
   border-radius: 8px;
   padding: 7px 12px;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13.5px;
-  font-weight: 600;
-  letter-spacing: .06em;
-  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .02em;
   color: #ccc;
   cursor: pointer;
   transition: border-color .15s, color .15s, background .15s;
