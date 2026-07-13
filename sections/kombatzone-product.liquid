@@ -598,6 +598,20 @@
 
   .kzpr-mobile-sticky-price { font-size: 16px; font-weight: 700; color: #F2F0EB; flex-shrink: 0; }
 
+  .kzpr-mobile-sticky-size {
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 8px;
+    background: #161616;
+    color: #F2F0EB;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    padding: 6px 12px;
+    text-transform: uppercase;
+  }
+
   .kzpr-mobile-sticky-btn {
     flex: 1;
     max-width: 520px;
@@ -887,6 +901,9 @@
 {%- comment -%} ============ MOBILE STICKY BAR ============ {%- endcomment -%}
 <div class="kzpr-mobile-sticky-bar" id="kzpr-sticky-bar-{{ section.id }}">
   <div class="kzpr-mobile-sticky-price">{{ current_variant.price | money }}</div>
+  {%- unless product.has_only_default_variant -%}
+    <div class="kzpr-mobile-sticky-size" id="kzpr-sticky-size-{{ section.id }}">{{ current_variant.title }}</div>
+  {%- endunless -%}
   <button type="button" class="kzpr-mobile-sticky-btn" id="kzpr-sticky-add-{{ section.id }}">
     {{ section.settings.add_to_cart_label }}
   </button>
@@ -955,6 +972,7 @@
     var addBtn = root.querySelector('.kzpr-add-to-cart');
     var priceEl = root.querySelector('.kzpr-price-now');
     var stickyPrice = document.querySelector('#kzpr-sticky-bar-{{ section.id }} .kzpr-mobile-sticky-price');
+    var stickySize = document.getElementById('kzpr-sticky-size-{{ section.id }}');
     if (match && hiddenInput) {
       hiddenInput.value = match.id;
       if (addBtn) {
@@ -966,6 +984,9 @@
       }
       if (stickyPrice && match.price) {
         stickyPrice.textContent = formatMoney(match.price);
+      }
+      if (stickySize && match.title) {
+        stickySize.textContent = match.title;
       }
     }
   }
