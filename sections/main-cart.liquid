@@ -442,9 +442,28 @@
     letter-spacing: .04em;
   }
   #shopify-section-{{ section.id }} .kz-trust-mini-item i { color: #E8272A; font-size: 14px; }
-  #shopify-section-{{ section.id }} .kz-progress-bar-wrap { background: #1a1a1a; height: 3px; margin: 0 0 6px; }
-  #shopify-section-{{ section.id }} .kz-progress-bar { background: #E8272A; height: 3px; transition: background .2s; }
+  #shopify-section-{{ section.id }} .kz-progress-bar-wrap { background: #1a1a1a; height: 3px; margin: 10px 0 12px; }
+  #shopify-section-{{ section.id }} .kz-progress-bar { background: #E8272A; height: 3px; transition: background .2s; position: relative; min-width: 14px; }
   #shopify-section-{{ section.id }} .kz-progress-bar.is-complete { background: #4cbb7a; }
+  #shopify-section-{{ section.id }} .kz-progress-truck {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(50%, -50%);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #0a0a0a;
+    border: 2px solid #E8272A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #E8272A;
+    font-size: 12px;
+    transition: border-color .2s, color .2s;
+    z-index: 1;
+  }
+  #shopify-section-{{ section.id }} .kz-progress-bar.is-complete .kz-progress-truck { border-color: #4cbb7a; color: #4cbb7a; }
   #shopify-section-{{ section.id }} .kz-free-shipping-msg {
     font-size: 10px;
     color: #888880;
@@ -880,10 +899,12 @@
       flex-wrap: wrap;
       justify-content: center;
       overflow-x: visible;
+      gap: 8px;
     }
     .kz-also-grid .kz-also-card {
-      flex: 0 0 calc(50% - 3px) !important;
-      width: calc(50% - 3px);
+      flex: 0 0 calc(50% - 8px) !important;
+      width: calc(50% - 8px);
+      max-width: calc(50% - 8px);
     }
     #shopify-section-{{ section.id }} .kz-empty { padding: 56px 16px; }
     #shopify-section-{{ section.id }} .kz-empty-also { max-width: 100%; }
@@ -983,7 +1004,7 @@
         {%- endif -%}
 
         <div style="padding: 10px 24px 0; background: #0a0a0a;">
-          <div class="kz-progress-bar-wrap"><div class="kz-progress-bar{% if remaining_cents == 0 %} is-complete{% endif %}" style="width: {{ progress_pct }}%;"></div></div>
+          <div class="kz-progress-bar-wrap"><div class="kz-progress-bar{% if remaining_cents == 0 %} is-complete{% endif %}" style="width: {{ progress_pct }}%;"><span class="kz-progress-truck" aria-hidden="true"><i class="ti ti-truck"></i></span></div></div>
           <div class="kz-free-shipping-msg" data-free-shipping-msg>
             {%- if remaining_cents > 0 -%}
               Aggiungi <strong>{{ remaining_cents | money }} di prodotti</strong> per la spedizione gratuita
