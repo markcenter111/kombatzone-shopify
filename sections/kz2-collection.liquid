@@ -266,6 +266,28 @@
 {%- render 'kz-product-modal' -%}
 <script src="{{ 'kz-product-modal.js' | asset_url }}" defer></script>
 
+<script>
+  /* Reveal card allo scroll: fade-up con stagger quando entrano nel viewport */
+  (function () {
+    if (!('IntersectionObserver' in window)) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll('.kz-product-grid').forEach(function (grid) {
+      grid.classList.add('kz-anim-ready');
+      var io = new IntersectionObserver(function (entries) {
+        var delay = 0;
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.style.animationDelay = delay + 'ms';
+          delay += 70;
+          entry.target.classList.add('kz-in');
+          io.unobserve(entry.target);
+        });
+      }, { rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
+      grid.querySelectorAll('.kz-card').forEach(function (card) { io.observe(card); });
+    });
+  })();
+</script>
+
 {% schema %}
 {
   "name": "KombatZone Catalog v2",
