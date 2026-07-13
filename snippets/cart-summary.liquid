@@ -60,24 +60,13 @@
 
   <div class="kz-summary-row">
     <span class="kz-summary-label">Spedizione</span>
-    {%- if qualifies_free_shipping -%}
-      <span class="kz-summary-val green">Gratuita</span>
-    {%- else -%}
-      <span class="kz-summary-val">Calcolata al checkout</span>
-    {%- endif -%}
+    <span class="kz-summary-val green">Gratuita</span>
   </div>
 
   {%- if has_free_gift -%}
     <div class="kz-summary-row">
       <span class="kz-summary-label">Omaggio</span>
       <span class="kz-summary-val" style="color:#C9992A;">{{ free_gift_name }} inclusa</span>
-    </div>
-  {%- endif -%}
-
-  {%- if cart.taxes_included -%}
-    <div class="kz-summary-row">
-      <span class="kz-summary-label">IVA inclusa</span>
-      <span class="kz-summary-val">{{ cart.total_tax | money_without_trailing_zeros }}</span>
     </div>
   {%- endif -%}
 
@@ -98,7 +87,7 @@
     <div class="kz-total-val">{{ cart.total_price | money }}</div>
   </div>
 
-  {%- form 'cart', cart -%}
+  {%- form 'cart', cart, id: 'kz-cart-form' -%}
     <button type="submit" name="checkout" class="kz-checkout-btn">
       <i class="ti ti-lock" aria-hidden="true"></i>
       Procedi al checkout
@@ -114,6 +103,18 @@
       </div>
     {%- endif -%}
   {%- endform -%}
+
+  {%- liquid
+    assign months_it = 'gen,feb,mar,apr,mag,giu,lug,ago,set,ott,nov,dic' | split: ','
+    assign eta_start_s = 'now' | date: '%s' | plus: 1209600
+    assign eta_end_s = 'now' | date: '%s' | plus: 1555200
+    assign eta_start_m = eta_start_s | date: '%m' | plus: 0 | minus: 1
+    assign eta_end_m = eta_end_s | date: '%m' | plus: 0 | minus: 1
+  -%}
+  <div class="kz-delivery-estimate">
+    <i class="ti ti-truck-delivery" aria-hidden="true"></i>
+    <span>Consegna stimata: <strong>{{ eta_start_s | date: '%-d' }} {{ months_it[eta_start_m] }} – {{ eta_end_s | date: '%-d' }} {{ months_it[eta_end_m] }}</strong></span>
+  </div>
 
   <div class="kz-trust-mini">
     {%- if trust_badges and trust_badges.size > 0 -%}

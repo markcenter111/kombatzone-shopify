@@ -278,6 +278,20 @@
     color: #8a8a80;
     opacity: 1;
   }
+  #shopify-section-{{ section.id }} .kz-delivery-estimate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 10.5px;
+    color: #888880;
+    letter-spacing: .03em;
+    margin: 2px 0 12px;
+  }
+  #shopify-section-{{ section.id }} .kz-delivery-estimate i { color: #4cbb7a; font-size: 14px; }
+  #shopify-section-{{ section.id }} .kz-delivery-estimate strong { color: #F2F0EB; font-weight: 600; }
+  #shopify-section-{{ section.id }} .kz-cart-sticky { display: none; }
   #shopify-section-{{ section.id }} .kz-free-gift {
     display: grid;
     grid-template-columns: 80px 1fr;
@@ -931,6 +945,68 @@
     }
     #shopify-section-{{ section.id }} .kz-empty { padding: 56px 16px; }
     #shopify-section-{{ section.id }} .kz-empty-also { max-width: 100%; }
+
+    /* Sticky checkout bar */
+    #shopify-section-{{ section.id }} .kz-cart-section { padding-bottom: 66px; }
+    #shopify-section-{{ section.id }} .kz-cart-sticky {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 998;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 16px;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom));
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      transform: translateY(0);
+      transition: transform .25s ease;
+    }
+    #shopify-section-{{ section.id }} .kz-cart-sticky.is-hidden { transform: translateY(110%); }
+    #shopify-section-{{ section.id }} .kz-cart-sticky-total {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+      flex-shrink: 0;
+    }
+    #shopify-section-{{ section.id }} .kz-cart-sticky-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 8.5px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #888880;
+    }
+    #shopify-section-{{ section.id }} .kz-cart-sticky-val {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 21px;
+      font-weight: 800;
+      color: #F2F0EB;
+    }
+    #shopify-section-{{ section.id }} .kz-cart-sticky-btn {
+      flex: 1;
+      background: #E8272A;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: background .2s ease, transform .15s ease;
+    }
+    #shopify-section-{{ section.id }} .kz-cart-sticky-btn:active { background: #c41f22; transform: scale(.98); }
   }
 </style>
 
@@ -1088,12 +1164,37 @@
 
     </div>
 
+    {%- comment -%} Sticky checkout — solo mobile, si nasconde quando il bottone reale è visibile {%- endcomment -%}
+    <div class="kz-cart-sticky" data-cart-sticky>
+      <div class="kz-cart-sticky-total">
+        <span class="kz-cart-sticky-label">Totale</span>
+        <span class="kz-cart-sticky-val">{{ cart.total_price | money }}</span>
+      </div>
+      <button type="submit" form="kz-cart-form" name="checkout" class="kz-cart-sticky-btn">
+        <i class="ti ti-lock" aria-hidden="true"></i>
+        Procedi al checkout
+      </button>
+    </div>
+
   {%- endif -%}
 </div>
 
 <script>
   (function () {
     var sectionId = {{ section.id | json }};
+
+    var stickyObserver = null;
+    function initStickyCheckout() {
+      var sticky = document.querySelector('[data-cart-sticky]');
+      var realBtn = document.querySelector('.kz-checkout-btn');
+      if (!sticky || !realBtn || !('IntersectionObserver' in window)) return;
+      if (stickyObserver) stickyObserver.disconnect();
+      stickyObserver = new IntersectionObserver(function (entries) {
+        sticky.classList.toggle('is-hidden', entries[0].isIntersecting);
+      }, { rootMargin: '0px 0px -8% 0px' });
+      stickyObserver.observe(realBtn);
+    }
+    initStickyCheckout();
 
     function loadUpsells() {
       var container = document.querySelector('[data-upsell-root]');
@@ -1152,6 +1253,7 @@
             oldWrapper.replaceWith(newWrapper);
           }
           loadUpsells();
+          initStickyCheckout();
           document.dispatchEvent(new CustomEvent('cart:updated'));
         });
     }
