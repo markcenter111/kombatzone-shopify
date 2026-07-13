@@ -390,8 +390,8 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(232,39,42,0.07);
-    border: 1px solid #E8272A;
+    background: rgba(201,153,42,0.08);
+    border: 1px solid #C9992A;
     border-radius: 99px;
     padding: 5px 6px 5px 14px;
   }
@@ -401,13 +401,13 @@
     font-weight: 600;
     letter-spacing: .08em;
     text-transform: uppercase;
-    color: #E8272A;
+    color: #C9992A;
     line-height: 1;
   }
   #shopify-section-{{ section.id }} .kz-coupon-tag-x {
     background: none;
     border: none;
-    color: #E8272A;
+    color: #C9992A;
     width: 18px;
     height: 18px;
     border-radius: 50%;
@@ -420,7 +420,7 @@
     padding: 0;
     transition: background .15s, color .15s;
   }
-  #shopify-section-{{ section.id }} .kz-coupon-tag-x:hover { background: #E8272A; color: #fff; }
+  #shopify-section-{{ section.id }} .kz-coupon-tag-x:hover { background: #C9992A; color: #0a0a0a; }
   #shopify-section-{{ section.id }} .kz-summary-row {
     display: flex;
     justify-content: space-between;
@@ -1282,7 +1282,7 @@
     }
 
     function refreshSection() {
-      fetch(window.location.pathname + '?sections=' + sectionId)
+      return fetch(window.location.pathname + '?sections=' + sectionId)
         .then(function (r) { return r.json(); })
         .then(function (data) {
           var html = data[sectionId];
@@ -1444,36 +1444,30 @@
         if (submitBtn) { submitBtn.disabled = true; submitBtn.classList.add('is-loading'); }
         setMsg(msgEl, 'Verifica in corso…', '');
 
-        // Il codice sconto va nel PATH dell'URL (non come query string).
-        // Colpiamo /discount/CODICE con redirect verso la pagina corrente
-        // (non /checkout): cosi lo sconto viene associato al carrello/sessione
-        // ma l'utente resta sul carrello e vede solo il ricalcolo del totale,
-        // senza essere portato automaticamente al checkout.
+        // Cart AJAX API: /cart/update.js con { discount: CODICE } applica lo
+        // sconto direttamente al carrello (totali, chip e riepilogo si
+        // aggiornano subito), senza passare dal checkout.
         fetch('/cart.js')
           .then(function (r) { return r.json(); })
           .then(function (cartBefore) {
-            var discountBefore = cartBefore.total_discount;
-            return fetch('/discount/' + encodeURIComponent(code) + '?redirect=' + encodeURIComponent(window.location.pathname))
-              .then(function () { return fetch('/cart.js'); })
+            return fetch('/cart/update.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ discount: code })
+            })
               .then(function (r) { return r.json(); })
               .then(function (cartAfter) {
-                return fetch(window.location.pathname + '?section_id=cart-section')
-                  .then(function (r) { return r.text(); })
-                  .then(function (html) {
-                    var doc = new DOMParser().parseFromString(html, 'text/html');
-                    var freshSummary = doc.querySelector('[data-cart-summary]');
-                    var currentSummary = document.querySelector('[data-cart-summary]');
-                    if (freshSummary && currentSummary) {
-                      currentSummary.replaceWith(freshSummary);
-                    }
-                    var newMsg = document.querySelector('[data-coupon-msg]');
-                    var discountAfter = cartAfter.total_discount;
-                    if (discountAfter > discountBefore) {
-                      setMsg(newMsg, 'Codice applicato: risparmi ' + kzFormatMoney(discountAfter - discountBefore) + '.', 'success');
-                    } else {
-                      setMsg(newMsg, 'Codice non valido, scaduto o non applicabile a questo ordine.', 'error');
-                    }
-                  });
+                var saved = cartBefore.total_price - cartAfter.total_price;
+                var applied = saved > 0 || cartAfter.total_discount > cartBefore.total_discount;
+                return refreshSection().then(function () {
+                  var newMsg = document.querySelector('[data-coupon-msg]');
+                  if (applied) {
+                    var savedAmount = saved > 0 ? saved : cartAfter.total_discount - cartBefore.total_discount;
+                    setMsg(newMsg, 'Codice applicato: risparmi ' + kzFormatMoney(savedAmount) + '.', 'success');
+                  } else {
+                    setMsg(newMsg, 'Codice non valido, scaduto o non applicabile a questo ordine.', 'error');
+                  }
+                });
               });
           })
           .catch(function () {
