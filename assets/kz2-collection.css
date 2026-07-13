@@ -157,16 +157,24 @@
    --------------------------------------------------------- */
 .kz-product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 14px;
   padding: 20px 24px 28px;
   transition: grid-template-columns .2s;
 }
 
-/* Grid size variants */
-.kz-product-grid--sm { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
-.kz-product-grid--md { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
-.kz-product-grid--lg { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+/* Grid size variants — colonne FISSE che dividono sempre 24 prodotti/pagina
+   (6, 4, 3, 2): l'ultima riga risulta sempre completa su ogni monitor. */
+.kz-product-grid--sm { grid-template-columns: repeat(6, 1fr); gap: 10px; }
+.kz-product-grid--md { grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.kz-product-grid--lg { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+
+/* Tablet: si scala mantenendo divisori di 24 (4, 3, 2) */
+@media (max-width: 1023px) {
+  .kz-product-grid--sm { grid-template-columns: repeat(4, 1fr); }
+  .kz-product-grid--md { grid-template-columns: repeat(3, 1fr); }
+  .kz-product-grid--lg { grid-template-columns: repeat(2, 1fr); }
+}
 
 /* Card image scales with grid */
 .kz-product-grid--lg .kz-card__image-wrap { height: 220px; }
