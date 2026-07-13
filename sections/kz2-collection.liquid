@@ -43,14 +43,16 @@
 
     {%- for block in section.blocks -%}
       {%- if block.type == 'category' -%}
-        {%- assign tag       = block.settings.tag -%}
-        {%- assign tag_url   = collection.url | append: '/' | append: tag | handle -%}
-        <a href="{{ tag_url }}"
-           class="kz-cat-btn{% if current_tags contains tag %} kz-cat-btn--active{% endif %}"
-           role="listitem"
-           {{ block.shopify_attributes }}>
-          {{ block.settings.label }}
-        </a>
+        {%- assign tag = block.settings.tag -%}
+        {%- if collection.all_tags contains tag -%}
+          {%- assign tag_url = collection.url | append: '/' | append: tag | handle -%}
+          <a href="{{ tag_url }}"
+             class="kz-cat-btn{% if current_tags contains tag %} kz-cat-btn--active{% endif %}"
+             role="listitem"
+             {{ block.shopify_attributes }}>
+            {{ block.settings.label }}
+          </a>
+        {%- endif -%}
       {%- endif -%}
     {%- endfor -%}
 
@@ -62,53 +64,75 @@
     <div class="kz-filter-bar__left">
       <span class="kz-filter-bar__label">Filtri:</span>
 
-      {%- comment -%} Filtro livello {%- endcomment -%}
-      <select class="kz-select"
-              aria-label="Filtra per livello"
-              onchange="window.location=this.value">
-        <option value="{{ collection.url }}">Tutti i livelli</option>
-        <option value="{{ collection.url }}/principiante"
-          {%- if current_tags contains 'principiante' %} selected{%- endif %}>
-          Principiante
-        </option>
-        <option value="{{ collection.url }}/intermedio"
-          {%- if current_tags contains 'intermedio' %} selected{%- endif %}>
-          Intermedio
-        </option>
-        <option value="{{ collection.url }}/agonista"
-          {%- if current_tags contains 'agonista' %} selected{%- endif %}>
-          Agonista
-        </option>
-      </select>
+      {%- comment -%} Filtro livello — solo se la collezione ha tag livello {%- endcomment -%}
+      {%- if collection.all_tags contains 'principiante' or collection.all_tags contains 'intermedio' or collection.all_tags contains 'agonista' -%}
+        <select class="kz-select"
+                aria-label="Filtra per livello"
+                onchange="window.location=this.value">
+          <option value="{{ collection.url }}">Tutti i livelli</option>
+          {%- if collection.all_tags contains 'principiante' -%}
+            <option value="{{ collection.url }}/principiante"
+              {%- if current_tags contains 'principiante' %} selected{%- endif %}>
+              Principiante
+            </option>
+          {%- endif -%}
+          {%- if collection.all_tags contains 'intermedio' -%}
+            <option value="{{ collection.url }}/intermedio"
+              {%- if current_tags contains 'intermedio' %} selected{%- endif %}>
+              Intermedio
+            </option>
+          {%- endif -%}
+          {%- if collection.all_tags contains 'agonista' -%}
+            <option value="{{ collection.url }}/agonista"
+              {%- if current_tags contains 'agonista' %} selected{%- endif %}>
+              Agonista
+            </option>
+          {%- endif -%}
+        </select>
+      {%- endif -%}
 
-      <select class="kz-select"
-              aria-label="Filtra per marca"
-              onchange="window.location=this.value">
-        <option value="{{ collection.url }}">Tutte le marche</option>
-        {%- assign vendors = section.settings.vendors | split: ',' -%}
+      {%- assign vendors = section.settings.vendors | split: ',' -%}
+      {%- capture kz_vendor_options -%}
         {%- for vendor in vendors -%}
           {%- assign v = vendor | strip -%}
-          <option value="{{ collection.url }}/{{ v | handle }}"
-            {%- if current_tags contains v %} selected{%- endif %}>
-            {{ v }}
-          </option>
+          {%- if collection.all_tags contains v -%}
+            <option value="{{ collection.url }}/{{ v | handle }}"
+              {%- if current_tags contains v %} selected{%- endif %}>
+              {{ v }}
+            </option>
+          {%- endif -%}
         {%- endfor -%}
-      </select>
+      {%- endcapture -%}
+      {%- if kz_vendor_options contains '<option' -%}
+        <select class="kz-select"
+                aria-label="Filtra per marca"
+                onchange="window.location=this.value">
+          <option value="{{ collection.url }}">Tutte le marche</option>
+          {{ kz_vendor_options }}
+        </select>
+      {%- endif -%}
 
       
-      <select class="kz-select"
-              aria-label="Filtra per taglia"
-              onchange="window.location=this.value">
-        <option value="{{ collection.url }}">Tutte le taglie</option>
-        {%- assign sizes = section.settings.sizes | split: ',' -%}
+      {%- assign sizes = section.settings.sizes | split: ',' -%}
+      {%- capture kz_size_options -%}
         {%- for size in sizes -%}
-          {%- assign s = size | strip -%}
-          <option value="{{ collection.url }}/{{ s | handle }}"
-            {%- if current_tags contains s %} selected{%- endif %}>
-            {{ s }}
-          </option>
+          {%- assign sz = size | strip -%}
+          {%- if collection.all_tags contains sz -%}
+            <option value="{{ collection.url }}/{{ sz | handle }}"
+              {%- if current_tags contains sz %} selected{%- endif %}>
+              {{ sz }}
+            </option>
+          {%- endif -%}
         {%- endfor -%}
-      </select>
+      {%- endcapture -%}
+      {%- if kz_size_options contains '<option' -%}
+        <select class="kz-select"
+                aria-label="Filtra per taglia"
+                onchange="window.location=this.value">
+          <option value="{{ collection.url }}">Tutte le taglie</option>
+          {{ kz_size_options }}
+        </select>
+      {%- endif -%}
     </div>
 
     <div class="kz-filter-bar__right">
@@ -121,7 +145,17 @@
         {%- for option in collection.sort_options -%}
           <option value="{{ collection.url }}?sort_by={{ option.value }}"
             {%- if collection.sort_by == option.value %} selected{%- endif %}>
-            {{ option.name }}
+            {%- case option.value -%}
+              {%- when 'manual' -%}In evidenza
+              {%- when 'best-selling' -%}Più venduti
+              {%- when 'title-ascending' -%}Nome A–Z
+              {%- when 'title-descending' -%}Nome Z–A
+              {%- when 'price-ascending' -%}Prezzo: dal più basso
+              {%- when 'price-descending' -%}Prezzo: dal più alto
+              {%- when 'created-ascending' -%}Meno recenti
+              {%- when 'created-descending' -%}Novità
+              {%- else -%}{{ option.name }}
+            {%- endcase -%}
           </option>
         {%- endfor -%}
       </select>

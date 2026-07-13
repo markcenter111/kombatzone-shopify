@@ -145,7 +145,9 @@
         {%- endif -%}
       </div>
     {%- else -%}
-      <div class="kz-card__type">{{ product.type | upcase }}</div>
+      {%- assign kz_card_type = product.type -%}
+      {%- if kz_card_type == blank -%}{%- assign kz_card_type = product.collections.first.title -%}{%- endif -%}
+      <div class="kz-card__type">{{ kz_card_type | upcase }}</div>
     {%- endif -%}
 
     <a href="{{ product.url }}" class="kz-card__title">
@@ -158,13 +160,6 @@
       </div>
     {%- endif -%}
 
-    <div class="kz-card__price">
-      <span class="kz-card__price-current">{{ product.price | money }}</span>
-      {%- if has_discount -%}
-        <span class="kz-card__price-old">{{ product.compare_at_price | money }}</span>
-      {%- endif -%}
-    </div>
-
     {%- comment -%} Contenuto set — metafield kzone.contenuto {%- endcomment -%}
     {%- assign contenuto = product.metafields.kzone.contenuto.value -%}
     {%- if contenuto != blank -%}
@@ -175,6 +170,13 @@
         {%- endfor -%}
       </div>
     {%- endif -%}
+
+    <div class="kz-card__price">
+      <span class="kz-card__price-current">{{ product.price | money }}</span>
+      {%- if has_discount -%}
+        <span class="kz-card__price-old">{{ product.compare_at_price | money }}</span>
+      {%- endif -%}
+    </div>
 
     {%- comment -%}
       Il bottone testuale rimane nell'HTML per accessibilità e
