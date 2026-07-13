@@ -115,15 +115,16 @@
         {%- endif -%}
       </div>
 
-      <div class="kz-qty" data-qty-wrap>
-        <button type="button" class="kz-qty-btn" data-qty-decrease aria-label="Diminuisci quantità">−</button>
-        <div class="kz-qty-val" data-qty-value>{{ item.quantity }}</div>
-        <button type="button" class="kz-qty-btn" data-qty-increase aria-label="Aumenta quantità">+</button>
+      <div class="kz-item-actions">
+        <div class="kz-qty" data-qty-wrap>
+          <button type="button" class="kz-qty-btn" data-qty-decrease aria-label="Diminuisci quantità">−</button>
+          <div class="kz-qty-val" data-qty-value>{{ item.quantity }}</div>
+          <button type="button" class="kz-qty-btn" data-qty-increase aria-label="Aumenta quantità">+</button>
+        </div>
+        <button type="button" class="kz-remove-btn" data-cart-remove>
+          <i class="ti ti-trash" aria-hidden="true"></i> Rimuovi
+        </button>
       </div>
-
-      <button type="button" class="kz-remove-btn" data-cart-remove>
-        <i class="ti ti-trash" aria-hidden="true"></i> Rimuovi
-      </button>
     </div>
   </div>
 
