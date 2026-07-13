@@ -483,24 +483,12 @@
 }
 
 /* ---------------------------------------------------------
-   Hero Card (bestseller a doppia larghezza)
+   Card bestseller: stessa identica dimensione delle altre.
+   Si distingue SOLO per l'etichetta "PIU' VENDUTO" sull'immagine
+   (niente doppia larghezza, niente bordo rosso fisso).
    --------------------------------------------------------- */
 .kz-card--hero {
-  grid-column: span 2;
-  border-color: var(--kz-red) !important;
-}
-.kz-card--hero .kz-card__image-wrap {
-  height: 200px;
-}
-.kz-card--hero .kz-card__title {
-  font-size: 16px;
-}
-.kz-card--hero .kz-card__price-current {
-  font-size: 20px;
-}
-.kz-card--hero .kz-card__atc {
-  font-size: 13px;
-  padding: 11px 0;
+  grid-column: auto;
 }
 
 /* Bestseller label a tutta larghezza sopra l'immagine */
