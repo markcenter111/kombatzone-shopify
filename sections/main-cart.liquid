@@ -175,9 +175,11 @@
     margin: 14px 24px;
     border: 1px solid rgba(232,39,42,0.35);
     border-radius: 12px;
-    overflow: hidden;
+    /* overflow visibile: la tendina variante deve poter uscire dalla card */
     background: linear-gradient(180deg, rgba(232,39,42,0.05), rgba(232,39,42,0) 70%);
   }
+  #shopify-section-{{ section.id }} .kz-set-head { border-radius: 12px 12px 0 0; }
+  #shopify-section-{{ section.id }} .kz-set-actions { border-radius: 0 0 12px 12px; }
   #shopify-section-{{ section.id }} .kz-set-head {
     display: flex;
     align-items: baseline;
@@ -330,9 +332,15 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
-    max-height: 260px;
+    max-height: 300px;
     overflow-y: auto;
+    min-width: 170px;
+    scrollbar-width: thin;
+    scrollbar-color: #333 transparent;
   }
+  #shopify-section-{{ section.id }} .kz-vdd-panel::-webkit-scrollbar { width: 6px; }
+  #shopify-section-{{ section.id }} .kz-vdd-panel::-webkit-scrollbar-thumb { background: #333; border-radius: 99px; }
+  #shopify-section-{{ section.id }} .kz-vdd-panel::-webkit-scrollbar-track { background: transparent; }
   #shopify-section-{{ section.id }} .kz-vdd.open .kz-vdd-panel { opacity: 1; transform: none; pointer-events: auto; }
   #shopify-section-{{ section.id }} .kz-vdd-opt {
     display: flex;
