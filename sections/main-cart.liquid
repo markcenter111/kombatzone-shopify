@@ -253,6 +253,30 @@
   #shopify-section-{{ section.id }} .kz-also-arrow,
   .kz-also-arrow { display: none !important; }
 
+  /* Upsell: griglia a righe complete come il catalogo.
+     Le card oltre la riga piena vengono nascoste per breakpoint. */
+  .kz-also-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    overflow: visible !important;
+  }
+  .kz-also-grid .kz-also-card {
+    width: auto !important;
+    max-width: none !important;
+    flex: none !important;
+  }
+  .kz-also-grid .kz-also-card:nth-child(n+5) { display: none !important; }
+  @media (max-width: 1199px) {
+    .kz-also-grid { grid-template-columns: repeat(3, 1fr); }
+    .kz-also-grid .kz-also-card:nth-child(n+4) { display: none !important; }
+  }
+  @media (max-width: 540px) {
+    .kz-also-grid { grid-template-columns: repeat(2, 1fr); }
+    .kz-also-grid .kz-also-card:nth-child(n+4) { display: flex !important; }
+    .kz-also-grid .kz-also-card:nth-child(n+5) { display: none !important; }
+  }
+
   /* Tendina variante custom: taglia + pallino colore */
   #shopify-section-{{ section.id }} .kz-vdd { position: relative; display: inline-block; }
   #shopify-section-{{ section.id }} .kz-vdd-btn {
@@ -2004,7 +2028,7 @@
       "type": "number",
       "id": "upsell_limit",
       "label": "Numero massimo di prodotti consigliati",
-      "default": 3
+      "default": 4
     },
     {
       "type": "select",
