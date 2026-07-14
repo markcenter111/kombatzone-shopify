@@ -576,6 +576,95 @@
 
   }
 
+  /* ── MINI-POPUP "AGGIUNTO AL CARRELLO" (stesso del quick-buy) ── */
+  #kzpr-added-{{ section.id }} {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+    z-index: 999998;
+  }
+  #kzpr-added-{{ section.id }}.show { opacity: 1; pointer-events: auto; }
+  .kzpr-added-card {
+    background: #161616;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 26px 26px 22px;
+    width: min(320px, calc(100% - 48px));
+    text-align: center;
+    box-shadow: 0 22px 60px rgba(0,0,0,.6);
+    transform: translateY(10px) scale(.96);
+    transition: transform .25s cubic-bezier(.2,.6,.2,1);
+  }
+  #kzpr-added-{{ section.id }}.show .kzpr-added-card { transform: translateY(0) scale(1); }
+  .kzpr-added-check {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(76,187,122,0.12);
+    border: 1.5px solid #4cbb7a;
+    color: #4cbb7a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+  }
+  .kzpr-added-check svg { width: 22px; height: 22px; }
+  .kzpr-added-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #F2F0EB;
+    margin-bottom: 16px;
+  }
+  .kzpr-added-cart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: 46px;
+    background: #E8272A;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    margin-bottom: 8px;
+    transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+  }
+  .kzpr-added-cart:hover { background: #c41f22; transform: translateY(-2px); box-shadow: 0 8px 22px rgba(232,39,42,.35); }
+  .kzpr-added-cart:active { transform: translateY(0) scale(.98); box-shadow: none; }
+  .kzpr-added-continue {
+    width: 100%;
+    height: 42px;
+    background: transparent;
+    border: 1px solid rgba(242,240,235,0.35);
+    border-radius: 8px;
+    color: #F2F0EB;
+    font-family: 'Inter', sans-serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color .2s ease, transform .2s ease, background .2s ease;
+  }
+  .kzpr-added-continue:hover { border-color: #F2F0EB; transform: translateY(-2px); background: rgba(255,255,255,.04); }
+
   /* Sticky add-to-cart bar — stile carrello, desktop e mobile */
   .kzpr-mobile-sticky-bar {
     position: fixed;
@@ -823,7 +912,7 @@
         </div>
 
         {%- if section.settings.show_buy_now and current_variant.available -%}
-          <button type="button" class="kzpr-buy-now" onclick="document.getElementById('kzpr-product-form').requestSubmit(); window.location.href='/checkout';">
+          <button type="button" class="kzpr-buy-now" id="kzpr-buy-now-{{ section.id }}">
             {{ section.settings.buy_now_label }}
           </button>
         {%- endif -%}
@@ -963,6 +1052,20 @@
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5"/></svg>
 </button>
 
+<div id="kzpr-added-{{ section.id }}" aria-hidden="true">
+  <div class="kzpr-added-card">
+    <div class="kzpr-added-check">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+    </div>
+    <div class="kzpr-added-title">Aggiunto al carrello!</div>
+    <a class="kzpr-added-cart" href="/cart">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width:15px;height:15px"><path d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 0 0 0-1.5H5.378A2.25 2.25 0 0 1 7.5 15h11.218a.75.75 0 0 0 .674-.421 60.358 60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z"/></svg>
+      Vai al carrello
+    </a>
+    <button type="button" class="kzpr-added-continue" id="kzpr-added-continue-{{ section.id }}">Continua lo shopping</button>
+  </div>
+</div>
+
 <script>
 (function() {
   var root = document.getElementById('kzpr-{{ section.id }}');
@@ -1089,6 +1192,55 @@
   }
   if (stickyHideBtn) stickyHideBtn.addEventListener('click', function() { stickyCollapsed = true; syncSticky(); });
   if (stickyShowTab) stickyShowTab.addEventListener('click', function() { stickyCollapsed = false; syncSticky(); });
+
+  /* ── Add to cart AJAX + mini-popup scelta (come il quick-buy) ── */
+  var kzprForm = document.getElementById('kzpr-product-form');
+  var kzprAdded = document.getElementById('kzpr-added-{{ section.id }}');
+  var kzprBuyNow = document.getElementById('kzpr-buy-now-{{ section.id }}');
+  var kzprGoCheckout = false;
+
+  function kzprUpdateCartCount() {
+    fetch('/cart.js').then(function(r){ return r.json(); }).then(function(cart){
+      var badge = document.querySelector('.kz-cart-count');
+      if (!badge) return;
+      badge.textContent = cart.item_count > 0 ? cart.item_count : '';
+      badge.style.display = cart.item_count > 0 ? '' : 'none';
+    });
+  }
+
+  if (kzprForm) {
+    kzprForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var addBtnEl = kzprForm.querySelector('.kzpr-add-to-cart');
+      if (addBtnEl) addBtnEl.disabled = true;
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(kzprForm)
+      })
+        .then(function(r){ return r.json(); })
+        .then(function(){
+          if (addBtnEl) addBtnEl.disabled = false;
+          if (kzprGoCheckout) { window.location.href = '/checkout'; return; }
+          kzprUpdateCartCount();
+          if (kzprAdded) kzprAdded.classList.add('show');
+          else window.location.href = '/cart';
+        })
+        .catch(function(){
+          if (addBtnEl) addBtnEl.disabled = false;
+          kzprGoCheckout = false;
+        });
+    });
+  }
+  if (kzprBuyNow) kzprBuyNow.addEventListener('click', function() {
+    kzprGoCheckout = true;
+    kzprForm.requestSubmit();
+  });
+  if (kzprAdded) {
+    kzprAdded.addEventListener('click', function(e) { if (e.target === kzprAdded) kzprAdded.classList.remove('show'); });
+    var contBtn = document.getElementById('kzpr-added-continue-{{ section.id }}');
+    if (contBtn) contBtn.addEventListener('click', function() { kzprAdded.classList.remove('show'); });
+  }
 
   var stickyAddBtn = document.getElementById('kzpr-sticky-add-{{ section.id }}');
   if (stickyAddBtn) {
