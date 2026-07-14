@@ -1,11 +1,21 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "kz2-locker",
       "settings": {
+        "source_collection": "locker",
+        "base_image": "shopify://shop_images/set_colorato.png",
         "padding_top": 48,
-        "padding_bottom": 80,
-        "source_collection": "locker"
+        "padding_bottom": 80
       }
     }
   },
