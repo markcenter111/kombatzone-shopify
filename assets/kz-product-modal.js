@@ -280,37 +280,87 @@
     return translations[lower] || name;
   }
 
+  /* Varianti per OPZIONE, identiche alla pagina prodotto:
+     taglie = bottoni quadrati, colori = pallini tondi */
+  let modalSelectedOptions = [];
+
+  function translateOptionName(name) {
+    const t = { size:'Taglia', taglia:'Taglia', color:'Colore', colour:'Colore', colore:'Colore', title:'Variante' };
+    return t[(name || '').trim().toLowerCase()] || name;
+  }
+  function isColorOption(name) {
+    const n = (name || '').trim().toLowerCase();
+    return n === 'color' || n === 'colour' || n === 'colore';
+  }
+  function findMatchingVariant(product) {
+    return product.variants.find(v => v.options.every((o, i) => o === modalSelectedOptions[i]));
+  }
+  function valueAvailable(product, optIndex, value) {
+    return product.variants.some(v =>
+      v.available &&
+      v.options[optIndex] === value &&
+      v.options.every((o, i) => i === optIndex || o === modalSelectedOptions[i])
+    );
+  }
+
   function renderVariants(product) {
-    const wrap      = document.getElementById('kz-modal-variants-wrap');
-    const container = document.getElementById('kz-modal-variants');
-    const label     = document.getElementById('kz-modal-variants-label');
-    container.innerHTML = '';
+    const wrap = document.getElementById('kz-modal-variants-wrap');
+    wrap.innerHTML = '';
 
     if (product.variants.length === 1 && product.variants[0].title === 'Default Title') {
       wrap.style.display = 'none';
       return;
     }
-
     wrap.style.display = 'block';
-    label.textContent = getOptionLabel(product);
 
-    product.variants.forEach(variant => {
-      const btn = document.createElement('button');
-      btn.className = 'kz-modal-var-btn' +
-        (variant.id === selectedVariantId ? ' active' : '') +
-        (!variant.available ? ' unavailable' : '');
-      btn.textContent = variant.title;
-      btn.disabled = !variant.available;
-      btn.addEventListener('click', () => {
-        if (!variant.available) return;
-        selectedVariantId = variant.id;
-        container.querySelectorAll('.kz-modal-var-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        updatePrice(variant);
-        updateStock(variant);
+    const current = product.variants.find(v => v.id === selectedVariantId) || product.variants[0];
+    modalSelectedOptions = current.options.slice();
+
+    (product.options || []).forEach((opt, optIndex) => {
+      const optName   = typeof opt === 'string' ? opt : (opt.name || '');
+      const optValues = typeof opt === 'string'
+        ? [...new Set(product.variants.map(v => v.options[optIndex]))]
+        : (opt.values || []);
+
+      const label = document.createElement('div');
+      label.className = 'kz-modal-label';
+      label.textContent = translateOptionName(optName);
+      wrap.appendChild(label);
+
+      const group = document.createElement('div');
+      group.className = 'kz-modal-variants' + (isColorOption(optName) ? ' kz-modal-swatches' : '');
+
+      optValues.forEach(value => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        if (isColorOption(optName)) {
+          btn.className = 'kz-modal-swatch';
+          btn.style.backgroundColor = String(value).toLowerCase().replace(/\s+/g, '-');
+          btn.setAttribute('aria-label', value);
+        } else {
+          btn.className = 'kz-modal-var-btn';
+          btn.textContent = value;
+        }
+        if (modalSelectedOptions[optIndex] === value) btn.classList.add('active');
+        if (!valueAvailable(product, optIndex, value)) btn.classList.add('unavailable');
+        btn.addEventListener('click', () => {
+          modalSelectedOptions[optIndex] = value;
+          const match = findMatchingVariant(product);
+          if (match) {
+            selectedVariantId = match.id;
+            updatePrice(match);
+            updateStock(match);
+          }
+          renderVariants(product);
+        });
+        group.appendChild(btn);
       });
-      container.appendChild(btn);
+      wrap.appendChild(group);
     });
+
+    const divider = document.createElement('div');
+    divider.className = 'kz-modal-divider';
+    wrap.appendChild(divider);
   }
 
   /* ──────────────────────────────────────
@@ -351,7 +401,7 @@
     }
 
     addBtn.disabled = false;
-    addBtn.textContent = '🛒 Aggiungi al carrello';
+    addBtn.textContent = 'Aggiungi al carrello';
 
     const qty = variant.inventory_quantity;
     if (qty !== undefined && qty !== null && qty <= 10 && qty > 0) {
