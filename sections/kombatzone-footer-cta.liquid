@@ -121,7 +121,7 @@
       {%- if kz_now_s < kz_end_s -%}{%- assign kz_promo_active = true -%}{%- endif -%}
     {%- endif -%}
     {%- if kz_promo_active -%}
-      <div class="footer-cta-sub">Spedizione gratuita su TUTTI gli ordini fino al {{ kz_end_s | date: '%-d/%-m' }} · Reso 30 giorni · Personalizzazione inclusa</div>
+      <div class="footer-cta-sub">Spedizione gratuita su TUTTI gli ordini fino al {{ kz_end_s | date: '%-d/%-m' }}</div>
     {%- else -%}
       <div class="footer-cta-sub">{{ section.settings.subtitle }}</div>
     {%- endif -%}
