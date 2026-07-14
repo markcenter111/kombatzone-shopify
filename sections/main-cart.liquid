@@ -1058,6 +1058,23 @@
 {%- assign progress_pct = cart.original_total_price | times: 100.0 | divided_by: free_shipping_threshold_cents -%}
 {%- if progress_pct > 100 -%}{%- assign progress_pct = 100 -%}{%- endif -%}
 
+{%- comment -%}
+  Promo lancio: fino a free_ship_promo_end la spedizione è gratuita per TUTTI
+  (stessa data del countdown nel banner). Scaduta la promo, torna
+  automaticamente la soglia standard. Lasciare vuoto per disattivare.
+{%- endcomment -%}
+{%- assign kz_promo_active = false -%}
+{%- assign kz_promo_end = section.settings.free_ship_promo_end -%}
+{%- if kz_promo_end != blank -%}
+  {%- assign kz_now_s = 'now' | date: '%s' | plus: 0 -%}
+  {%- assign kz_end_s = kz_promo_end | date: '%s' | plus: 0 -%}
+  {%- if kz_now_s < kz_end_s -%}
+    {%- assign kz_promo_active = true -%}
+    {%- assign remaining_cents = 0 -%}
+    {%- assign progress_pct = 100 -%}
+  {%- endif -%}
+{%- endif -%}
+
 {%- comment -%} Raccolta trust badge dai blocks della section, passata allo snippet cart-summary {%- endcomment -%}
 {%- assign trust_badges = '' -%}
 {%- capture trust_badges_json -%}
@@ -1201,7 +1218,7 @@
 
       </div>
 
-      {%- render 'cart-summary', free_shipping_threshold: free_shipping_threshold, trust_badges: trust_badges -%}
+      {%- render 'cart-summary', free_shipping_threshold: free_shipping_threshold, trust_badges: trust_badges, promo_active: kz_promo_active -%}
 
     </div>
 
@@ -1635,6 +1652,13 @@
       "label": "Soglia spedizione gratuita",
       "info": "Importo nella valuta dello shop (es. 60 per 60€)",
       "default": 60
+    },
+    {
+      "type": "text",
+      "id": "free_ship_promo_end",
+      "label": "Promo lancio: spedizione gratis per tutti fino a (ISO, es. 2026-07-30T23:59:59)",
+      "info": "Stessa data del countdown nel banner. Vuoto = promo disattivata.",
+      "default": "2026-07-30T23:59:59"
     },
     {
       "type": "checkbox",

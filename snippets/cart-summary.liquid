@@ -24,6 +24,9 @@
 {%- if cart.original_total_price >= free_shipping_threshold_cents -%}
   {%- assign qualifies_free_shipping = true -%}
 {%- endif -%}
+{%- if promo_active -%}
+  {%- assign qualifies_free_shipping = true -%}
+{%- endif -%}
 
 <div class="kz-sidebar" data-cart-summary>
 
@@ -74,7 +77,11 @@
 
   <div class="kz-summary-row">
     <span class="kz-summary-label">Spedizione</span>
-    <span class="kz-summary-val green">Gratuita</span>
+    {%- if qualifies_free_shipping -%}
+      <span class="kz-summary-val green">Gratuita</span>
+    {%- else -%}
+      <span class="kz-summary-val">Calcolata al checkout</span>
+    {%- endif -%}
   </div>
 
   {%- if has_free_gift -%}

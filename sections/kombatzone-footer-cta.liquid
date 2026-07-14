@@ -113,7 +113,18 @@
 <div id="kz-footer-cta-{{ section.id }}">
   <div class="footer-cta-text">
     <div class="footer-cta-title">{{ section.settings.title }}</div>
-    <div class="footer-cta-sub">{{ section.settings.subtitle }}</div>
+    {%- assign kz_promo_active = false -%}
+    {%- assign kz_promo_end = section.settings.free_ship_promo_end -%}
+    {%- if kz_promo_end != blank -%}
+      {%- assign kz_now_s = 'now' | date: '%s' | plus: 0 -%}
+      {%- assign kz_end_s = kz_promo_end | date: '%s' | plus: 0 -%}
+      {%- if kz_now_s < kz_end_s -%}{%- assign kz_promo_active = true -%}{%- endif -%}
+    {%- endif -%}
+    {%- if kz_promo_active -%}
+      <div class="footer-cta-sub">Spedizione gratuita su TUTTI gli ordini fino al {{ kz_end_s | date: '%-d/%-m' }} · Reso 30 giorni · Personalizzazione inclusa</div>
+    {%- else -%}
+      <div class="footer-cta-sub">{{ section.settings.subtitle }}</div>
+    {%- endif -%}
   </div>
   <a href="{{ section.settings.button_link | default: '#' }}" class="footer-cta-btn">{{ section.settings.button_text }} →</a>
 
@@ -137,6 +148,13 @@
   "tag": "section",
   "class": "kz-footer-cta-section",
   "settings": [
+    {
+      "type": "text",
+      "id": "free_ship_promo_end",
+      "label": "Promo lancio: fine (ISO, es. 2026-07-30T23:59:59)",
+      "info": "Durante la promo il sottotitolo diventa automaticamente 'Spedizione gratuita su TUTTI gli ordini'. Vuoto = disattivata.",
+      "default": "2026-07-30T23:59:59"
+    },
     {
       "type": "color",
       "id": "bg_color",
