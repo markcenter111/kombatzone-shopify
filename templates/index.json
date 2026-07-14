@@ -48,7 +48,7 @@
         "cta_primary_label": "comincia da qui",
         "cta_primary_url": "shopify://collections",
         "cta_ghost_label": "Personalizza il tuo set",
-        "cta_ghost_url": "",
+        "cta_ghost_url": "/pages/fighter-locker",
         "slide_image_1": "shopify://shop_images/nc.jpg",
         "slide_interval": 10
       }
@@ -319,7 +319,7 @@
         "title_line2": "la tua firma.",
         "description": "Ogni prodotto Kombat Zone può essere personalizzato con il tuo nome, nickname o numero. Zero costo aggiuntivo. Pronto in 2 giorni.",
         "button_text": "Personalizza il tuo set",
-        "button_link": ""
+        "button_link": "/pages/fighter-locker"
       }
     },
     "kombatzone_reviews_CFpNP9": {

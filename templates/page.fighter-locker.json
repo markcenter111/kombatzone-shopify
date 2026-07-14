@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "main": {
+      "type": "kz2-locker",
+      "settings": {
+        "padding_top": 48,
+        "padding_bottom": 80
+      }
+    }
+  },
+  "order": ["main"]
+}
