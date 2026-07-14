@@ -171,17 +171,21 @@
     padding: 2px 7px;
   }
   #shopify-section-{{ section.id }} .kz-item-size-select {
-    font-size: 10px;
+    font-size: 12px;
+    font-weight: 600;
     color: #F2F0EB;
-    letter-spacing: .06em;
-    background: #1a1a1a;
-    border: 1px solid rgba(255,255,255,0.1);
-    padding: 3px 6px;
+    letter-spacing: .04em;
+    background: #161616;
+    border: 1px solid rgba(242,240,235,0.25);
+    border-radius: 8px;
+    padding: 8px 12px;
     font-family: 'Inter', sans-serif;
     cursor: pointer;
-    max-width: 160px;
+    max-width: 180px;
+    transition: border-color .15s, transform .1s;
   }
-  #shopify-section-{{ section.id }} .kz-item-size-select:focus { outline: 1px solid #E8272A; }
+  #shopify-section-{{ section.id }} .kz-item-size-select:hover { border-color: rgba(242,240,235,0.6); transform: translateY(-1px); }
+  #shopify-section-{{ section.id }} .kz-item-size-select:focus { outline: none; border-color: #E8272A; }
   #shopify-section-{{ section.id }} .kz-custom-tag {
     font-size: 9px;
     color: #C9992A;
