@@ -254,10 +254,10 @@
   .kz-also-arrow { display: none !important; }
 
   /* Upsell: griglia a righe complete come il catalogo.
-     Le card oltre la riga piena vengono nascoste per breakpoint. */
+     Card compatte, testi leggibili; le card oltre la riga piena si nascondono. */
   .kz-also-grid {
     display: grid !important;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 10px;
     overflow: visible !important;
   }
@@ -266,14 +266,19 @@
     max-width: none !important;
     flex: none !important;
   }
-  .kz-also-grid .kz-also-card:nth-child(n+5) { display: none !important; }
+  .kz-also-grid .kz-also-card:nth-child(n+7) { display: none !important; }
+  /* Tipografia proporzionata alle card */
+  .kz-also-grid .kz-card__title { font-size: 13.5px; }
+  .kz-also-grid .kz-card__price-current { font-size: 17px; }
+  .kz-also-grid .kz-card__type,
+  .kz-also-grid .kz-card__discipline { font-size: 10.5px; }
   @media (max-width: 1199px) {
-    .kz-also-grid { grid-template-columns: repeat(3, 1fr); }
-    .kz-also-grid .kz-also-card:nth-child(n+4) { display: none !important; }
+    .kz-also-grid { grid-template-columns: repeat(4, 1fr); }
+    .kz-also-grid .kz-also-card:nth-child(n+5) { display: none !important; }
   }
   @media (max-width: 540px) {
     .kz-also-grid { grid-template-columns: repeat(2, 1fr); }
-    .kz-also-grid .kz-also-card:nth-child(n+4) { display: flex !important; }
+    .kz-also-grid .kz-also-card:nth-child(n+3) { display: flex !important; }
     .kz-also-grid .kz-also-card:nth-child(n+5) { display: none !important; }
   }
 
@@ -2028,7 +2033,7 @@
       "type": "number",
       "id": "upsell_limit",
       "label": "Numero massimo di prodotti consigliati",
-      "default": 4
+      "default": 6
     },
     {
       "type": "select",
