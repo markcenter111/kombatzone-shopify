@@ -228,12 +228,36 @@
       thumbsWrap.appendChild(div);
     });
 
-    /* Click img-wrap = toggle pausa silenziosa */
+    /* Navigazione stile stories: tap sinistra = indietro, destra = avanti;
+       tieni premuto = pausa (come Instagram) */
     const imgWrap = document.getElementById('kz-modal-img-wrap');
     if (imgWrap) {
-      imgWrap.onclick = () => {
-        if (slidePaused) resumeSlideshow();
-        else pauseSlideshow();
+      let holdTimer = null;
+      let wasHold = false;
+      imgWrap.onpointerdown = () => {
+        wasHold = false;
+        clearTimeout(holdTimer);
+        holdTimer = setTimeout(() => {
+          wasHold = true;
+          if (!slidePaused) pauseSlideshow();
+        }, 220);
+      };
+      imgWrap.onpointerup = (e) => {
+        clearTimeout(holdTimer);
+        if (wasHold) {
+          if (slidePaused) resumeSlideshow();
+          wasHold = false;
+          return;
+        }
+        const zone = e.target && e.target.getAttribute ? e.target.getAttribute('data-kz-tap') : null;
+        if (zone === 'prev') slideTo(slideIndex - 1);
+        else slideTo(slideIndex + 1);
+        if (!slidePaused) startSlideTimer();
+      };
+      imgWrap.onpointercancel = () => {
+        clearTimeout(holdTimer);
+        if (wasHold && slidePaused) resumeSlideshow();
+        wasHold = false;
       };
     }
 
@@ -418,6 +442,21 @@
 
   closeBtn.addEventListener('click', closeModal);
   overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+
+  /* Cursore X: fuori dal popup il mouse diventa la stessa X del close */
+  const cursorX = document.getElementById('kz-modal-cursor-x');
+  if (cursorX && window.matchMedia('(pointer: fine)').matches) {
+    overlay.addEventListener('mousemove', e => {
+      if (e.target === overlay) {
+        cursorX.style.left = e.clientX + 'px';
+        cursorX.style.top = e.clientY + 'px';
+        cursorX.classList.add('show');
+      } else {
+        cursorX.classList.remove('show');
+      }
+    });
+    overlay.addEventListener('mouseleave', () => cursorX.classList.remove('show'));
+  }
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
   /* ──────────────────────────────────────
