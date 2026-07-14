@@ -471,7 +471,16 @@
     </script>
     <script src="{{ 'kz2-locker.js' | asset_url }}" defer></script>
   {%- else -%}
-    <div class="kz2-locker-empty-state">{{ 'sections.kz2-locker.empty_state' | t }}</div>
+    <div class="kz2-locker-empty-state">
+      {{ 'sections.kz2-locker.empty_state' | t }}
+      <div style="font-size:10px;color:#555;margin-top:10px;letter-spacing:.02em">
+        DEBUG · coll={{ src_collection.handle | default: 'NESSUNA' }}
+        · prodotti={{ src_collection.products.size | default: 0 }}
+        {%- for p in src_collection.products limit: 6 %}
+          <br>[{{ p.handle }} · slot="{{ p.metafields.kzone.slot.value | default: 'VUOTO' }}" · layer={% if p.metafields.kzone.layer_image.value != blank %}OK{% else %}MANCANTE{% endif %} · z={{ p.metafields.kzone.z_index.value | default: 'VUOTO' }}]
+        {%- endfor %}
+      </div>
+    </div>
   {%- endif -%}
 
 </div>
