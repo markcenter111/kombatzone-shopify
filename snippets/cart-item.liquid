@@ -68,21 +68,7 @@
       </div>
 
       <a href="{{ item.url }}" class="kz-item-name" style="text-decoration:none;">
-        {{ item.product.title }}
-        {%- if item.variant.title != 'Default Title' -%}
-          <br>
-          <span class="kz-item-variant-line">
-            {%- for opt in item.options_with_values -%}
-              {%- assign kz_on = opt.name | downcase -%}
-              {%- if kz_on == 'color' or kz_on == 'colore' or kz_on == 'colour' -%}
-                <span class="kz-item-color-dot" style="background-color: {{ opt.value | handle }};" title="{{ opt.value | escape }}"></span>
-              {%- else -%}
-                {{ opt.value }}
-              {%- endif -%}
-              {%- unless forloop.last %} / {% endunless -%}
-            {%- endfor -%}
-          </span>
-        {%- endif -%}
+        {{ item.product.title }}{% if item.variant.title != 'Default Title' %}<br>{{ item.variant.title }}{% endif %}
       </a>
 
       <div class="kz-item-meta">
@@ -93,7 +79,16 @@
           restano visibili ma disabilitate.
         {%- endcomment -%}
         {%- if item.product.variants.size > 1 -%}
-          <select class="kz-item-size-select" data-variant-change data-line-index="{{ item_index }}" aria-label="Cambia taglia/variante">
+          {%- liquid
+            assign kz_color_idx = -1
+            for opt in item.product.options_with_values
+              assign kz_on = opt.name | downcase
+              if kz_on == 'color' or kz_on == 'colore' or kz_on == 'colour'
+                assign kz_color_idx = forloop.index0
+              endif
+            endfor
+          -%}
+          <select class="kz-item-size-select" data-variant-change data-color-idx="{{ kz_color_idx }}" data-line-index="{{ item_index }}" aria-label="Cambia taglia/variante">
             {%- for variant in item.product.variants -%}
               <option value="{{ variant.id }}" {% if variant.id == item.variant.id %}selected{% endif %} {% if variant.available == false and variant.id != item.variant.id %}disabled{% endif %}>
                 {{ variant.title }}{% if variant.available == false and variant.id != item.variant.id %} (esaurito){% endif %}

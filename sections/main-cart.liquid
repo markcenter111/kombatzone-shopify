@@ -170,11 +170,77 @@
     border: 1px solid rgba(255,255,255,0.1);
     padding: 2px 7px;
   }
-  #shopify-section-{{ section.id }} .kz-item-variant-line {
+  /* Tendina variante custom: taglia + pallino colore */
+  #shopify-section-{{ section.id }} .kz-vdd { position: relative; display: inline-block; }
+  #shopify-section-{{ section.id }} .kz-vdd-btn {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #F2F0EB;
+    letter-spacing: .04em;
+    background: #161616;
+    border: 1px solid rgba(242,240,235,0.25);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: border-color .15s, transform .1s;
   }
+  #shopify-section-{{ section.id }} .kz-vdd-btn:hover { border-color: rgba(242,240,235,0.6); transform: translateY(-1px); }
+  #shopify-section-{{ section.id }} .kz-vdd.open .kz-vdd-btn { border-color: #E8272A; }
+  #shopify-section-{{ section.id }} .kz-vdd-caret {
+    width: 11px;
+    height: 11px;
+    color: #777;
+    transition: transform .2s ease;
+    flex-shrink: 0;
+  }
+  #shopify-section-{{ section.id }} .kz-vdd.open .kz-vdd-caret { transform: rotate(180deg); color: #E8272A; }
+  #shopify-section-{{ section.id }} .kz-vdd-panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: max(100%, 150px);
+    background: #161616;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 6px;
+    z-index: 60;
+    box-shadow: 0 18px 44px rgba(0,0,0,.65);
+    opacity: 0;
+    transform: translateY(-6px) scale(.98);
+    transform-origin: top;
+    pointer-events: none;
+    transition: opacity .16s ease, transform .16s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: 260px;
+    overflow-y: auto;
+  }
+  #shopify-section-{{ section.id }} .kz-vdd.open .kz-vdd-panel { opacity: 1; transform: none; pointer-events: auto; }
+  #shopify-section-{{ section.id }} .kz-vdd-opt {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: #aaa;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .12s, color .12s;
+  }
+  #shopify-section-{{ section.id }} .kz-vdd-opt:hover:not(:disabled) { background: rgba(232,39,42,.12); color: #fff; }
+  #shopify-section-{{ section.id }} .kz-vdd-opt.is-selected { color: #fff; font-weight: 600; }
+  #shopify-section-{{ section.id }} .kz-vdd-opt:disabled { opacity: .35; text-decoration: line-through; cursor: not-allowed; }
   #shopify-section-{{ section.id }} .kz-item-color-dot {
     display: inline-block;
     width: 13px;
@@ -1450,6 +1516,76 @@
       function kzFormatMoney(cents) {
         return '\u20AC' + (cents / 100).toFixed(2).replace('.', ',');
       }
+
+      /* ── Tendina variante custom: taglia testo + pallino colore ── */
+      var VDD_CARET = '<svg class="kz-vdd-caret" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>';
+
+      function vddCloseAll(except) {
+        document.querySelectorAll('.kz-vdd.open').forEach(function (d) {
+          if (d !== except) d.classList.remove('open');
+        });
+      }
+
+      function vddLabelHtml(text, colorIdx) {
+        var parts = String(text).split(' / ');
+        return parts.map(function (part, i) {
+          if (i === colorIdx) {
+            var c = part.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
+            return '<span class="kz-item-color-dot" style="background-color:' + c + '" title="' + part + '"></span>';
+          }
+          return '<span>' + part + '</span>';
+        }).join(' / ');
+      }
+
+      function initVariantDropdowns() {
+        document.querySelectorAll('.kz-item-size-select').forEach(function (sel) {
+          if (sel.dataset.kzVdd) return;
+          sel.dataset.kzVdd = '1';
+          var colorIdx = parseInt(sel.getAttribute('data-color-idx'), 10);
+
+          var dd = document.createElement('div');
+          dd.className = 'kz-vdd';
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'kz-vdd-btn';
+          btn.setAttribute('aria-haspopup', 'listbox');
+          var selOpt = sel.options[sel.selectedIndex];
+          btn.innerHTML = '<span class="kz-vdd-label">' + vddLabelHtml(selOpt ? selOpt.text.trim() : '', colorIdx) + '</span>' + VDD_CARET;
+
+          var panel = document.createElement('div');
+          panel.className = 'kz-vdd-panel';
+          panel.setAttribute('role', 'listbox');
+          Array.prototype.forEach.call(sel.options, function (o) {
+            var it = document.createElement('button');
+            it.type = 'button';
+            it.className = 'kz-vdd-opt' + (o.selected ? ' is-selected' : '');
+            it.disabled = o.disabled;
+            it.innerHTML = vddLabelHtml(o.text.trim(), colorIdx);
+            it.addEventListener('click', function () {
+              if (o.disabled) return;
+              sel.value = o.value;
+              dd.classList.remove('open');
+              btn.querySelector('.kz-vdd-label').innerHTML = vddLabelHtml(o.text.trim(), colorIdx);
+              sel.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+            panel.appendChild(it);
+          });
+
+          dd.appendChild(btn);
+          dd.appendChild(panel);
+          sel.parentNode.insertBefore(dd, sel);
+          sel.style.display = 'none';
+
+          btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            vddCloseAll(dd);
+            dd.classList.toggle('open');
+          });
+        });
+      }
+      initVariantDropdowns();
+      document.addEventListener('click', function () { vddCloseAll(); });
+      document.addEventListener('cart:updated', initVariantDropdowns);
 
       document.addEventListener('click', function (e) {
         var removeBtn = e.target.closest('[data-coupon-remove]');
