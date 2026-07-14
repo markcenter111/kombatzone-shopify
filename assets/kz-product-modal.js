@@ -170,7 +170,7 @@
 
   function startViewersTimer(handle) {
     stopViewersTimer();
-    randomViewers = getBaseViewers(handle);
+    randomViewers = Math.max(3, getBaseViewers(handle) + Math.floor(Math.random() * 13) - 4);
     renderViewers();
     viewersTimer = setInterval(() => {
       const base  = getBaseViewers(handle);
@@ -194,6 +194,12 @@
       product.type ? `${product.type} · ${product.vendor}` : product.vendor;
 
     productLink.href = `/products/${product.handle}`;
+
+    /* Reset quantita e mini-popup */
+    const qtyEl = document.getElementById('kz-modal-qty-input');
+    if (qtyEl) qtyEl.value = 1;
+    const addedEl = document.getElementById('kz-modal-added');
+    if (addedEl) addedEl.classList.remove('show');
 
     /* Reset stato slideshow */
     slideImages  = (product.images || []).slice(0, 8);
@@ -228,36 +234,22 @@
       thumbsWrap.appendChild(div);
     });
 
-    /* Navigazione stile stories: tap sinistra = indietro, destra = avanti;
-       tieni premuto = pausa (come Instagram) */
+    /* Navigazione stile stories: tap sinistra = indietro, destra = avanti,
+       tap al centro = pausa/riprendi lo scorrimento */
     const imgWrap = document.getElementById('kz-modal-img-wrap');
     if (imgWrap) {
-      let holdTimer = null;
-      let wasHold = false;
-      imgWrap.onpointerdown = () => {
-        wasHold = false;
-        clearTimeout(holdTimer);
-        holdTimer = setTimeout(() => {
-          wasHold = true;
-          if (!slidePaused) pauseSlideshow();
-        }, 220);
-      };
-      imgWrap.onpointerup = (e) => {
-        clearTimeout(holdTimer);
-        if (wasHold) {
-          if (slidePaused) resumeSlideshow();
-          wasHold = false;
-          return;
-        }
+      imgWrap.onclick = (e) => {
         const zone = e.target && e.target.getAttribute ? e.target.getAttribute('data-kz-tap') : null;
-        if (zone === 'prev') slideTo(slideIndex - 1);
-        else slideTo(slideIndex + 1);
-        if (!slidePaused) startSlideTimer();
-      };
-      imgWrap.onpointercancel = () => {
-        clearTimeout(holdTimer);
-        if (wasHold && slidePaused) resumeSlideshow();
-        wasHold = false;
+        if (zone === 'prev') {
+          slideTo(slideIndex - 1);
+          if (!slidePaused) startSlideTimer();
+        } else if (zone === 'next') {
+          slideTo(slideIndex + 1);
+          if (!slidePaused) startSlideTimer();
+        } else {
+          if (slidePaused) resumeSlideshow();
+          else pauseSlideshow();
+        }
       };
     }
 
@@ -375,6 +367,30 @@
   /* ──────────────────────────────────────
      CARRELLO
   ────────────────────────────────────── */
+  /* Quantita nel popup */
+  const qtyInput = document.getElementById('kz-modal-qty-input');
+  const qtyMinus = document.getElementById('kz-modal-qty-minus');
+  const qtyPlus  = document.getElementById('kz-modal-qty-plus');
+  function getQty() {
+    const v = parseInt(qtyInput && qtyInput.value, 10);
+    return isNaN(v) || v < 1 ? 1 : v;
+  }
+  if (qtyMinus) qtyMinus.addEventListener('click', () => { qtyInput.value = Math.max(1, getQty() - 1); });
+  if (qtyPlus)  qtyPlus.addEventListener('click', () => { qtyInput.value = getQty() + 1; });
+
+  /* Mini-popup post aggiunta: continua lo shopping o vai al carrello */
+  const addedPop = document.getElementById('kz-modal-added');
+  function showAddedPop() {
+    if (!addedPop) { window.location.href = '/cart'; return; }
+    addedPop.classList.add('show');
+  }
+  function hideAddedPop() {
+    if (addedPop) addedPop.classList.remove('show');
+  }
+  const addedContinue = document.getElementById('kz-modal-added-continue');
+  if (addedContinue) addedContinue.addEventListener('click', () => { hideAddedPop(); closeModal(); });
+  if (addedPop) addedPop.addEventListener('click', e => { if (e.target === addedPop) hideAddedPop(); });
+
   addBtn.addEventListener('click', () => {
     if (!selectedVariantId || addBtn.disabled) return;
     addBtn.disabled = true;
@@ -383,34 +399,18 @@
     fetch('/cart/add.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: selectedVariantId, quantity: 1 })
+      body: JSON.stringify({ id: selectedVariantId, quantity: getQty() })
     })
       .then(r => r.json())
       .then(() => {
-        closeModal();
         updateCartCount();
-
-        // Prova ad aprire il drawer del carrello del tema (Dawn e la maggior parte dei temi Shopify)
-        const drawerTrigger = document.querySelector(
-          '[data-cart-drawer-trigger], cart-notification, ' +
-          '[aria-controls="CartDrawer"], [href="/cart"]'
-        );
-
-        // Evento nativo Shopify che i temi ascoltano per aprire il drawer
-        document.dispatchEvent(new CustomEvent('cart:open', { bubbles: true }));
-
-        // Dawn / Craft / altri temi moderni usano questo
-        const cartDrawer = document.querySelector('cart-drawer');
-        if (cartDrawer && typeof cartDrawer.open === 'function') {
-          cartDrawer.open();
-        } else {
-          // Fallback: vai direttamente alla pagina carrello
-          window.location.href = '/cart';
-        }
+        addBtn.disabled = false;
+        addBtn.textContent = 'Aggiungi al carrello';
+        showAddedPop();
       })
       .catch(() => {
         addBtn.disabled = false;
-        addBtn.textContent = '🛒 Aggiungi al carrello';
+        addBtn.textContent = 'Aggiungi al carrello';
         showToast('Errore — riprova');
       });
   });

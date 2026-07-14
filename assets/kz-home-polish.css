@@ -146,3 +146,22 @@
 [id^="kz-how-"] {
   background-image: linear-gradient(180deg, rgba(232, 39, 42, .07), rgba(232, 39, 42, 0) 280px);
 }
+
+
+/* ---------- Container uniforme: tutte le sezioni della home entro 1280px su desktop ---------- */
+@media (min-width: 1024px) {
+  .kz-hero,
+  [id^="kz-cat-"],
+  .kzp-wrap,
+  [id^="kz-diff-"],
+  [id^="kz-how-"],
+  [id^="kz-custom-"],
+  [id^="kz-reviews-"],
+  .kz-tt-section,
+  [id^="kz-email-"],
+  .kz-faq-section,
+  [id^="kz-footer-cta-"] {
+    padding-left: max(32px, calc((100vw - 1280px) / 2)) !important;
+    padding-right: max(32px, calc((100vw - 1280px) / 2)) !important;
+  }
+}

@@ -598,6 +598,53 @@
 
   .kzpr-mobile-sticky-price { font-size: 16px; font-weight: 700; color: #F2F0EB; flex-shrink: 0; }
 
+  .kzpr-sticky-hide {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #a5a59d;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+  }
+  .kzpr-sticky-hide svg { width: 14px; height: 14px; }
+  .kzpr-sticky-hide:hover { background: #E8272A; border-color: #E8272A; color: #fff; transform: scale(1.1); }
+  .kzpr-sticky-hide:active { transform: scale(.95); }
+
+  /* Tab per riaprire la barra quando nascosta */
+  .kzpr-sticky-show {
+    position: fixed;
+    bottom: 14px;
+    left: 14px;
+    z-index: 39;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(10,10,10,0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #a5a59d;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity .2s ease, transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .kzpr-sticky-show svg { width: 15px; height: 15px; }
+  .kzpr-sticky-show.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .kzpr-sticky-show:hover { background: #E8272A; border-color: #E8272A; color: #fff; }
+
   .kzpr-mobile-sticky-size {
     flex-shrink: 0;
     border: 1px solid rgba(255,255,255,0.18);
@@ -900,6 +947,9 @@
 
 {%- comment -%} ============ MOBILE STICKY BAR ============ {%- endcomment -%}
 <div class="kzpr-mobile-sticky-bar" id="kzpr-sticky-bar-{{ section.id }}">
+  <button type="button" class="kzpr-sticky-hide" id="kzpr-sticky-hide-{{ section.id }}" aria-label="Nascondi barra">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
+  </button>
   <div class="kzpr-mobile-sticky-price">{{ current_variant.price | money }}</div>
   {%- unless product.has_only_default_variant -%}
     <div class="kzpr-mobile-sticky-size" id="kzpr-sticky-size-{{ section.id }}">{{ current_variant.title }}</div>
@@ -908,6 +958,10 @@
     {{ section.settings.add_to_cart_label }}
   </button>
 </div>
+
+<button type="button" class="kzpr-sticky-show" id="kzpr-sticky-show-{{ section.id }}" aria-label="Mostra barra acquisto">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5"/></svg>
+</button>
 
 <script>
 (function() {
@@ -1012,18 +1066,29 @@
   // Mobile sticky bar: show after scrolling past buy box
   var stickyBar = document.getElementById('kzpr-sticky-bar-{{ section.id }}');
   var detailsEl = root.querySelector('.kzpr-add-to-cart') || root.querySelector('.kzpr-details');
+  var stickyHideBtn = document.getElementById('kzpr-sticky-hide-{{ section.id }}');
+  var stickyShowTab = document.getElementById('kzpr-sticky-show-{{ section.id }}');
+  var stickyCollapsed = false;
+  var stickyInZone = false;
+
+  function syncSticky() {
+    if (!stickyBar) return;
+    if (stickyInZone && !stickyCollapsed) stickyBar.classList.add('visible');
+    else stickyBar.classList.remove('visible');
+    if (stickyShowTab) stickyShowTab.classList.toggle('show', stickyInZone && stickyCollapsed);
+  }
+
   if (stickyBar && detailsEl) {
     var observer = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
-        if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
-          stickyBar.classList.add('visible');
-        } else {
-          stickyBar.classList.remove('visible');
-        }
+        stickyInZone = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+        syncSticky();
       });
     }, { threshold: 0 });
     observer.observe(detailsEl);
   }
+  if (stickyHideBtn) stickyHideBtn.addEventListener('click', function() { stickyCollapsed = true; syncSticky(); });
+  if (stickyShowTab) stickyShowTab.addEventListener('click', function() { stickyCollapsed = false; syncSticky(); });
 
   var stickyAddBtn = document.getElementById('kzpr-sticky-add-{{ section.id }}');
   if (stickyAddBtn) {

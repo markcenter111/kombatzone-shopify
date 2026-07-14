@@ -201,10 +201,10 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 34%;
+    width: 30%;
     z-index: 3;
   }
-  .kz-modal-tap-zone.right { right: 0; width: 66%; }
+  .kz-modal-tap-zone.right { right: 0; }
   .kz-modal-tap-zone.left { left: 0; }
 
   /* ── PROGRESS BAR — sopra l'immagine, dentro kz-modal-left ── */
@@ -368,24 +368,23 @@
     margin-bottom: 14px;
   }
   .kz-modal-var-btn {
-    background: #1a1a1a;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 8px;
+    min-width: 48px;
+    height: 48px;
+    padding: 0 16px;
+    background: transparent;
+    border: 1px solid rgba(242,240,235,0.25);
+    border-radius: 1px;
     color: #F2F0EB;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .06em;
-    padding: 7px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .04em;
     cursor: pointer;
-    font-family: 'Barlow Condensed', sans-serif;
-    text-transform: uppercase;
-    transition: all .15s;
+    transition: background .15s, border-color .15s, transform .1s;
   }
-  .kz-modal-var-btn:hover:not(.unavailable):not(.active) {
-    border-color: rgba(232,39,42,0.5);
-    background: #1f1f1f;
-  }
-  .kz-modal-var-btn.active { border-color: #E8272A; color: #E8272A; background: rgba(232,39,42,0.1); }
+  .kz-modal-var-btn:hover:not(.unavailable):not(.active) { border-color: rgba(242,240,235,0.6); transform: translateY(-1px); }
+  .kz-modal-var-btn.active { background: #E8272A; border-color: #E8272A; color: #fff; box-shadow: 0 0 14px rgba(232,39,42,.35); }
+  .kz-modal-var-btn.active:hover { background: #c41f22; }
   .kz-modal-var-btn.unavailable { opacity: .35; text-decoration: line-through; cursor: not-allowed; }
 
   /* ── STOCK ── */
@@ -411,55 +410,104 @@
   }
   .kz-modal-stock-fill { height: 3px; background: #E8272A; transition: width .4s; border-radius: 99px; }
 
-  /* ── CTA ── */
+  /* ── BUY ROW: identica alla pagina prodotto (qty pill + CTA) ── */
+  .kz-modal-buy-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .kz-modal-qty {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    background: #161616;
+    overflow: hidden;
+    height: 52px;
+    flex-shrink: 0;
+  }
+  .kz-modal-qty button {
+    width: 44px;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: #a5a59d;
+    font-size: 18px;
+    font-weight: 300;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background .15s, color .15s;
+  }
+  .kz-modal-qty button:hover { background: rgba(255,255,255,0.06); color: #fff; }
+  .kz-modal-qty button:active { background: rgba(232,39,42,0.85); color: #fff; }
+  .kz-modal-qty input {
+    width: 42px;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: #F2F0EB;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  .kz-modal-qty input::-webkit-outer-spin-button,
+  .kz-modal-qty input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   .kz-modal-cta {
-    width: 100%;
+    flex: 1;
+    height: 52px;
     background: #E8272A;
+    color: #fff;
     border: none;
     border-radius: 8px;
-    color: #fff;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 14px;
-    font-weight: 900;
-    letter-spacing: .2em;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .1em;
     text-transform: uppercase;
-    padding: 14px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-bottom: 8px;
-    box-shadow: 0 4px 14px rgba(232,39,42,0.35);
-    transition: background .15s, transform .15s, box-shadow .15s;
+    transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
   }
   .kz-modal-cta:hover {
     background: #c41f22;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(232,39,42,0.45);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(232, 39, 42, .35);
   }
-  .kz-modal-cta:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(232,39,42,0.35); }
-  .kz-modal-cta:disabled { background: #444; cursor: not-allowed; transform: none; box-shadow: none; }
+  .kz-modal-cta:active { transform: translateY(0) scale(.98); box-shadow: none; }
+  .kz-modal-cta:disabled { background: #3a3a36; cursor: not-allowed; transform: none; box-shadow: none; }
   .kz-modal-cta-secondary {
     width: 100%;
     background: transparent;
-    border: 1px solid rgba(255,255,255,0.12);
+    border: 1px solid rgba(242,240,235,0.35);
     border-radius: 8px;
-    color: #888880;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .14em;
+    color: #F2F0EB;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .1em;
     text-transform: uppercase;
-    padding: 9px;
+    padding: 14px;
     cursor: pointer;
     margin-bottom: 14px;
-    transition: all .15s;
+    transition: border-color .2s ease, color .2s ease, transform .2s ease, background .2s ease;
     text-decoration: none;
     display: block;
     text-align: center;
   }
-  .kz-modal-cta-secondary:hover { border-color: rgba(255,255,255,0.3); color: #F2F0EB; background: rgba(255,255,255,0.03); }
+  .kz-modal-cta-secondary:hover { border-color: #F2F0EB; transform: translateY(-2px); background: rgba(255,255,255,.04); }
+  .kz-modal-cta-secondary:active { transform: translateY(0) scale(.99); }
 
   /* ── TRUST ── */
   .kz-modal-trust {
@@ -499,6 +547,95 @@
     text-align: center;
     line-height: 1.3;
   }
+
+  /* ── MINI-POPUP "AGGIUNTO AL CARRELLO" ── */
+  #kz-modal-added {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+    z-index: 30;
+  }
+  #kz-modal-added.show { opacity: 1; pointer-events: auto; }
+  .kz-modal-added-card {
+    background: #161616;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 26px 26px 22px;
+    width: min(320px, calc(100% - 48px));
+    text-align: center;
+    box-shadow: 0 22px 60px rgba(0,0,0,.6);
+    transform: translateY(10px) scale(.96);
+    transition: transform .25s cubic-bezier(.2,.6,.2,1);
+  }
+  #kz-modal-added.show .kz-modal-added-card { transform: translateY(0) scale(1); }
+  .kz-modal-added-check {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(76,187,122,0.12);
+    border: 1.5px solid #4cbb7a;
+    color: #4cbb7a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+  }
+  .kz-modal-added-check svg { width: 22px; height: 22px; }
+  .kz-modal-added-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #F2F0EB;
+    margin-bottom: 16px;
+  }
+  .kz-modal-added-cart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: 46px;
+    background: #E8272A;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    margin-bottom: 8px;
+    transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+  }
+  .kz-modal-added-cart:hover { background: #c41f22; transform: translateY(-2px); box-shadow: 0 8px 22px rgba(232,39,42,.35); }
+  .kz-modal-added-cart:active { transform: translateY(0) scale(.98); box-shadow: none; }
+  .kz-modal-added-continue {
+    width: 100%;
+    height: 42px;
+    background: transparent;
+    border: 1px solid rgba(242,240,235,0.35);
+    border-radius: 8px;
+    color: #F2F0EB;
+    font-family: 'Inter', sans-serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color .2s ease, transform .2s ease, background .2s ease;
+  }
+  .kz-modal-added-continue:hover { border-color: #F2F0EB; transform: translateY(-2px); background: rgba(255,255,255,.04); }
 
   /* ── TOAST ── */
   #kz-modal-toast {
@@ -608,10 +745,17 @@
           </div>
         </div>
 
-        <!-- CTA -->
-        <button class="kz-modal-cta" id="kz-modal-add-btn">
-          Aggiungi al carrello
-        </button>
+        <!-- CTA: quantita + aggiungi (come pagina prodotto) -->
+        <div class="kz-modal-buy-row">
+          <div class="kz-modal-qty">
+            <button type="button" id="kz-modal-qty-minus" aria-label="Diminuisci quantit&#224;">&minus;</button>
+            <input type="number" id="kz-modal-qty-input" value="1" min="1" aria-label="Quantit&#224;">
+            <button type="button" id="kz-modal-qty-plus" aria-label="Aumenta quantit&#224;">+</button>
+          </div>
+          <button class="kz-modal-cta" id="kz-modal-add-btn">
+            Aggiungi al carrello
+          </button>
+        </div>
         <a class="kz-modal-cta-secondary" id="kz-modal-product-link" href="#">
           Vedi pagina prodotto completa →
         </a>
@@ -652,6 +796,21 @@
             <span>Ordina entro 2h per oggi</span>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- MINI-POPUP: scelta dopo l'aggiunta -->
+    <div id="kz-modal-added" aria-hidden="true">
+      <div class="kz-modal-added-card">
+        <div class="kz-modal-added-check">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+        </div>
+        <div class="kz-modal-added-title">Aggiunto al carrello!</div>
+        <a class="kz-modal-added-cart" href="/cart">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width:15px;height:15px"><path d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 0 0 0-1.5H5.378A2.25 2.25 0 0 1 7.5 15h11.218a.75.75 0 0 0 .674-.421 60.358 60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z"/></svg>
+          Vai al carrello
+        </a>
+        <button type="button" class="kz-modal-added-continue" id="kz-modal-added-continue">Continua lo shopping</button>
       </div>
     </div>
   </div>
