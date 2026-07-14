@@ -1593,10 +1593,16 @@
         .then(function (cart) {
           var oldItem = cart.items[line - 1]; // line è 1-based
           if (oldItem) oldKey = oldItem.key;
+          var newItem = { id: parseInt(newVariantId, 10), quantity: quantity };
+          /* Conserva le proprietà della riga (es. _kz_set del Fighter Set):
+             così cambiare taglia/colore non fa uscire il pezzo dal bundle */
+          if (oldItem && oldItem.properties && Object.keys(oldItem.properties).length) {
+            newItem.properties = oldItem.properties;
+          }
           return fetch('/cart/add.js', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ items: [{ id: parseInt(newVariantId, 10), quantity: quantity }] })
+            body: JSON.stringify({ items: [newItem] })
           });
         })
         .then(function (r) { return r.json(); })
