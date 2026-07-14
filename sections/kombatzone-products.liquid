@@ -294,6 +294,58 @@
 
         </a>
 
+      {%- elsif block.type == 'product' -%}
+        {%- assign p = block.settings.product -%}
+        {%- if p != blank -%}
+          {%- assign has_disc = false -%}
+          {%- if p.compare_at_price > p.price -%}
+            {%- assign has_disc = true -%}
+            {%- assign p_pct = p.compare_at_price | minus: p.price | times: 100 | divided_by: p.compare_at_price | round -%}
+          {%- endif -%}
+          <a class="kzp-card{% if block.settings.featured %} featured{% endif %}"
+             href="{{ p.url }}"
+             {{ block.shopify_attributes }}>
+            <div class="kzp-img">
+              {%- if p.featured_image -%}
+                <img
+                  src="{{ p.featured_image | image_url: width: 800 }}"
+                  alt="{{ p.title | escape }}"
+                  width="{{ p.featured_image.width }}"
+                  height="{{ p.featured_image.height }}"
+                  loading="lazy"
+                >
+              {%- else -%}
+                <div class="kzp-placeholder">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 3v18M16 3v18"/></svg>
+                  <span>Foto prodotto</span>
+                </div>
+              {%- endif -%}
+              {%- if block.settings.badge_label != blank -%}
+                <div class="kzp-badge{% if block.settings.badge_gold %} gold{% endif %}">{{ block.settings.badge_label }}</div>
+              {%- elsif p.tags contains 'bestseller' -%}
+                <div class="kzp-badge">BESTSELLER</div>
+              {%- elsif has_disc -%}
+                <div class="kzp-badge">&minus;{{ p_pct }}%</div>
+              {%- endif -%}
+            </div>
+            <div class="kzp-info">
+              {%- assign p_cat = p.type -%}
+              {%- if p_cat == blank -%}{%- assign p_cat = p.collections.first.title -%}{%- endif -%}
+              {%- if p_cat != blank -%}
+                <div class="kzp-cat">{{ p_cat }}</div>
+              {%- endif -%}
+              <div class="kzp-name">{{ p.title }}</div>
+              <div class="kzp-pricing">
+                <span class="kzp-price-now">{{ p.price | money }}</span>
+                {%- if has_disc -%}
+                  <span class="kzp-price-was">{{ p.compare_at_price | money }}</span>
+                  <span class="kzp-price-pct">&minus;{{ p_pct }}%</span>
+                {%- endif -%}
+              </div>
+            </div>
+            <div class="kzp-hover-cta">{{ section.settings.cta_label }}</div>
+          </a>
+        {%- endif -%}
       {%- endif -%}
     {%- endfor -%}
   </div>
@@ -378,6 +430,35 @@
     }
   ],
   "blocks": [
+    {
+      "type": "product",
+      "name": "Prodotto (automatico)",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Prodotto"
+        },
+        {
+          "type": "checkbox",
+          "id": "featured",
+          "label": "Card grande (featured)",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "badge_label",
+          "label": "Badge personalizzato (opzionale)",
+          "info": "Vuoto = automatico: BESTSELLER da tag o sconto %"
+        },
+        {
+          "type": "checkbox",
+          "id": "badge_gold",
+          "label": "Badge dorato",
+          "default": false
+        }
+      ]
+    },
     {
       "type": "product_card",
       "name": "Card prodotto",
