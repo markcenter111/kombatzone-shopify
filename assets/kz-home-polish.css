@@ -1,0 +1,138 @@
+/* =========================================================
+   KOMBAT ZONE — Home polish layer
+   Applica il design system del sito (radius, lift, zoom,
+   glow, reveal) a tutte le sezioni della home page.
+   Caricato da sections/kombatzone-hero.liquid.
+   ========================================================= */
+
+/* ---------- CTA principali: arrotondate, lift + glow rosso ---------- */
+.kz-btn-primary,
+.custom-btn,
+.footer-cta-btn,
+.kz-faq-cta-btn,
+.kz-tt-cta-btn,
+.kz-tt-follow-btn,
+.email-btn {
+  border-radius: 8px !important;
+  transition: background .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease, border-color .2s ease !important;
+}
+.kz-btn-primary:hover,
+.custom-btn:hover,
+.footer-cta-btn:hover,
+.kz-faq-cta-btn:hover,
+.kz-tt-cta-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 22px rgba(232, 39, 42, .35) !important;
+}
+.kz-btn-primary:active,
+.custom-btn:active,
+.footer-cta-btn:active,
+.kz-faq-cta-btn:active,
+.kz-tt-cta-btn:active,
+.email-btn:active {
+  transform: translateY(0) scale(.98) !important;
+  box-shadow: none !important;
+}
+.email-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 22px rgba(201, 153, 42, .35) !important;
+}
+.kz-btn-ghost { border-radius: 8px !important; }
+
+/* Pulse d'attenzione sulla CTA hero (solo se le animazioni sono attive) */
+@media (prefers-reduced-motion: no-preference) {
+  .kz-btn-primary {
+    animation: kzh-cta-pulse 2.6s ease-in-out infinite;
+  }
+  .kz-btn-primary:hover { animation: none; }
+}
+@keyframes kzh-cta-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(232, 39, 42, 0); }
+  50%      { box-shadow: 0 0 20px 3px rgba(232, 39, 42, .30); }
+}
+
+/* ---------- Card: angoli smussati, lift in hover ---------- */
+.cat-card,
+.kzp-card,
+.review-card,
+.kz-tt-card,
+.diff-item,
+.how-step,
+.kz-faq-item,
+.custom-visual {
+  border-radius: 12px !important;
+  overflow: hidden;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease !important;
+}
+.cat-card:hover,
+.kzp-card:hover,
+.review-card:hover,
+.kz-tt-card:hover,
+.diff-item:hover,
+.how-step:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .45) !important;
+}
+
+/* ---------- Zoom soft delle immagini dentro le card ---------- */
+.cat-card img,
+.cat-card .cat-bg,
+.kzp-img img,
+.kz-tt-card img,
+.kz-tt-card video {
+  transition: transform .5s cubic-bezier(.2, .6, .2, 1) !important;
+  backface-visibility: hidden;
+}
+.cat-card:hover img,
+.cat-card:hover .cat-bg,
+.kzp-card:hover .kzp-img img,
+.kz-tt-card:hover img,
+.kz-tt-card:hover video {
+  transform: scale(1.06) !important;
+}
+
+/* ---------- Badge e pill: raggio coerente ---------- */
+.kzp-badge,
+.kz-tt-badge,
+.kz-tt-card-label,
+.free-badge,
+.how-tag,
+.custom-tag {
+  border-radius: 6px !important;
+}
+
+/* ---------- Hero: barre e progress arrotondate ---------- */
+.kz-hero-bar,
+.kz-hero-progress,
+.kz-hero-progress-fill,
+.kz-hero-progress-seg {
+  border-radius: 99px !important;
+  overflow: hidden;
+}
+
+/* ---------- Email capture: input arrotondato ---------- */
+.email-input {
+  border-radius: 8px !important;
+  transition: border-color .15s ease !important;
+}
+
+/* ---------- Reveal allo scroll (pilotato da kz-home-polish.js) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .kzh-hidden { opacity: 0; }
+  .kzh-in {
+    opacity: 1;
+    animation: kzh-in .5s cubic-bezier(.2, .6, .2, 1) backwards;
+  }
+}
+@keyframes kzh-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cat-card, .kzp-card, .review-card, .kz-tt-card,
+  .diff-item, .how-step, .kz-faq-item,
+  .cat-card img, .kzp-img img, .kz-tt-card img {
+    transition: none !important;
+    animation: none !important;
+  }
+}

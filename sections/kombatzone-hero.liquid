@@ -384,6 +384,10 @@
 </script>
 {%- endif -%}
 
+{%- comment -%} Home polish layer: design system (radius, animazioni, reveal) per tutta la home {%- endcomment -%}
+{{ 'kz-home-polish.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kz-home-polish.js' | asset_url }}" defer></script>
+
 {% schema %}
 {
   "name": "KZ Hero",
