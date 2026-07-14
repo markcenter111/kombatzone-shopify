@@ -158,54 +158,30 @@
     "kombatzone_products_7qQ4EE": {
       "type": "kombatzone-products",
       "blocks": {
-        "product_card_BaeRGG": {
-          "type": "product_card",
+        "product_auto_1": {
+          "type": "product",
           "settings": {
-            "featured": true,
-            "image": "shopify://shop_images/main-image-1_ccf126b0-da71-4ed4-8b7d-43a56cc29c18.jpg",
-            "product_url": "shopify://products/ufc-venum-long-sleeve-20th-anniversary",
-            "category": "MMA · Boxe · Muay Thai",
-            "name": "Fight Starter Kit",
-            "price_now": "€84",
-            "price_was": "€139",
-            "price_pct": "−40%",
-            "badge_label": "Set completo",
-            "badge_gold": true
+            "product": "ufc-paint-training-set",
+            "featured": true
           }
         },
-        "product_card_wFdHhw": {
-          "type": "product_card",
+        "product_auto_2": {
+          "type": "product",
           "settings": {
-            "featured": false,
-            "product_url": "shopify://collections/all",
-            "category": "Boxe",
-            "name": "Guantoni Pro Series",
-            "price_now": "€47",
-            "price_was": "€72",
-            "price_pct": "",
-            "badge_label": "−35%",
-            "badge_gold": false
+            "product": "ufc-premium-whitegold-makhachev-set"
           }
         },
-        "product_card_eHRrAc": {
-          "type": "product_card",
+        "product_auto_3": {
+          "type": "product",
           "settings": {
-            "featured": false,
-            "product_url": "",
-            "category": "MMA",
-            "name": "Shorts Combat",
-            "price_now": "€38",
-            "price_was": "€59",
-            "price_pct": "−35%",
-            "badge_label": "",
-            "badge_gold": false
+            "product": "ufc-venum-snake-set"
           }
         }
       },
       "block_order": [
-        "product_card_BaeRGG",
-        "product_card_wFdHhw",
-        "product_card_eHRrAc"
+        "product_auto_1",
+        "product_auto_2",
+        "product_auto_3"
       ],
       "name": "KZ Prodotti",
       "settings": {
