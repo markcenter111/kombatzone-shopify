@@ -55,7 +55,6 @@
 .cat-card,
 .kzp-card,
 .kz-tt-card,
-.diff-item,
 .how-step,
 .custom-visual {
   border-radius: 12px !important;
@@ -65,7 +64,6 @@
 .cat-card:hover,
 .kzp-card:hover,
 .kz-tt-card:hover,
-.diff-item:hover,
 .how-step:hover {
   transform: translateY(-4px) !important;
   box-shadow: 0 12px 28px rgba(0, 0, 0, .45) !important;
@@ -127,7 +125,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .cat-card, .kzp-card, .kz-tt-card,
-  .diff-item, .how-step,
+  .how-step,
   .cat-card img, .kzp-img img, .kz-tt-card img {
     transition: none !important;
     animation: none !important;
