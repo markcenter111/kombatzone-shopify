@@ -150,7 +150,7 @@
 
 /* ---------- Container uniforme: tutte le sezioni della home entro 1280px su desktop ---------- */
 @media (min-width: 1024px) {
-  .kz-hero,
+  /* Sezioni contenute a 1440px */
   [id^="kz-cat-"],
   .kzp-wrap,
   [id^="kz-diff-"],
@@ -158,10 +158,15 @@
   [id^="kz-custom-"],
   [id^="kz-reviews-"],
   .kz-tt-section,
-  [id^="kz-email-"],
-  .kz-faq-section,
-  [id^="kz-footer-cta-"] {
+  [id^="kz-email-"] {
     padding-left: max(32px, calc((100vw - 1440px) / 2)) !important;
     padding-right: max(32px, calc((100vw - 1440px) / 2)) !important;
+  }
+  /* Hero, FAQ e CTA finale: respiro a tutta larghezza */
+  .kz-hero,
+  .kz-faq-section,
+  [id^="kz-footer-cta-"] {
+    padding-left: 48px !important;
+    padding-right: 48px !important;
   }
 }
