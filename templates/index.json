@@ -80,8 +80,8 @@
         "trust_item_fwNBqq": {
           "type": "trust_item",
           "settings": {
-            "label": "Reso gratuito",
-            "highlight": "30 giorni"
+            "label": "Pagamento sicuro",
+            "highlight": "SSL"
           }
         }
       },
