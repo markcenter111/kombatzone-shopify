@@ -161,7 +161,7 @@
   [id^="kz-email-"],
   .kz-faq-section,
   [id^="kz-footer-cta-"] {
-    padding-left: max(32px, calc((100vw - 1280px) / 2)) !important;
-    padding-right: max(32px, calc((100vw - 1280px) / 2)) !important;
+    padding-left: max(32px, calc((100vw - 1440px) / 2)) !important;
+    padding-right: max(32px, calc((100vw - 1440px) / 2)) !important;
   }
 }
