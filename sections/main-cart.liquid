@@ -256,15 +256,16 @@
   /* Upsell: griglia a righe complete come il catalogo.
      Card compatte, testi leggibili; le card oltre la riga piena si nascondono. */
   .kz-also-grid {
-    display: grid !important;
-    grid-template-columns: repeat(6, 1fr);
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
     gap: 10px;
     overflow: visible !important;
   }
   .kz-also-grid .kz-also-card {
     width: auto !important;
-    max-width: none !important;
-    flex: none !important;
+    flex: 0 0 calc(16.666% - 9px) !important;
+    max-width: calc(16.666% - 9px) !important;
   }
   .kz-also-grid .kz-also-card:nth-child(n+7) { display: none !important; }
   /* Tipografia proporzionata alle card */
@@ -273,11 +274,11 @@
   .kz-also-grid .kz-card__type,
   .kz-also-grid .kz-card__discipline { font-size: 10.5px; }
   @media (max-width: 1199px) {
-    .kz-also-grid { grid-template-columns: repeat(4, 1fr); }
+    .kz-also-grid .kz-also-card { flex-basis: calc(25% - 8px) !important; max-width: calc(25% - 8px) !important; }
     .kz-also-grid .kz-also-card:nth-child(n+5) { display: none !important; }
   }
   @media (max-width: 540px) {
-    .kz-also-grid { grid-template-columns: repeat(2, 1fr); }
+    .kz-also-grid .kz-also-card { flex-basis: calc(50% - 5px) !important; max-width: calc(50% - 5px) !important; }
     .kz-also-grid .kz-also-card:nth-child(n+3) { display: flex !important; }
     .kz-also-grid .kz-also-card:nth-child(n+5) { display: none !important; }
   }
