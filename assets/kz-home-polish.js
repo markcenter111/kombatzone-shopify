@@ -4,7 +4,7 @@
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   var targets = document.querySelectorAll(
-    '.cat-card, .kzp-card, .review-card, .kz-tt-card, .diff-item, .how-step, .kz-faq-item, .custom-visual, .email-form'
+    '.cat-card, .kzp-card, .kz-tt-card, .diff-item, .how-step, .custom-visual, .email-form'
   );
   if (!targets.length) return;
 

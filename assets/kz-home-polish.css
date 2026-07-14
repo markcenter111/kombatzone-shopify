@@ -54,11 +54,9 @@
 /* ---------- Card: angoli smussati, lift in hover ---------- */
 .cat-card,
 .kzp-card,
-.review-card,
 .kz-tt-card,
 .diff-item,
 .how-step,
-.kz-faq-item,
 .custom-visual {
   border-radius: 12px !important;
   overflow: hidden;
@@ -66,7 +64,6 @@
 }
 .cat-card:hover,
 .kzp-card:hover,
-.review-card:hover,
 .kz-tt-card:hover,
 .diff-item:hover,
 .how-step:hover {
@@ -129,10 +126,22 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .cat-card, .kzp-card, .review-card, .kz-tt-card,
-  .diff-item, .how-step, .kz-faq-item,
+  .cat-card, .kzp-card, .kz-tt-card,
+  .diff-item, .how-step,
   .cat-card img, .kzp-img img, .kz-tt-card img {
     transition: none !important;
     animation: none !important;
   }
+}
+
+
+/* ---------- Gradienti rossi in testa alle sezioni (stile carrello) ---------- */
+.kzp-wrap {
+  background-image: linear-gradient(180deg, rgba(232, 39, 42, .05), rgba(232, 39, 42, 0) 320px);
+}
+[id^="kz-cat-"] {
+  background-image: linear-gradient(180deg, rgba(232, 39, 42, .04), rgba(232, 39, 42, 0) 280px);
+}
+[id^="kz-footer-cta-"] {
+  background-image: linear-gradient(180deg, rgba(232, 39, 42, .07), rgba(232, 39, 42, 0) 75%);
 }

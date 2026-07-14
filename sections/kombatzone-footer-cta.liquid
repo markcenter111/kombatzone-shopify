@@ -61,6 +61,42 @@
     transform: translateY(-1px);
   }
 
+  #kz-footer-cta-{{ section.id }} .footer-cta-trust {
+    flex-basis: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+    margin-top: 6px;
+  }
+  #kz-footer-cta-{{ section.id }} .footer-cta-trust-items {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  #kz-footer-cta-{{ section.id }} .footer-cta-trust-item {
+    font-family: var(--ff-body), sans-serif;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: .03em;
+  }
+  #kz-footer-cta-{{ section.id }} .footer-cta-payments {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  #kz-footer-cta-{{ section.id }} .footer-pay-badge {
+    width: 40px;
+    height: auto;
+    border-radius: 4px;
+    opacity: .85;
+    box-shadow: 0 1px 4px rgba(0,0,0,.3);
+  }
+
   @media (max-width: 600px) {
     #kz-footer-cta-{{ section.id }} {
       flex-direction: column;
@@ -80,6 +116,19 @@
     <div class="footer-cta-sub">{{ section.settings.subtitle }}</div>
   </div>
   <a href="{{ section.settings.button_link | default: '#' }}" class="footer-cta-btn">{{ section.settings.button_text }} →</a>
+
+  <div class="footer-cta-trust">
+    <div class="footer-cta-trust-items">
+      <span class="footer-cta-trust-item">✓ Pagamento sicuro SSL</span>
+      <span class="footer-cta-trust-item">✓ Reso gratuito 30 giorni</span>
+      <span class="footer-cta-trust-item">✓ Spedizione 48–72h dall'Europa</span>
+    </div>
+    <div class="footer-cta-payments">
+      {%- for type in shop.enabled_payment_types -%}
+        {{ type | payment_type_svg_tag: class: 'footer-pay-badge' }}
+      {%- endfor -%}
+    </div>
+  </div>
 </div>
 
 {% schema %}
