@@ -170,6 +170,89 @@
     border: 1px solid rgba(255,255,255,0.1);
     padding: 2px 7px;
   }
+  /* ── Bundle Fighter Set ── */
+  #shopify-section-{{ section.id }} .kz-set-bundle {
+    margin: 14px 24px;
+    border: 1px solid rgba(232,39,42,0.35);
+    border-radius: 12px;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(232,39,42,0.05), rgba(232,39,42,0) 70%);
+  }
+  #shopify-section-{{ section.id }} .kz-set-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  #shopify-section-{{ section.id }} .kz-set-head-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: #E8272A;
+  }
+  #shopify-section-{{ section.id }} .kz-set-head-title em {
+    font-style: normal;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #888880;
+    letter-spacing: .06em;
+  }
+  #shopify-section-{{ section.id }} .kz-set-head-total {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: #F2F0EB;
+  }
+  #shopify-section-{{ section.id }} .kz-set-bundle .kz-cart-item:last-of-type { border-bottom: none; }
+  #shopify-section-{{ section.id }} .kz-set-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  #shopify-section-{{ section.id }} .kz-set-edit {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 14px;
+    border: 1px solid rgba(242,240,235,0.35);
+    border-radius: 8px;
+    color: #F2F0EB;
+    font-family: 'Inter', sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: border-color .2s ease, transform .2s ease, background .2s ease;
+  }
+  #shopify-section-{{ section.id }} .kz-set-edit:hover { border-color: #F2F0EB; transform: translateY(-1px); background: rgba(255,255,255,.04); }
+  #shopify-section-{{ section.id }} .kz-set-remove {
+    background: none;
+    border: none;
+    color: #3f3f3a;
+    opacity: .8;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    padding: 4px 2px;
+    transition: color .15s, opacity .15s;
+  }
+  #shopify-section-{{ section.id }} .kz-set-remove:hover { color: #E8272A; opacity: 1; }
+
+  /* Frecce del carosello upsell: rimosse */
+  #shopify-section-{{ section.id }} .kz-also-arrow,
+  .kz-also-arrow { display: none !important; }
+
   /* Tendina variante custom: taglia + pallino colore */
   #shopify-section-{{ section.id }} .kz-vdd { position: relative; display: inline-block; }
   #shopify-section-{{ section.id }} .kz-vdd-btn {
@@ -1080,6 +1163,7 @@
     }
     #shopify-section-{{ section.id }} .kz-empty { padding: 56px 16px; }
     #shopify-section-{{ section.id }} .kz-empty-also { max-width: 100%; }
+    #shopify-section-{{ section.id }} .kz-set-bundle { margin: 12px 16px; }
 
     /* Sticky checkout bar */
     #shopify-section-{{ section.id }} .kz-cart-section { padding-bottom: 66px; }
@@ -1267,7 +1351,44 @@
 
         {%- comment -%} Righe prodotto: l'omaggio automatico viene rilevato dentro lo snippet stesso {%- endcomment -%}
         {%- for item in cart.items -%}
-          {%- render 'cart-item', item: item, item_index: forloop.index -%}
+          {%- if item.properties._kz_set == blank -%}
+            {%- render 'cart-item', item: item, item_index: forloop.index -%}
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- comment -%} Fighter Set: righe con la stessa proprieta _kz_set raggruppate in un bundle {%- endcomment -%}
+        {%- assign kz_handled_sets = '' -%}
+        {%- for item in cart.items -%}
+          {%- assign kz_sid = item.properties._kz_set -%}
+          {%- if kz_sid != blank -%}
+            {%- assign kz_sid_token = '|' | append: kz_sid | append: '|' -%}
+            {%- unless kz_handled_sets contains kz_sid_token -%}
+              {%- assign kz_handled_sets = kz_handled_sets | append: kz_sid_token -%}
+              {%- assign kz_set_count = 0 -%}
+              {%- assign kz_set_total = 0 -%}
+              {%- for it2 in cart.items -%}
+                {%- if it2.properties._kz_set == kz_sid -%}
+                  {%- assign kz_set_count = kz_set_count | plus: it2.quantity -%}
+                  {%- assign kz_set_total = kz_set_total | plus: it2.final_line_price -%}
+                {%- endif -%}
+              {%- endfor -%}
+              <div class="kz-set-bundle" data-set-id="{{ kz_sid }}">
+                <div class="kz-set-head">
+                  <span class="kz-set-head-title">Fighter Set <em>· {{ kz_set_count }} pezz{% if kz_set_count == 1 %}o{% else %}i{% endif %}</em></span>
+                  <span class="kz-set-head-total">{{ kz_set_total | money }}</span>
+                </div>
+                {%- for it2 in cart.items -%}
+                  {%- if it2.properties._kz_set == kz_sid -%}
+                    {%- render 'cart-item', item: it2, item_index: forloop.index -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                <div class="kz-set-actions">
+                  <a href="/pages/fighter-locker?edit_set={{ kz_sid | url_encode }}" class="kz-set-edit">Modifica set</a>
+                  <button type="button" class="kz-set-remove" data-remove-set="{{ kz_sid }}">Rimuovi set</button>
+                </div>
+              </div>
+            {%- endunless -%}
+          {%- endif -%}
         {%- endfor -%}
 
         {%- comment -%}
@@ -1586,6 +1707,33 @@
       initVariantDropdowns();
       document.addEventListener('click', function () { vddCloseAll(); });
       document.addEventListener('cart:updated', initVariantDropdowns);
+
+      /* ── Rimuovi un intero Fighter Set (tutte le righe con la stessa _kz_set) ── */
+      document.addEventListener('click', function (e) {
+        var setBtn = e.target.closest('[data-remove-set]');
+        if (!setBtn) return;
+        var sid = setBtn.getAttribute('data-remove-set');
+        setBtn.disabled = true;
+        setBtn.style.opacity = '.5';
+        fetch('/cart.js')
+          .then(function (r) { return r.json(); })
+          .then(function (cart) {
+            var updates = {};
+            cart.items.forEach(function (it) {
+              if (it.properties && it.properties._kz_set === sid) updates[it.key] = 0;
+            });
+            return fetch('/cart/update.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ updates: updates })
+            });
+          })
+          .then(function () { refreshSection(); })
+          .catch(function () {
+            setBtn.disabled = false;
+            setBtn.style.opacity = '';
+          });
+      });
 
       document.addEventListener('click', function (e) {
         var removeBtn = e.target.closest('[data-coupon-remove]');

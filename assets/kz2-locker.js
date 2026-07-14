@@ -22,6 +22,7 @@
     if (!pieces.length) return;
 
     var SLOTS = ['testa', 'corpo', 'gambe', 'piedi', 'accessorio'];
+    var editSetId = new URLSearchParams(window.location.search).get('edit_set');
     var stage = root.querySelector('[data-locker-stage]');
     var totalEl = root.querySelector('[data-locker-total]');
     var countEl = root.querySelector('[data-locker-count]');
@@ -187,15 +188,39 @@
       t.addEventListener('click', function () { activateTab(t.getAttribute('data-locker-tab')); });
     });
 
-    /* Default outfit: primo bestseller di ogni slot */
-    SLOTS.forEach(function (slot) {
-      var def = pieces.find(function (p) { return p.slot === slot && p.bestseller && p.available; });
-      if (def) state[slot] = { piece: def, variantId: firstAvailableVariant(def).id };
-      renderPieces(slot);
-      renderSizes(slot);
-      refreshStage(slot);
-    });
-    refreshTotals();
+    /* Default outfit: primo bestseller di ogni slot (o, in modifica, i pezzi del carrello) */
+    function renderAll() {
+      SLOTS.forEach(function (slot) {
+        renderPieces(slot);
+        renderSizes(slot);
+        refreshStage(slot);
+      });
+      refreshTotals();
+    }
+
+    if (editSetId) {
+      /* Modalita modifica: riprendi i pezzi del set dal carrello */
+      if (addBtn && i18n.update_set) addBtn.textContent = i18n.update_set;
+      fetch('/cart.js')
+        .then(function (r) { return r.json(); })
+        .then(function (cart) {
+          cart.items.forEach(function (it) {
+            if (!it.properties || it.properties._kz_set !== editSetId) return;
+            var piece = pieces.find(function (p) {
+              return p.variants.some(function (v) { return v.id === it.variant_id; });
+            });
+            if (piece) state[piece.slot] = { piece: piece, variantId: it.variant_id };
+          });
+          renderAll();
+        })
+        .catch(function () { renderAll(); });
+    } else {
+      SLOTS.forEach(function (slot) {
+        var def = pieces.find(function (p) { return p.slot === slot && p.bestseller && p.available; });
+        if (def) state[slot] = { piece: def, variantId: firstAvailableVariant(def).id };
+      });
+      renderAll();
+    }
 
     /* Primo tab con pezzi disponibili */
     var firstSlot = SLOTS.find(function (s) {
@@ -211,18 +236,43 @@
       addBtn.disabled = true;
       addBtn.textContent = '…';
 
-      fetch('/cart/add.js', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: entries.map(function (e) { return { id: e.variantId, quantity: 1 }; })
-        })
+      var setId = editSetId || ('kzset-' + Date.now().toString(36));
+
+      /* In modifica: prima azzera le righe del vecchio set */
+      var clearOld = editSetId
+        ? fetch('/cart.js')
+            .then(function (r) { return r.json(); })
+            .then(function (cart) {
+              var updates = {};
+              cart.items.forEach(function (it) {
+                if (it.properties && it.properties._kz_set === editSetId) updates[it.key] = 0;
+              });
+              if (!Object.keys(updates).length) return null;
+              return fetch('/cart/update.js', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ updates: updates })
+              });
+            })
+        : Promise.resolve(null);
+
+      clearOld.then(function () {
+        return fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            items: entries.map(function (e) {
+              return { id: e.variantId, quantity: 1, properties: { _kz_set: setId } };
+            })
+          })
+        });
       })
         .then(function (r) {
           if (!r.ok) throw new Error('add failed');
           return r.json();
         })
         .then(function () {
+          if (editSetId) { window.location.href = '/cart'; return; }
           addBtn.disabled = false;
           addBtn.textContent = label;
           /* Aggiorna il badge del carrello nell'header */

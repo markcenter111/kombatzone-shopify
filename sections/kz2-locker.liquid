@@ -466,21 +466,13 @@
         "piece": {{ 'sections.kz2-locker.piece' | t | json }},
         "pieces": {{ 'sections.kz2-locker.pieces' | t | json }},
         "out_of_stock": {{ 'sections.kz2-locker.out_of_stock' | t | json }},
-        "error": {{ 'sections.kz2-locker.error' | t | json }}
+        "error": {{ 'sections.kz2-locker.error' | t | json }},
+        "update_set": {{ 'sections.kz2-locker.update_set' | t | json }}
       }
     </script>
     <script src="{{ 'kz2-locker.js' | asset_url }}" defer></script>
   {%- else -%}
-    <div class="kz2-locker-empty-state">
-      {{ 'sections.kz2-locker.empty_state' | t }}
-      <div style="font-size:10px;color:#555;margin-top:10px;letter-spacing:.02em">
-        DEBUG · coll={{ src_collection.handle | default: 'NESSUNA' }}
-        · prodotti={{ src_collection.products.size | default: 0 }}
-        {%- for p in src_collection.products limit: 6 %}
-          <br>[{{ p.handle }} · slot="{{ p.metafields.kzone.slot.value | default: 'VUOTO' }}" · layer={% if p.metafields.kzone.layer_image.value != blank %}OK{% else %}MANCANTE{% endif %} · z={{ p.metafields.kzone.z_index.value | default: 'VUOTO' }}]
-        {%- endfor %}
-      </div>
-    </div>
+    <div class="kz2-locker-empty-state">{{ 'sections.kz2-locker.empty_state' | t }}</div>
   {%- endif -%}
 
 </div>
@@ -543,6 +535,7 @@
       "added": "Set aggiunto al carrello!",
       "go_cart": "Vai al carrello",
       "continue": "Continua a montare",
+      "update_set": "Aggiorna il set",
       "out_of_stock": "Esaurito",
       "error": "Errore — riprova",
       "empty_state": "Configura la collezione sorgente e i metafield kzone.slot / kzone.layer_image sui prodotti per attivare il locker."
@@ -567,6 +560,7 @@
       "added": "Set added to cart!",
       "go_cart": "Go to cart",
       "continue": "Keep building",
+      "update_set": "Update the set",
       "out_of_stock": "Sold out",
       "error": "Error — try again",
       "empty_state": "Set the source collection and the kzone.slot / kzone.layer_image metafields on products to activate the locker."
@@ -591,6 +585,7 @@
       "added": "¡Set añadido al carrito!",
       "go_cart": "Ir al carrito",
       "continue": "Seguir montando",
+      "update_set": "Actualizar el set",
       "out_of_stock": "Agotado",
       "error": "Error — inténtalo de nuevo",
       "empty_state": "Configura la colección de origen y los metafields kzone.slot / kzone.layer_image en los productos para activar el locker."
@@ -615,6 +610,7 @@
       "added": "Set im Warenkorb!",
       "go_cart": "Zum Warenkorb",
       "continue": "Weiter bauen",
+      "update_set": "Set aktualisieren",
       "out_of_stock": "Ausverkauft",
       "error": "Fehler — bitte erneut versuchen",
       "empty_state": "Lege die Quell-Kollektion und die Metafelder kzone.slot / kzone.layer_image an den Produkten fest, um den Locker zu aktivieren."
@@ -639,6 +635,7 @@
       "added": "Set ajouté au panier !",
       "go_cart": "Voir le panier",
       "continue": "Continuer le montage",
+      "update_set": "Mettre \u00e0 jour le set",
       "out_of_stock": "Épuisé",
       "error": "Erreur — réessaie",
       "empty_state": "Configure la collection source et les métachamps kzone.slot / kzone.layer_image sur les produits pour activer le locker."
