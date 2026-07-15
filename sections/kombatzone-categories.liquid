@@ -60,6 +60,15 @@
     background: var(--bg2);
     overflow: hidden;
     cursor: pointer;
+    display: block;
+  }
+  /* Layer invisibile a tutta card: ogni pixel è cliccabile,
+     sopra qualsiasi overlay/z-index interno */
+  #kz-cat-{{ section.id }} .cat-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 5;
     aspect-ratio: 3/2;
     display: flex;
     align-items: flex-end;
