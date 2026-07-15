@@ -58,6 +58,7 @@
 
   .kz-nav-links {
     display: flex;
+    align-items: center;
     gap: 28px;
     font-size: 12px;
     font-weight: 500;
@@ -75,17 +76,21 @@
   }
   .kz-nav-links li a:hover { color: var(--kz-text); }
 
-  /* Voce speciale "Personalizza": pill rossa con pallino pulsante */
+  /* Voce speciale "Personalizza": blocco squadrato stile brand, aggressivo */
   .kz-nav-links li a.kz-nav-special,
   .kz-nav-mobile a.kz-nav-special {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
     background: var(--kz-red);
     color: #fff;
-    padding: 7px 15px;
-    border-radius: 99px;
-    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 3px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: .12em;
+    line-height: 1;
     box-shadow: 0 0 12px rgba(232,39,42,.30);
     transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
   }
@@ -94,7 +99,7 @@
     background: #c41f22;
     color: #fff;
     transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(232,39,42,.45);
+    box-shadow: 0 4px 16px rgba(232,39,42,.5);
   }
   .kz-nav-special-dot {
     width: 6px;
