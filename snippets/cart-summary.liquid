@@ -109,10 +109,10 @@
   </div>
 
   {%- form 'cart', cart, id: 'kz-cart-form' -%}
-    <button type="submit" name="checkout" class="kz-checkout-btn">
+    <a href="/checkout" class="kz-checkout-btn">
       <i class="ti ti-lock" aria-hidden="true"></i>
       Procedi al checkout
-    </button>
+    </a>
 
     {%- comment -%}
       Pulsanti di checkout dinamici nativi Shopify (PayPal, Shop Pay, ecc.),

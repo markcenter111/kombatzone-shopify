@@ -1481,7 +1481,7 @@
         <span class="kz-cart-sticky-label">Totale</span>
         <span class="kz-cart-sticky-val">{{ cart.total_price | money }}</span>
       </div>
-      <button type="submit" form="kz-cart-form" name="checkout" class="kz-cart-sticky-btn">
+      <button type="button" onclick="window.location.href='/checkout'" class="kz-cart-sticky-btn">
         <i class="ti ti-lock" aria-hidden="true"></i>
         Procedi al checkout
       </button>
