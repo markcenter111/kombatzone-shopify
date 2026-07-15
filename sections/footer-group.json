@@ -46,7 +46,7 @@
           "type": "link",
           "settings": {
             "label": "Guida alle taglie",
-            "link": "shopify://pages/size-chart"
+            "link": "shopify://pages/tabella-taglie"
           }
         },
         "lk_cura": {
