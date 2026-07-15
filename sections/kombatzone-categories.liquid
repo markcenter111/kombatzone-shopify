@@ -60,7 +60,11 @@
     background: var(--bg2);
     overflow: hidden;
     cursor: pointer;
-    display: block;
+    aspect-ratio: 3/2;
+    display: flex;
+    align-items: flex-end;
+    border: 1px solid var(--border);
+    text-decoration: none;
   }
   /* Layer invisibile a tutta card: ogni pixel è cliccabile,
      sopra qualsiasi overlay/z-index interno */
@@ -69,11 +73,6 @@
     position: absolute;
     inset: 0;
     z-index: 5;
-    aspect-ratio: 3/2;
-    display: flex;
-    align-items: flex-end;
-    border: 1px solid var(--border);
-    text-decoration: none;
   }
   #kz-cat-{{ section.id }} .cat-img {
     position: absolute;
