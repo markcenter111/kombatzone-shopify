@@ -76,42 +76,76 @@
   }
   .kz-nav-links li a:hover { color: var(--kz-text); }
 
-  /* Voce speciale "Personalizza": blocco squadrato stile brand, aggressivo */
+  /* Voce speciale "Personalizza": target-lock — mirino rosso attorno al testo
+     + micro-glitch cromatico periodico (stesso linguaggio dei titoli) */
   .kz-nav-links li a.kz-nav-special,
   .kz-nav-mobile a.kz-nav-special {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--kz-red);
+    position: relative;
+    display: inline-block;
     color: #fff;
-    padding: 6px 14px;
-    border-radius: 3px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 14px;
-    font-weight: 900;
-    letter-spacing: .12em;
+    font-weight: 700;
+    padding: 5px 10px;
     line-height: 1;
-    box-shadow: 0 0 12px rgba(232,39,42,.30);
-    transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+    transition: color .2s ease;
+    animation: kz-nav-glitch 3.4s infinite;
+  }
+  .kz-nav-special-dot { display: none; }
+
+  /* Angoli del mirino: alto-sx e basso-dx */
+  .kz-nav-links li a.kz-nav-special::before,
+  .kz-nav-mobile a.kz-nav-special::before,
+  .kz-nav-links li a.kz-nav-special::after,
+  .kz-nav-mobile a.kz-nav-special::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    animation: kz-nav-corners 1.8s ease-in-out infinite;
+  }
+  .kz-nav-links li a.kz-nav-special::before,
+  .kz-nav-mobile a.kz-nav-special::before {
+    top: -2px;
+    left: -2px;
+    border-top: 2px solid var(--kz-red);
+    border-left: 2px solid var(--kz-red);
+  }
+  .kz-nav-links li a.kz-nav-special::after,
+  .kz-nav-mobile a.kz-nav-special::after {
+    bottom: -2px;
+    right: -2px;
+    border-bottom: 2px solid var(--kz-red);
+    border-right: 2px solid var(--kz-red);
   }
   .kz-nav-links li a.kz-nav-special:hover,
   .kz-nav-mobile a.kz-nav-special:hover {
-    background: #c41f22;
-    color: #fff;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(232,39,42,.5);
+    color: var(--kz-red);
+    animation: kz-nav-glitch .6s infinite;
   }
-  .kz-nav-special-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #fff;
-    flex-shrink: 0;
-    animation: kz-nav-dot 1.6s ease-in-out infinite;
+
+  @keyframes kz-nav-corners {
+    0%, 100% { transform: translate(0, 0); opacity: 1; }
+    50% { transform: translate(-2px, -2px); opacity: .6; }
   }
-  @keyframes kz-nav-dot {
-    0%, 100% { opacity: 1; }
-    50% { opacity: .35; }
+  .kz-nav-links li a.kz-nav-special::after { animation-name: kz-nav-corners-br; }
+  .kz-nav-mobile a.kz-nav-special::after { animation-name: kz-nav-corners-br; }
+  @keyframes kz-nav-corners-br {
+    0%, 100% { transform: translate(0, 0); opacity: 1; }
+    50% { transform: translate(2px, 2px); opacity: .6; }
+  }
+
+  @keyframes kz-nav-glitch {
+    0%, 90%, 100% { text-shadow: none; transform: none; }
+    92% { text-shadow: 2px 0 var(--kz-red), -2px 0 #2FB7FF; transform: translateX(-1px) skewX(-8deg); }
+    94% { text-shadow: -2px 0 var(--kz-red), 2px 0 #2FB7FF; transform: translateX(1px) skewX(4deg); }
+    96% { text-shadow: 1px 0 var(--kz-red); transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .kz-nav-links li a.kz-nav-special,
+    .kz-nav-mobile a.kz-nav-special,
+    .kz-nav-links li a.kz-nav-special::before,
+    .kz-nav-links li a.kz-nav-special::after,
+    .kz-nav-mobile a.kz-nav-special::before,
+    .kz-nav-mobile a.kz-nav-special::after { animation: none !important; }
   }
 
   .kz-nav-right {
