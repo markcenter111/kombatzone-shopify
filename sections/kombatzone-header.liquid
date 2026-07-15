@@ -247,7 +247,7 @@
     display: flex;
     flex-direction: column;
     background: rgba(10,10,10,0.98);
-    border-top: 1px solid var(--kz-border);
+    border-top: 1px solid transparent;
     padding: 20px 32px;
     gap: 16px;
     /* Chiuso: collassato e trasparente. Aperto: scende con fade. */
@@ -261,6 +261,7 @@
     transition: max-height .35s cubic-bezier(.2,.6,.2,1), opacity .28s ease, transform .32s cubic-bezier(.2,.6,.2,1), padding .3s ease;
   }
   .kz-nav-mobile.open {
+    border-top-color: var(--kz-border);
     max-height: 420px;
     padding-top: 20px;
     padding-bottom: 20px;
