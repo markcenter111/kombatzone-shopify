@@ -87,40 +87,48 @@
     "kombatzone_header_Vcibwm": {
       "type": "kombatzone-header",
       "blocks": {
-        "nav_link_RfHFhH": {
+        "nav_fightset": {
           "type": "nav_link",
           "settings": {
-            "link_label": "Guantoni",
-            "link_url": "shopify://collections/sets-1"
+            "link_label": "Fightset",
+            "link_url": "shopify://collections/sets"
           }
         },
-        "nav_link_NpgEei": {
+        "nav_abbigliamento": {
           "type": "nav_link",
           "settings": {
             "link_label": "Abbigliamento",
-            "link_url": ""
+            "link_url": "shopify://collections/abbigliamento"
           }
         },
-        "nav_link_E3KDCy": {
-          "type": "nav_link",
-          "settings": {
-            "link_label": "Set completi",
-            "link_url": ""
-          }
-        },
-        "nav_link_NrdJaU": {
+        "nav_personalizza": {
           "type": "nav_link",
           "settings": {
             "link_label": "Personalizza",
-            "link_url": ""
+            "link_url": "/pages/fighter-locker"
+          }
+        },
+        "nav_protezioni": {
+          "type": "nav_link",
+          "settings": {
+            "link_label": "Protezioni",
+            "link_url": "shopify://collections/protezioni"
+          }
+        },
+        "nav_accessori": {
+          "type": "nav_link",
+          "settings": {
+            "link_label": "Accessori",
+            "link_url": "shopify://collections/accessori"
           }
         }
       },
       "block_order": [
-        "nav_link_RfHFhH",
-        "nav_link_NpgEei",
-        "nav_link_E3KDCy",
-        "nav_link_NrdJaU"
+        "nav_fightset",
+        "nav_abbigliamento",
+        "nav_personalizza",
+        "nav_protezioni",
+        "nav_accessori"
       ],
       "name": "KZ Header",
       "settings": {

@@ -75,6 +75,40 @@
   }
   .kz-nav-links li a:hover { color: var(--kz-text); }
 
+  /* Voce speciale "Personalizza": pill rossa con pallino pulsante */
+  .kz-nav-links li a.kz-nav-special,
+  .kz-nav-mobile a.kz-nav-special {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--kz-red);
+    color: #fff;
+    padding: 7px 15px;
+    border-radius: 99px;
+    font-weight: 700;
+    box-shadow: 0 0 12px rgba(232,39,42,.30);
+    transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+  }
+  .kz-nav-links li a.kz-nav-special:hover,
+  .kz-nav-mobile a.kz-nav-special:hover {
+    background: #c41f22;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(232,39,42,.45);
+  }
+  .kz-nav-special-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #fff;
+    flex-shrink: 0;
+    animation: kz-nav-dot 1.6s ease-in-out infinite;
+  }
+  @keyframes kz-nav-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .35; }
+  }
+
   .kz-nav-right {
     display: flex;
     align-items: center;
@@ -216,7 +250,11 @@
       {% for block in section.blocks %}
         {% if block.type == 'nav_link' %}
           <li {{ block.shopify_attributes }}>
-            <a href="{{ block.settings.link_url }}">{{ block.settings.link_label }}</a>
+            {%- if block.settings.link_url contains 'fighter-locker' -%}
+              <a href="{{ block.settings.link_url }}" class="kz-nav-special"><span class="kz-nav-special-dot" aria-hidden="true"></span>{{ block.settings.link_label }}</a>
+            {%- else -%}
+              <a href="{{ block.settings.link_url }}">{{ block.settings.link_label }}</a>
+            {%- endif -%}
           </li>
         {% endif %}
       {% endfor %}
@@ -256,7 +294,11 @@
   <div class="kz-nav-mobile" id="kz-mobile-menu">
     {% for block in section.blocks %}
       {% if block.type == 'nav_link' %}
-        <a href="{{ block.settings.link_url }}">{{ block.settings.link_label }}</a>
+        {%- if block.settings.link_url contains 'fighter-locker' -%}
+          <a href="{{ block.settings.link_url }}" class="kz-nav-special"><span class="kz-nav-special-dot" aria-hidden="true"></span>{{ block.settings.link_label }}</a>
+        {%- else -%}
+          <a href="{{ block.settings.link_url }}">{{ block.settings.link_label }}</a>
+        {%- endif -%}
       {% endif %}
     {% endfor %}
     <a href="{{ section.settings.cta_url }}" class="kz-nav-cta" style="text-align:center;">{{ section.settings.cta_label }}</a>
