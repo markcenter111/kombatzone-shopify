@@ -1,0 +1,126 @@
+{%- comment -%}
+  KOMBAT ZONE — Pagina informativa (template page.kz-info)
+  Rende il contenuto della pagina in stile brand: fondo scuro
+  a tutta larghezza, titoli condensed, accenti rossi.
+{%- endcomment -%}
+
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  #shopify-section-{{ section.id }} .kz2-info {
+    background: #0a0a0a;
+    background-image: linear-gradient(180deg, rgba(232, 39, 42, .07), rgba(232, 39, 42, 0) 320px);
+    color: #c9c7c2;
+    font-family: 'Inter', sans-serif;
+    padding: 56px max(24px, calc((100vw - 820px) / 2)) 80px;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+  #shopify-section-{{ section.id }} .kz2-info-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #E8272A;
+    margin-bottom: 10px;
+  }
+  #shopify-section-{{ section.id }} .kz2-info-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 44px;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1;
+    color: #F2F0EB;
+    margin: 0 0 8px;
+  }
+  #shopify-section-{{ section.id }} .kz2-info-title em { font-style: normal; color: #E8272A; }
+  #shopify-section-{{ section.id }} .kz2-info-rule {
+    width: 56px;
+    height: 3px;
+    background: #E8272A;
+    border-radius: 99px;
+    margin: 18px 0 34px;
+  }
+  #shopify-section-{{ section.id }} .kz2-info-body h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: #E8272A;
+    margin: 36px 0 10px;
+  }
+  #shopify-section-{{ section.id }} .kz2-info-body h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 19px;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #F2F0EB;
+    margin: 24px 0 8px;
+  }
+  #shopify-section-{{ section.id }} .kz2-info-body p { margin: 0 0 14px; }
+  #shopify-section-{{ section.id }} .kz2-info-body strong { color: #F2F0EB; }
+  #shopify-section-{{ section.id }} .kz2-info-body a { color: #E8272A; text-decoration: none; border-bottom: 1px solid rgba(232,39,42,.4); transition: border-color .15s; }
+  #shopify-section-{{ section.id }} .kz2-info-body a:hover { border-bottom-color: #E8272A; }
+  #shopify-section-{{ section.id }} .kz2-info-body ul,
+  #shopify-section-{{ section.id }} .kz2-info-body ol { padding-left: 22px; margin: 0 0 16px; }
+  #shopify-section-{{ section.id }} .kz2-info-body li { margin-bottom: 8px; }
+  #shopify-section-{{ section.id }} .kz2-info-body li::marker { color: #E8272A; }
+  #shopify-section-{{ section.id }} .kz2-info-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 6px 0 22px;
+    font-size: 13.5px;
+    background: #111;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .kz2-info-body th {
+    text-align: left;
+    padding: 11px 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #F2F0EB;
+    background: rgba(232,39,42,.12);
+    border-bottom: 1px solid rgba(232,39,42,.3);
+  }
+  #shopify-section-{{ section.id }} .kz2-info-body td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  #shopify-section-{{ section.id }} .kz2-info-body tr:last-child td { border-bottom: none; }
+  #shopify-section-{{ section.id }} .kz2-info-body td:first-child { color: #E8272A; font-weight: 700; }
+  #shopify-section-{{ section.id }} .kz2-info-box {
+    background: rgba(232,39,42,.06);
+    border: 1px solid rgba(232,39,42,.3);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin: 18px 0;
+  }
+  @media (max-width: 600px) {
+    #shopify-section-{{ section.id }} .kz2-info { padding-top: 40px; padding-bottom: 56px; }
+    #shopify-section-{{ section.id }} .kz2-info-title { font-size: 34px; }
+  }
+</style>
+
+<div class="kz2-info">
+  <div class="kz2-info-eyebrow">Kombat Zone</div>
+  <h1 class="kz2-info-title">{{ page.title }}<em>.</em></h1>
+  <div class="kz2-info-rule"></div>
+  <div class="kz2-info-body">
+    {{ page.content }}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "KZ — Pagina info",
+  "tag": "section",
+  "class": "kz2-info-section",
+  "settings": []
+}
+{% endschema %}

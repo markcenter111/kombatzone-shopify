@@ -1,0 +1,8 @@
+{
+  "sections": {
+    "main": {
+      "type": "kz2-info-page"
+    }
+  },
+  "order": ["main"]
+}
