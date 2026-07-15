@@ -1,1 +1,87 @@
-{"type":"footer","name":"Footer","sections":{"kombatzone_footer_mini_eykHJg":{"type":"kombatzone-footer-mini","blocks":{"link_a9YM6E":{"type":"link","settings":{"label":"About Us","link":"shopify:\/\/pages\/about-us"}},"link_bAnFAX":{"type":"link","settings":{"label":"Privacy Policy","link":"shopify:\/\/pages\/privacy-policy"}},"link_A6Hz7z":{"type":"link","settings":{"label":"Your Privacy Choices","link":"shopify:\/\/pages\/data-sharing-opt-out"}},"link_7UG8yC":{"type":"link","settings":{"label":"Size Chart","link":"shopify:\/\/pages\/size-chart"}},"link_cL7hV3":{"type":"link","settings":{"label":"HTC Of Apparels","link":"shopify:\/\/pages\/how-to-take-care-of-apparels"}}},"block_order":["link_a9YM6E","link_bAnFAX","link_A6Hz7z","link_7UG8yC","link_cL7hV3"],"name":"KZ — Footer mini","settings":{"bg_color":"#0a0a0a","padding_top":26,"padding_bottom":26,"copy_text":"© 2026 Kombat Zone. Tutti i diritti riservati."}}},"order":["kombatzone_footer_mini_eykHJg"]}
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "kombatzone_footer_mini_eykHJg": {
+      "type": "kombatzone-footer-mini",
+      "blocks": {
+        "lk_chisiamo": {
+          "type": "link",
+          "settings": {
+            "label": "Chi siamo",
+            "link": "shopify://pages/about-us"
+          }
+        },
+        "lk_contatti": {
+          "type": "link",
+          "settings": {
+            "label": "Contatti",
+            "link": "shopify://pages/contatti"
+          }
+        },
+        "lk_spedizioni": {
+          "type": "link",
+          "settings": {
+            "label": "Spedizioni",
+            "link": "shopify://pages/spedizioni"
+          }
+        },
+        "lk_resi": {
+          "type": "link",
+          "settings": {
+            "label": "Resi e rimborsi",
+            "link": "shopify://pages/resi-e-rimborsi"
+          }
+        },
+        "lk_taglie": {
+          "type": "link",
+          "settings": {
+            "label": "Guida alle taglie",
+            "link": "shopify://pages/size-chart"
+          }
+        },
+        "lk_cura": {
+          "type": "link",
+          "settings": {
+            "label": "Cura dei capi",
+            "link": "shopify://pages/how-to-take-care-of-apparels"
+          }
+        },
+        "lk_termini": {
+          "type": "link",
+          "settings": {
+            "label": "Termini e condizioni",
+            "link": "shopify://pages/termini-e-condizioni"
+          }
+        },
+        "lk_privacy": {
+          "type": "link",
+          "settings": {
+            "label": "Privacy",
+            "link": "/policies/privacy-policy"
+          }
+        }
+      },
+      "block_order": [
+        "lk_chisiamo",
+        "lk_contatti",
+        "lk_spedizioni",
+        "lk_resi",
+        "lk_taglie",
+        "lk_cura",
+        "lk_termini",
+        "lk_privacy"
+      ],
+      "name": "KZ — Footer mini",
+      "settings": {
+        "bg_color": "#0a0a0a",
+        "padding_top": 26,
+        "padding_bottom": 26,
+        "copy_text": "© 2026 Kombat Zone. Tutti i diritti riservati."
+      }
+    }
+  },
+  "order": [
+    "kombatzone_footer_mini_eykHJg"
+  ]
+}
