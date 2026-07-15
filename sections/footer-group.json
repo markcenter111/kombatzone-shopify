@@ -32,7 +32,7 @@
           "type": "link",
           "settings": {
             "label": "Spedizioni",
-            "link": "shopify://pages/spedizioni"
+            "link": "shopify://pages/spedizioni-e-resi"
           }
         },
         "lk_resi": {
