@@ -262,6 +262,22 @@
     transition: background .15s;
   }
 
+  /* Hover: la card si solleva e ingrandisce (stessa animazione del resto del sito) */
+  #kz-tiktok-{{ section.id }} .kz-tt-card {
+    transition: transform .25s ease, box-shadow .25s ease !important;
+  }
+  #kz-tiktok-{{ section.id }} .kz-tt-card:hover {
+    transform: translateY(-4px) scale(1.03) !important;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, .5) !important;
+    z-index: 5;
+  }
+  #kz-tiktok-{{ section.id }} .kz-tt-thumb {
+    transition: transform .5s cubic-bezier(.2, .6, .2, 1) !important;
+  }
+  #kz-tiktok-{{ section.id }} .kz-tt-card:hover .kz-tt-thumb {
+    transform: scale(1.06) !important;
+  }
+
   .kz-tt-embed {
     position: absolute;
     inset: 0;
@@ -269,7 +285,7 @@
     background: #000;
     opacity: 0;
     pointer-events: none;
-    transition: opacity .25s ease;
+    transition: opacity .3s ease .18s;
   }
   .kz-tt-embed iframe {
     width: 100%;
