@@ -14,46 +14,25 @@
     "kombatzone_footer_mini_eykHJg": {
       "type": "kombatzone-footer-mini",
       "blocks": {
-        "lk_chisiamo": {
+        "lk_missione": {
           "type": "link",
           "settings": {
-            "label": "Chi siamo",
+            "label": "La nostra missione",
             "link": "shopify://pages/la-nostra-missione"
           }
         },
-        "lk_contatti": {
+        "lk_spedresi": {
           "type": "link",
           "settings": {
-            "label": "Contatti",
-            "link": "shopify://pages/contatti"
-          }
-        },
-        "lk_spedizioni": {
-          "type": "link",
-          "settings": {
-            "label": "Spedizioni",
+            "label": "Spedizioni e resi",
             "link": "shopify://pages/spedizioni-e-resi"
-          }
-        },
-        "lk_resi": {
-          "type": "link",
-          "settings": {
-            "label": "Resi e rimborsi",
-            "link": "shopify://pages/resi-e-rimborsi"
           }
         },
         "lk_taglie": {
           "type": "link",
           "settings": {
-            "label": "Guida alle taglie",
+            "label": "Taglie e cura dei capi",
             "link": "shopify://pages/tabella-taglie"
-          }
-        },
-        "lk_cura": {
-          "type": "link",
-          "settings": {
-            "label": "Cura dei capi",
-            "link": "shopify://pages/cura-dei-capi"
           }
         },
         "lk_termini": {
@@ -66,18 +45,15 @@
         "lk_privacy": {
           "type": "link",
           "settings": {
-            "label": "Privacy",
-            "link": "/policies/privacy-policy"
+            "label": "Privacy policy",
+            "link": "shopify://pages/privacy-policy"
           }
         }
       },
       "block_order": [
-        "lk_chisiamo",
-        "lk_contatti",
-        "lk_spedizioni",
-        "lk_resi",
+        "lk_missione",
+        "lk_spedresi",
         "lk_taglie",
-        "lk_cura",
         "lk_termini",
         "lk_privacy"
       ],
