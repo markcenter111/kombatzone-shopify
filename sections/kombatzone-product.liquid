@@ -829,8 +829,25 @@
         </div>
       {%- endif -%}
 
-      {%- if section.settings.usp_text != blank -%}
-        <p class="kzpr-usp">{{ section.settings.usp_text }}</p>
+      {%- liquid
+        comment
+          Sottotitolo dinamico per categoria: set completi, abbigliamento,
+          protezioni, accessori. Fallback: testo dalle impostazioni sezione.
+        endcomment
+        assign kz_usp = section.settings.usp_text
+        assign kz_colls = product.collections | map: 'handle' | join: ','
+        if kz_colls contains 'sets'
+          assign kz_usp = 'Tutto il necessario in un colpo solo: un set completo per allenarti da subito come un pro, col tuo nome stampato sopra.'
+        elsif kz_colls contains 'protezioni'
+          assign kz_usp = 'Protezione da combattimento vera, non da vetrina. Pensata per chi si allena ogni giorno e non può permettersi di rompere l&#8217;attrezzatura a metà stagione.'
+        elsif kz_colls contains 'abbigliamento'
+          assign kz_usp = 'Tessuti tecnici che reggono sudore e lavaggi, vestibilità da atleta. Fatto per allenarsi, non solo per farsi vedere.'
+        elsif kz_colls contains 'accessori'
+          assign kz_usp = 'Le leggende sul muro tengono alta la fame: stampa premium per l&#8217;angolo che ti ricorda perché ti alleni.'
+        endif
+      -%}
+      {%- if kz_usp != blank -%}
+        <p class="kzpr-usp">{{ kz_usp }}</p>
       {%- endif -%}
 
       <div class="kzpr-pricing">
