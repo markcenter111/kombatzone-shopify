@@ -48,20 +48,6 @@
             "label": "Privacy policy",
             "link": "shopify://pages/privacy-policy"
           }
-        },
-        "lk_tiktok": {
-          "type": "link",
-          "settings": {
-            "label": "TikTok",
-            "link": "https://www.tiktok.com/@kombatzoneofficial"
-          }
-        },
-        "lk_ig": {
-          "type": "link",
-          "settings": {
-            "label": "Instagram",
-            "link": "https://www.instagram.com/kombatzonestore/"
-          }
         }
       },
       "block_order": [
@@ -69,9 +55,7 @@
         "lk_spedresi",
         "lk_taglie",
         "lk_termini",
-        "lk_privacy",
-        "lk_tiktok",
-        "lk_ig"
+        "lk_privacy"
       ],
       "name": "KZ — Footer mini",
       "settings": {
