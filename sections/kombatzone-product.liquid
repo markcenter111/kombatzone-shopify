@@ -837,13 +837,13 @@
         assign kz_usp = section.settings.usp_text
         assign kz_colls = product.collections | map: 'handle' | join: ','
         if kz_colls contains 'sets'
-          assign kz_usp = 'Tutto il necessario in un colpo solo: un set completo per allenarti da subito come un pro, col tuo nome stampato sopra.'
+          assign kz_usp = 'Tutto quello che serve per entrare in palestra da protagonista. Un set completo e si vede subito chi fa sul serio.'
         elsif kz_colls contains 'protezioni'
-          assign kz_usp = 'Protezione da combattimento vera, non da vetrina. Pensata per chi si allena ogni giorno e non può permettersi di rompere l&#8217;attrezzatura a metà stagione.'
+          assign kz_usp = 'Protezione da combattimento vera, non da vetrina. Chi si allena ogni giorno non si presenta con mezze misure.'
         elsif kz_colls contains 'abbigliamento'
-          assign kz_usp = 'Tessuti tecnici che reggono sudore e lavaggi, vestibilità da atleta. Fatto per allenarsi, non solo per farsi vedere.'
+          assign kz_usp = 'Tessuti tecnici e vestibilità da atleta: reggono sudore, lavaggi e round infiniti. Vestiti come chi il ring lo comanda.'
         elsif kz_colls contains 'accessori'
-          assign kz_usp = 'Le leggende sul muro tengono alta la fame: stampa premium per l&#8217;angolo che ti ricorda perché ti alleni.'
+          assign kz_usp = 'Il dettaglio che completa il tuo mondo da fighter. La mentalità da campione si costruisce anche fuori dal ring.'
         endif
       -%}
       {%- if kz_usp != blank -%}
