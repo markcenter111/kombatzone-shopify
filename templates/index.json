@@ -162,19 +162,27 @@
           "type": "product",
           "settings": {
             "product": "ufc-paint-training-set",
-            "featured": true
+            "featured": true,
+            "badge_label": "",
+            "badge_gold": false
           }
         },
         "product_auto_2": {
           "type": "product",
           "settings": {
-            "product": "ufc-premium-whitegold-makhachev-set"
+            "product": "ufc-premium-whitegold-makhachev-set",
+            "featured": false,
+            "badge_label": "",
+            "badge_gold": false
           }
         },
         "product_auto_3": {
           "type": "product",
           "settings": {
-            "product": "ufc-venum-snake-set"
+            "product": "ufc-venum-snake-set",
+            "featured": false,
+            "badge_label": "",
+            "badge_gold": false
           }
         }
       },
@@ -251,7 +259,7 @@
           "settings": {
             "icon": "",
             "title": "Personalizza",
-            "desc": "Inserisci il tuo nome, nickname o numero nella nota dell'ordine. Gratis, sempre.",
+            "desc": "Inserisci il tuo nome, nickname o numero nella nota dell'ordine quando possibile. Gratis, sempre.",
             "tag": "Incluso gratis"
           }
         },
@@ -554,6 +562,7 @@
       "type": "kombatzone-footer-cta",
       "name": "KZ — CTA finale",
       "settings": {
+        "free_ship_promo_end": "2026-07-30T23:59:59",
         "bg_color": "#111111",
         "padding_top": 36,
         "padding_bottom": 36,
