@@ -837,14 +837,17 @@
   .kz-also-grid > * { display: contents; }
 
   /* Larghezza fissa card nel carrello — Liquid token */
-  .kz-also-grid .kz-also-card {
+  .kz-also-grid .kz-also-card,
+  .kz-also-grid .kz-card {
     flex: 0 0 {{ section.settings.upsell_card_size }}px !important;
     min-width: 0;
     display: flex !important;
   }
-  .kz-also-grid.kz-size-normal .kz-also-card { flex-basis: 160px !important; }
+  .kz-also-grid.kz-size-normal .kz-also-card,
+  .kz-also-grid.kz-size-normal .kz-card { flex-basis: 160px !important; }
 
-  /* ── Card identica a kz2-product-card ── */
+    /* ── Card catalogo — CSS estratto 1:1 da assets/kz2-collection.css ──
+     NON modificare qui: se cambi lo stile card in collection, ricopia. */
   .kz-card {
     background: var(--kz-card);
     border: 1px solid var(--kz-border);
@@ -855,27 +858,17 @@
     flex-direction: column;
   }
   .kz-card:hover {
-    border-color: var(--kz-red);
     transform: translateY(-4px);
-    box-shadow: 0 12px 28px rgba(0,0,0,.45), 0 0 18px rgba(232,39,42,.18);
-  }
-  .kz-card__image { transition: transform .5s cubic-bezier(.2,.6,.2,1); backface-visibility: hidden; }
-  .kz-card:hover .kz-card__image { transform: scale(1.06); }
-  @media (prefers-reduced-motion: reduce) {
-    .kz-card, .kz-card__image { transition: none; }
-    .kz-card:hover { transform: none; }
-    .kz-card:hover .kz-card__image { transform: none; }
+    box-shadow: 0 12px 28px rgba(0, 0, 0, .45);
   }
 
   .kz-card__image-wrap {
     display: block;
     background: #0f0f0f;
+    height: 148px;
     position: relative;
     text-decoration: none;
     flex-shrink: 0;
-    aspect-ratio: 1 / 1;
-    height: auto;
-    border-radius: 10px 10px 0 0;
     overflow: hidden;
   }
   .kz-card__image {
@@ -883,7 +876,11 @@
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform .5s cubic-bezier(.2, .6, .2, 1);
+    backface-visibility: hidden;
+    transform: translateZ(0);
   }
+  .kz-card:hover .kz-card__image { transform: translateZ(0) scale(1.06); }
   .kz-card__image-placeholder {
     width: 100%;
     height: 100%;
@@ -892,16 +889,7 @@
     justify-content: center;
     font-size: 52px;
   }
-  .kz-card__image-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 45%;
-    background: linear-gradient(transparent, var(--kz-card));
-    pointer-events: none;
-    z-index: 1;
-  }
+
   .kz-card__badge {
     position: absolute;
     top: 8px;
@@ -913,11 +901,134 @@
     border-radius: 4px;
     letter-spacing: .06em;
     line-height: 1;
-    z-index: 2;
   }
+  .kz-card__wishlist {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, .7);
+    border: 1px solid #333;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #fff;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+    line-height: 1;
+  }
+  .kz-card__wishlist:hover {
+    background: rgba(232, 39, 42, .6);
+    border-color: var(--kz-red);
+  }
+  .kz-card__wishlist.is-active {
+    color: var(--kz-red);
+  }
+
+  .kz-card__body {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    position: relative;
+    z-index: 2;
+    margin-top: -1px;
+    background: var(--kz-card);
+  }
+
+  .kz-card__type {
+    font-size: 10px;
+    color: var(--kz-red);
+    font-weight: 700;
+    letter-spacing: .08em;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    min-height: 13px;
+  }
+  .kz-card__title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 8px;
+    line-height: 1.3;
+    text-decoration: none;
+    min-height: 34px;
+    transition: color .15s;
+  }
+  .kz-card__title:hover { color: var(--kz-red); }
+
+  .kz-card__rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+  .kz-card__stars {
+    color: #F59E0B;
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+  .kz-card__review-count { font-size: 11px; color: #666; }
+
+  .kz-card__price {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 10px;
+    margin-bottom: 0;
+  }
+  .kz-card__price-current {
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+  }
+  .kz-card__price-old {
+    font-size: 12px;
+    color: #555;
+    text-decoration: line-through;
+  }
+
+  .kz-card__atc {
+    width: 100%;
+    background: var(--kz-red);
+    border: none;
+    color: #fff;
+    padding: 9px 0;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    letter-spacing: .06em;
+    transition: background .15s;
+  }
+  .kz-card__atc:hover:not(:disabled) { background: #c41f22; }
+  .kz-card__atc:disabled {
+    background: #2a2a2a;
+    color: #555;
+    cursor: not-allowed;
+  }
+  .kz-card__atc--added {
+    background: #16a34a !important;
+  }
+
+  .kz-card--hero {
+    grid-column: auto;
+  }
+
+  /* Bestseller label a tutta larghezza sopra l'immagine */
   .kz-card__bestseller-label {
     position: absolute;
-    top: 0; left: 0; right: 0;
+    top: 0;
+    left: 0;
+    right: 0;
     background: var(--kz-red);
     color: #fff;
     font-size: 9px;
@@ -928,9 +1039,30 @@
     text-transform: uppercase;
     z-index: 3;
   }
+
+  /* ---------------------------------------------------------
+     Name badge (gratis incluso)
+     --------------------------------------------------------- */
+  .kz-card__name-badge {
+    display: inline-block;
+    background: rgba(232,39,42,.1);
+    border: 0.5px solid rgba(232,39,42,.35);
+    color: #e57373;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 99px;
+    margin-bottom: 8px;
+    letter-spacing: .04em;
+  }
+
+  /* ---------------------------------------------------------
+     Stock urgency badge sull'immagine
+     --------------------------------------------------------- */
   .kz-card__stock-badge {
     position: absolute;
-    bottom: 8px; left: 8px;
+    bottom: 8px;
+    left: 8px;
     background: rgba(10,10,10,.88);
     border: 0.5px solid var(--kz-red);
     color: #e57373;
@@ -944,70 +1076,29 @@
     gap: 4px;
     letter-spacing: .03em;
   }
-  .kz-card__stock-badge svg { width: 10px; height: 10px; flex-shrink: 0; }
-
-  /* FAB carrello — identico alla collection */
-  @keyframes kz-fab-enter {
-    from { opacity: 0; transform: scale(0.6); }
-    to   { opacity: 1; transform: scale(1); }
+  .kz-card__stock-badge svg {
+    width: 10px;
+    height: 10px;
+    flex-shrink: 0;
   }
-  .kz-card__cart-fab {
+
+  /* ---------------------------------------------------------
+     Overlay sfumato sull'immagine
+     --------------------------------------------------------- */
+  .kz-card__image-overlay {
     position: absolute;
-    bottom: 10px; right: 10px;
-    z-index: 4;
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    background: rgba(0,0,0,0.6);
-    border: 1.5px solid rgba(255,255,255,0.25);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    flex-shrink: 0;
-    animation: kz-fab-enter 0.3s cubic-bezier(.4,0,.2,1) 0.3s both;
-    transition: background .25s ease, border-color .25s ease,
-                transform .25s ease, box-shadow .25s ease;
-    padding: 0;
-  }
-  .kz-card__cart-fab:hover {
-    background: #E8272A;
-    border-color: #E8272A;
-    transform: scale(1.12);
-    box-shadow: 0 0 14px rgba(232,39,42,0.6);
-  }
-  .kz-card__cart-fab:active {
-    transform: scale(0.95);
-    box-shadow: 0 0 6px rgba(232,39,42,0.4);
-  }
-  .kz-card__cart-fab:disabled {
-    background: rgba(0,0,0,0.6) !important;
-    border-color: rgba(255,255,255,0.1) !important;
-    box-shadow: none !important;
-    cursor: not-allowed;
-    opacity: 0.4;
-    animation: none;
-  }
-  .kz-card__cart-fab svg {
-    width: 18px; height: 18px;
-    color: #fff;
-    flex-shrink: 0;
-    display: block;
+    bottom: -1px;
+    left: -1px;
+    right: -1px;
+    height: 45%;
+    background: linear-gradient(transparent, var(--kz-card) 92%);
+    pointer-events: none;
+    z-index: 1;
   }
 
-  /* Body testo */
-  .kz-card__body {
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
-  .kz-card__type {
-    font-size: 10px;
-    color: var(--kz-red);
-    font-weight: 700;
-    letter-spacing: .08em;
-    margin-bottom: 4px;
-  }
+  /* ---------------------------------------------------------
+     Tag livello/disciplina
+     --------------------------------------------------------- */
   .kz-card__discipline {
     font-size: 9px;
     font-weight: 600;
@@ -1016,69 +1107,142 @@
     color: #555;
     margin-bottom: 4px;
   }
-  .kz-card__title {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: #fff;
-    margin-bottom: 8px;
-    line-height: 1.3;
-    text-decoration: none;
-    flex: 1;
+
+  .kz-card__image-wrap {
+    aspect-ratio: 1 / 1;
+    height: auto !important;      /* sovrascrive l'altezza fissa esistente */
+    border-radius: 10px 10px 0 0; /* angoli top smussati, bottom dritti per unirsi al body */
   }
-  .kz-card__title:hover { color: var(--kz-red); }
-  .kz-card__name-badge {
-    display: inline-block;
-    background: rgba(232,39,42,.1);
-    border: 0.5px solid rgba(232,39,42,.35);
-    color: #e57373;
-    font-size: 9px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 99px;
-    margin-bottom: 8px;
-    letter-spacing: .04em;
+
+  /* Tutti i size-variant della griglia devono usare aspect-ratio */
+  .kz-product-grid--sm .kz-card__image-wrap,
+  .kz-product-grid--md .kz-card__image-wrap,
+  .kz-product-grid--lg .kz-card__image-wrap {
+    height: auto !important;
+    aspect-ratio: 1 / 1;
   }
-  .kz-card__price {
+
+  /* =========================================================
+     Nasconde il bottone testo "Aggiungi al carrello"
+     ========================================================= */
+  .kz-card__atc {
+    display: none;
+  }
+
+  @keyframes kz-fab-enter {
+    from {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* =========================================================
+     Bottone carrello FAB
+     Identico al close × del modal:
+     — cerchio 32px, sfondo scuro, bordo bianco sottile
+     — hover: rosso + glow (uguale al × hover)
+     — entrata: stagger sinistra → destra
+     ========================================================= */
+  .kz-card__cart-fab {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 4;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    /* Entrata: appare da sinistra a destra via nth-child */
+    animation: kz-fab-enter 0.3s cubic-bezier(.4, 0, .2, 1) 0.3s both;
+    /* Transizione hover identica al × del modal */
+    transition: background .25s ease, border-color .25s ease,
+                transform .25s ease, box-shadow .25s ease;
   }
-  .kz-card__price-current {
-    font-size: 16px;
-    font-weight: 800;
+
+  /* Stagger entrata: ogni carta +0.1s — effetto sinistra → destra */
+  .kz-card:nth-child(1) .kz-card__cart-fab { animation-delay: 0.30s; }
+  .kz-card:nth-child(2) .kz-card__cart-fab { animation-delay: 0.40s; }
+  .kz-card:nth-child(3) .kz-card__cart-fab { animation-delay: 0.50s; }
+  .kz-card:nth-child(4) .kz-card__cart-fab { animation-delay: 0.60s; }
+  .kz-card:nth-child(5) .kz-card__cart-fab { animation-delay: 0.70s; }
+  .kz-card:nth-child(6) .kz-card__cart-fab { animation-delay: 0.80s; }
+  .kz-card:nth-child(7) .kz-card__cart-fab { animation-delay: 0.90s; }
+  .kz-card:nth-child(8) .kz-card__cart-fab { animation-delay: 1.00s; }
+
+  /* Hover: uguale al × del modal */
+  .kz-card__cart-fab:hover {
+    background: #E8272A;
+    border-color: #E8272A;
+    transform: scale(1.12);
+    box-shadow: 0 0 14px rgba(232, 39, 42, 0.6);
+  }
+  .kz-card__cart-fab:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 6px rgba(232, 39, 42, 0.4);
+  }
+  .kz-card__cart-fab:disabled {
+    background: rgba(0, 0, 0, 0.6) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: none !important;
+    cursor: not-allowed;
+    opacity: 0.4;
+    animation: none;
+  }
+  .kz-card__cart-fab svg {
+    width: 18px;
+    height: 18px;
     color: #fff;
+    flex-shrink: 0;
+    display: block;
   }
-  .kz-card__price-old {
-    font-size: 12px;
-    color: #555;
-    text-decoration: line-through;
+
+  /* Mobile: stesso identico stile, leggermente più piccolo */
+  @media (max-width: 600px) {
+    .kz-card__cart-fab {
+      width: 28px;
+      height: 28px;
+      bottom: 7px;
+      right: 7px;
+    }
+    .kz-card__cart-fab svg {
+      width: 15px;
+      height: 15px;
+    }
   }
+
   .kz-card__contenuto {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
-    margin-top: 4px;
+    margin-top: 2px;
   }
   .kz-card__pezzo {
     font-size: 10px;
     color: var(--kz-red);
-    background: rgba(232,39,42,0.08);
-    border: 0.5px solid rgba(232,39,42,0.25);
+    background: rgba(232, 39, 42, 0.08);
+    border: 0.5px solid rgba(232, 39, 42, 0.25);
     border-radius: 99px;
     padding: 2px 8px;
     white-space: nowrap;
     letter-spacing: .02em;
   }
-  /* Bottone ATC testuale — nascosto via CSS, usato dal modal JS */
-  .kz-card__atc { display: none; }
 
-  /* Mobile: FAB leggermente più piccolo */
-  @media (max-width: 600px) {
-    .kz-card__cart-fab { width: 28px; height: 28px; bottom: 7px; right: 7px; }
-    .kz-card__cart-fab svg { width: 15px; height: 15px; }
+  @media (prefers-reduced-motion: reduce) {
+    .kz-card, .kz-card__image { transition: none !important; animation: none !important; }
+    .kz-card:hover { transform: none; }
+    .kz-card:hover .kz-card__image { transform: none; }
   }
+
   #shopify-section-{{ section.id }} .kz-empty {
     padding: 80px 24px;
     text-align: center;
@@ -1363,7 +1527,7 @@
           <div class="kz-empty-also-title">{{ section.settings.empty_cart_recommend_heading }}</div>
           <div class="kz-also-grid">
             {%- for product in empty_collection.products limit: section.settings.empty_cart_recommend_limit -%}
-              {%- render 'upsell-product-card', product: product -%}
+              {%- render 'kz2-product-card', product: product -%}
             {%- endfor -%}
           </div>
         </div>
@@ -1551,7 +1715,7 @@
              Estraiamo solo le .kz-also-card per non rompere il flex layout. */
           var parser = new DOMParser();
           var doc = parser.parseFromString(html, 'text/html');
-          var cards = doc.querySelectorAll('.kz-also-card');
+          var cards = doc.querySelectorAll('.kz-card');
           if (!cards.length) { container.style.display = 'none'; return; }
           grid.innerHTML = '';
           cards.forEach(function(card) { grid.appendChild(card); });
@@ -1905,6 +2069,9 @@
     loadUpsells();
   })();
 </script>
+
+{%- render 'kz-product-modal' -%}
+<script src="{{ 'kz-product-modal.js' | asset_url }}" defer></script>
 
 {% schema %}
 {
