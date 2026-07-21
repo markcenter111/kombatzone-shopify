@@ -1441,6 +1441,40 @@
     }
     #shopify-section-{{ section.id }} .kz-cart-sticky-btn:active { background: #c41f22; transform: scale(.98); }
   }
+
+  /* === Upsell carrello su mobile: 2 card per riga, proporzionate === */
+  @media (max-width: 600px) {
+    #shopify-section-{{ section.id }} .kz-also-grid {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      justify-content: center !important;
+      overflow: visible !important;
+      gap: 10px !important;
+      padding-bottom: 0 !important;
+    }
+    #shopify-section-{{ section.id }} .kz-also-grid > * { display: block !important; }
+    #shopify-section-{{ section.id }} .kz-also-grid .kz-card,
+    #shopify-section-{{ section.id }} .kz-also-grid .kz-also-card {
+      flex: 0 0 calc(50% - 5px) !important;
+      width: calc(50% - 5px) !important;
+      max-width: calc(50% - 5px) !important;
+      min-width: 0 !important;
+    }
+    /* massimo 4 card = 2 righe pulite */
+    #shopify-section-{{ section.id }} .kz-also-grid .kz-card:nth-child(n+5),
+    #shopify-section-{{ section.id }} .kz-also-grid .kz-also-card:nth-child(n+5) { display: none !important; }
+    /* tipografia proporzionata alla card piccola */
+    #shopify-section-{{ section.id }} .kz-also-grid .kz-card__body { padding: 10px !important; }
+    #shopify-section-{{ section.id }} .kz-also-grid .kz-card__title { font-size: 12.5px !important; line-height: 1.25 !important; margin-bottom: 6px !important; }
+    #shopify-section-{{ section.id }} .kz-also-grid .kz-card__type,
+    #shopify-section-{{ section.id }} .kz-also-grid .kz-card__discipline { font-size: 9.5px !important; }
+    #shopify-section-{{ section.id }} .kz-also-grid .kz-card__price-current { font-size: 15px !important; }
+    #shopify-section-{{ section.id }} .kz-also-grid .kz-card__price-old { font-size: 11px !important; }
+    #shopify-section-{{ section.id }} .kz-also-grid .kz-card__badge { font-size: 9px !important; padding: 2px 6px !important; }
+    #shopify-section-{{ section.id }} .kz-also-grid .kz-card__cart-fab { width: 30px !important; height: 30px !important; }
+    /* le pill contenuto affollano la card piccola: nascoste su mobile */
+    #shopify-section-{{ section.id }} .kz-also-grid .kz-card__contenuto { display: none !important; }
+  }
 </style>
 
 {%- assign free_shipping_threshold = section.settings.free_shipping_threshold -%}
