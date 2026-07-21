@@ -30,7 +30,10 @@
   }
   #shopify-section-{{ section.id }} .kz2-locker-title {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 38px; font-weight: 900; text-transform: uppercase; line-height: 1;
+    font-size: clamp(26px, 6vw, 38px);
+    font-weight: 900; text-transform: uppercase; line-height: 1.02;
+    text-wrap: balance;
+    max-width: 22ch;
   }
   #shopify-section-{{ section.id }} .kz2-locker-title em { font-style: normal; color: #E8272A; }
   #shopify-section-{{ section.id }} .kz2-locker-sub { font-size: 12.5px; color: #888880; margin-top: 8px; }
@@ -353,7 +356,6 @@
     #shopify-section-{{ section.id }} .kz2-locker { padding-left: 16px; padding-right: 16px; }
     #shopify-section-{{ section.id }} .kz2-locker-grid { grid-template-columns: 1fr; gap: 24px; }
     #shopify-section-{{ section.id }} .kz2-locker-stage { max-width: 480px; margin: 0 auto; width: 100%; }
-    #shopify-section-{{ section.id }} .kz2-locker-title { font-size: 30px; }
     /* Stessa geometria del PC, tutto scalato: pallini piccoli ed etichette compatte */
     #shopify-section-{{ section.id }} .kz2-dot { width: 26px; height: 26px; border-width: 1.5px; }
     #shopify-section-{{ section.id }} .kz2-dot svg { width: 11px; height: 11px; }
