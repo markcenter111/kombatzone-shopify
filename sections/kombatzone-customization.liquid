@@ -35,12 +35,43 @@
     position: relative;
     overflow: hidden;
   }
+  #kz-custom-{{ section.id }} .custom-visual { background: #050505; }
   #kz-custom-{{ section.id }} .custom-visual img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
+  }
+  #kz-custom-{{ section.id }} .custom-slide {
+    opacity: 0;
+    transform: scale(1.03);
+    transition: opacity .9s ease, transform 1.2s ease;
+  }
+  #kz-custom-{{ section.id }} .custom-slide.active {
+    opacity: 1;
+    transform: scale(1);
+  }
+  #kz-custom-{{ section.id }} .custom-dots {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 7px;
+    z-index: 3;
+  }
+  #kz-custom-{{ section.id }} .custom-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 99px;
+    background: rgba(255,255,255,0.25);
+    transition: background .3s ease, width .3s ease;
+  }
+  #kz-custom-{{ section.id }} .custom-dot.active {
+    background: #E8272A;
+    width: 20px;
   }
   #kz-custom-{{ section.id }} .custom-visual-inner {
     font-family: var(--ff-display), sans-serif;
@@ -165,13 +196,50 @@
   }
 </style>
 
+<script>
+  /* Rotazione manichini: crossfade ogni 4s */
+  document.addEventListener('DOMContentLoaded', function () {
+    var root = document.getElementById('kz-custom-{{ section.id }}');
+    if (!root) return;
+    var slides = root.querySelectorAll('.custom-slide');
+    var dots = root.querySelectorAll('.custom-dot');
+    if (slides.length < 2) return;
+    var i = 0;
+    setInterval(function () {
+      slides[i].classList.remove('active');
+      if (dots[i]) dots[i].classList.remove('active');
+      i = (i + 1) % slides.length;
+      slides[i].classList.add('active');
+      if (dots[i]) dots[i].classList.add('active');
+    }, 4000);
+  });
+</script>
+
 <div id="kz-custom-{{ section.id }}">
   <div class="custom-visual">
-    {% if section.settings.visual_image != blank %}
-      <img src="{{ section.settings.visual_image | image_url: width: 900 }}" alt="{{ section.settings.visual_image.alt | default: section.settings.title_line1 }}" loading="lazy">
-    {% else %}
+    {%- assign kzc_slides = '' -%}
+    {%- if section.settings.visual_image != blank -%}
+      <img class="custom-slide active" src="{{ section.settings.visual_image | image_url: width: 1000 }}" alt="{{ section.settings.title_line1 }}" loading="lazy">
+      {%- assign kzc_slides = kzc_slides | append: 'x' -%}
+    {%- endif -%}
+    {%- if section.settings.visual_image_2 != blank -%}
+      <img class="custom-slide" src="{{ section.settings.visual_image_2 | image_url: width: 1000 }}" alt="{{ section.settings.title_line1 }}" loading="lazy">
+      {%- assign kzc_slides = kzc_slides | append: 'x' -%}
+    {%- endif -%}
+    {%- if section.settings.visual_image_3 != blank -%}
+      <img class="custom-slide" src="{{ section.settings.visual_image_3 | image_url: width: 1000 }}" alt="{{ section.settings.title_line1 }}" loading="lazy">
+      {%- assign kzc_slides = kzc_slides | append: 'x' -%}
+    {%- endif -%}
+    {%- if kzc_slides == '' -%}
       <div class="custom-visual-inner">KZ<br>GEAR</div>
-    {% endif %}
+    {%- endif -%}
+    {%- if kzc_slides.size > 1 -%}
+      <div class="custom-dots" aria-hidden="true">
+        {%- for i in (1..kzc_slides.size) -%}
+          <span class="custom-dot{% if forloop.first %} active{% endif %}"></span>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
     {% if section.settings.show_name_preview %}
       <div class="custom-name-preview">{{ section.settings.name_preview_text }}</div>
     {% endif %}
@@ -221,6 +289,16 @@
       "id": "visual_image",
       "label": "Immagine (opzionale)",
       "info": "Se vuota, mostra il placeholder testuale \"KZ GEAR\""
+    },
+    {
+      "type": "image_picker",
+      "id": "visual_image_2",
+      "label": "Immagine manichino 2 (rotazione)"
+    },
+    {
+      "type": "image_picker",
+      "id": "visual_image_3",
+      "label": "Immagine manichino 3 (rotazione)"
     },
     {
       "type": "checkbox",
