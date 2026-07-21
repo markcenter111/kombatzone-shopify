@@ -220,6 +220,18 @@
     });
     document.addEventListener('click', function () { closeAll(); });
 
+    /* Zoom del manichino */
+    var zoomBtn = root.querySelector('[data-locker-zoom]');
+    if (zoomBtn) {
+      zoomBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var canvas = stage;
+        var on = canvas.classList.toggle('kz2-zoomed');
+        zoomBtn.classList.toggle('active', on);
+        zoomBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+    }
+
     function renderAll() {
       SLOTS.forEach(function (slot) {
         renderPieces(slot); renderSizes(slot); refreshStage(slot);
