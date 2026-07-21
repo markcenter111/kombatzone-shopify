@@ -415,10 +415,21 @@
         });
     });
 
+    function resetLocker() {
+      SLOTS.forEach(function (slot) { state[slot] = null; });
+      closeAll();
+      renderAll();
+    }
+
     if (addedPop) {
       addedPop.addEventListener('click', function (e) { if (e.target === addedPop) addedPop.classList.remove('show'); });
       var cont = addedPop.querySelector('[data-locker-continue]');
-      if (cont) cont.addEventListener('click', function () { addedPop.classList.remove('show'); });
+      if (cont) cont.addEventListener('click', function () {
+        addedPop.classList.remove('show');
+        /* il set e' gia' nel carrello: armadietto svuotato, pronto per il prossimo */
+        resetLocker();
+        root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
     }
   }
 })();
