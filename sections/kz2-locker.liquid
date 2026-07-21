@@ -1,17 +1,17 @@
 {%- comment -%}
   ╔══════════════════════════════════════════════════════════╗
-  ║  KOMBAT ZONE — Fighter Locker (configuratore a layer)    ║
-  ║  Section: sections/kz2-locker.liquid                     ║
+  ║  KOMBAT ZONE — Fighter Locker v2 (hotspot sul manichino) ║
+  ║  Sezione: sections/kz2-locker.liquid                     ║
   ║  JS:      assets/kz2-locker.js                           ║
   ║                                                          ║
-  ║  Dati: prodotti della collezione scelta in admin, con    ║
-  ║  metafield namespace kzone:                              ║
-  ║    kzone.slot        (string)  testa|corpo|gambe|piedi|accessorio
-  ║    kzone.layer_image (file)    PNG trasparente del pezzo ║
-  ║    kzone.z_index     (number)  ordine di stacking        ║
-  ║  Default outfit: primo prodotto taggato "bestseller"     ║
-  ║  di ogni slot. Slot senza selezione = vuoto (nessun      ║
-  ║  layer, nessun costo).                                   ║
+  ║  Slot: casco, maglia, pantaloncini, guanti,              ║
+  ║        parastinchi, paradenti                            ║
+  ║  I vecchi valori metafield vengono mappati:              ║
+  ║  testa→casco, corpo→maglia, gambe→pantaloncini,          ║
+  ║  piedi→parastinchi, accessorio→guanti                    ║
+  ║                                                          ║
+  ║  UX: pallini chiusi sul manichino → hover/tap apre il    ║
+  ║  menu del pezzo → selezione = pallino verde.             ║
   ╚══════════════════════════════════════════════════════════╝
 {%- endcomment -%}
 
@@ -21,347 +21,248 @@
     color: #F2F0EB;
     font-family: 'Inter', sans-serif;
     padding: {{ section.settings.padding_top }}px 32px {{ section.settings.padding_bottom }}px;
+    font-size: 14px;
   }
   #shopify-section-{{ section.id }} .kz2-locker-head { max-width: 1280px; margin: 0 auto 28px; }
   #shopify-section-{{ section.id }} .kz2-locker-eyebrow {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    color: #E8272A;
-    margin-bottom: 8px;
+    font-size: 10px; font-weight: 700; letter-spacing: .18em;
+    text-transform: uppercase; color: #E8272A; margin-bottom: 8px;
   }
   #shopify-section-{{ section.id }} .kz2-locker-title {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 38px;
-    font-weight: 900;
-    text-transform: uppercase;
-    line-height: 1;
+    font-size: 38px; font-weight: 900; text-transform: uppercase; line-height: 1;
   }
   #shopify-section-{{ section.id }} .kz2-locker-title em { font-style: normal; color: #E8272A; }
   #shopify-section-{{ section.id }} .kz2-locker-sub { font-size: 12.5px; color: #888880; margin-top: 8px; }
 
   #shopify-section-{{ section.id }} .kz2-locker-grid {
-    max-width: 1280px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: minmax(0, 560px) 1fr;
-    gap: 40px;
-    align-items: start;
+    max-width: 1280px; margin: 0 auto;
+    display: grid; grid-template-columns: minmax(0, 620px) 1fr;
+    gap: 40px; align-items: start;
   }
 
-  /* ── STAGE ── */
-  #shopify-section-{{ section.id }} .kz2-locker-stage {
+  /* ── PALCO ── */
+  #shopify-section-{{ section.id }} .kz2-locker-stage { position: relative; }
+  #shopify-section-{{ section.id }} .kz2-locker-canvas {
     position: relative;
     aspect-ratio: 4 / 5;
     background:
       radial-gradient(ellipse 70% 55% at 50% 42%, rgba(232,39,42,0.10) 0%, transparent 70%),
-      #141414;
+      #101010;
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 14px;
     overflow: hidden;
   }
-  #shopify-section-{{ section.id }} .kz2-locker-stage img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    pointer-events: none;
+  #shopify-section-{{ section.id }} .kz2-locker-canvas img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: contain; pointer-events: none;
   }
-  #shopify-section-{{ section.id }} .kz2-locker-stage .kz2-locker-layer { transition: opacity .25s ease; }
-  #shopify-section-{{ section.id }} .kz2-locker-stage .kz2-locker-layer.kz2-hidden { opacity: 0; }
+  #shopify-section-{{ section.id }} .kz2-locker-canvas .kz2-locker-layer { transition: opacity .25s ease; }
+  #shopify-section-{{ section.id }} .kz2-locker-canvas .kz2-locker-layer.kz2-hidden { opacity: 0; }
 
-  /* ── LOCKER ── */
-  #shopify-section-{{ section.id }} .kz2-locker-tabs {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 18px;
+  /* ── PALLINI HOTSPOT ── */
+  #shopify-section-{{ section.id }} .kz2-dot-wrap { position: absolute; z-index: 10; }
+  #shopify-section-{{ section.id }} .kz2-dot {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: rgba(10,10,10,0.78);
+    border: 2px solid rgba(255,255,255,0.45);
+    color: #fff; cursor: pointer; padding: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease;
+    animation: kz2-dot-pulse 2.4s ease-in-out infinite;
   }
-  #shopify-section-{{ section.id }} .kz2-locker-tab {
-    background: #1a1a1a;
-    border: 1px solid #333;
-    color: #aaa;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .05em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background .15s, color .15s, border-color .15s, transform .15s, box-shadow .15s;
+  #shopify-section-{{ section.id }} .kz2-dot svg { width: 15px; height: 15px; transition: transform .25s ease; }
+  #shopify-section-{{ section.id }} .kz2-dot:hover { transform: scale(1.15); border-color: #E8272A; box-shadow: 0 0 14px rgba(232,39,42,.5); }
+  #shopify-section-{{ section.id }} .kz2-dot-wrap.open .kz2-dot { border-color: #E8272A; background: #E8272A; animation: none; }
+  #shopify-section-{{ section.id }} .kz2-dot-wrap.open .kz2-dot svg { transform: rotate(45deg); }
+  #shopify-section-{{ section.id }} .kz2-dot-wrap.filled .kz2-dot {
+    border-color: #4cbb7a; background: #4cbb7a; animation: none;
+    box-shadow: 0 0 12px rgba(76,187,122,.5);
   }
-  #shopify-section-{{ section.id }} .kz2-locker-tab:hover { background: #2a2a2a; border-color: #555; color: #fff; transform: translateY(-1px); }
-  #shopify-section-{{ section.id }} .kz2-locker-tab.active {
-    background: #E8272A;
-    border-color: #E8272A;
-    color: #fff;
-    font-weight: 700;
-    box-shadow: 0 0 14px rgba(232,39,42,.35);
-  }
-  #shopify-section-{{ section.id }} .kz2-locker-tab .kz2-locker-tab-dot {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #4cbb7a;
-    margin-left: 6px;
-    vertical-align: 1px;
+  @keyframes kz2-dot-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(232,39,42,0); }
+    50%      { box-shadow: 0 0 0 6px rgba(232,39,42,.14); }
   }
 
-  #shopify-section-{{ section.id }} .kz2-locker-panel { display: none; }
-  #shopify-section-{{ section.id }} .kz2-locker-panel.active { display: block; }
+  /* posizioni: lato sinistro = protezioni, destro = vestiti */
+  #shopify-section-{{ section.id }} .kz2-dot-wrap[data-slot="paradenti"]   { left: 34%; top: 13%; }
+  #shopify-section-{{ section.id }} .kz2-dot-wrap[data-slot="guanti"]      { left: 30%; top: 30%; }
+  #shopify-section-{{ section.id }} .kz2-dot-wrap[data-slot="parastinchi"] { left: 32%; top: 72%; }
+  #shopify-section-{{ section.id }} .kz2-dot-wrap[data-slot="casco"]       { left: 60%; top: 10%; }
+  #shopify-section-{{ section.id }} .kz2-dot-wrap[data-slot="maglia"]      { left: 63%; top: 33%; }
+  #shopify-section-{{ section.id }} .kz2-dot-wrap[data-slot="pantaloncini"]{ left: 62%; top: 52%; }
 
-  #shopify-section-{{ section.id }} .kz2-locker-pieces {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
-    gap: 10px;
+  #shopify-section-{{ section.id }} .kz2-dot-label {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: #b9b7b0; white-space: nowrap; pointer-events: none;
   }
-  #shopify-section-{{ section.id }} .kz2-locker-piece {
+  #shopify-section-{{ section.id }} .kz2-dot-wrap.kz2-left .kz2-dot-label { right: calc(100% + 8px); }
+  #shopify-section-{{ section.id }} .kz2-dot-wrap.kz2-right .kz2-dot-label { left: calc(100% + 8px); }
+
+  /* ── POPOVER SCELTA PEZZO ── */
+  #shopify-section-{{ section.id }} .kz2-pop {
+    position: absolute; top: -8px; z-index: 30;
+    width: 252px;
     background: #141414;
-    border: 1px solid #222;
-    border-radius: 10px;
-    padding: 6px;
-    cursor: pointer;
-    text-align: center;
-    transition: border-color .2s, transform .2s, box-shadow .2s;
-  }
-  #shopify-section-{{ section.id }} .kz2-locker-piece:hover:not(.unavailable) {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 22px rgba(0,0,0,.45);
-    border-color: #555;
-  }
-  #shopify-section-{{ section.id }} .kz2-locker-piece.active { border-color: #E8272A; box-shadow: 0 0 14px rgba(232,39,42,.25); }
-  #shopify-section-{{ section.id }} .kz2-locker-piece.unavailable { opacity: .35; cursor: not-allowed; }
-  #shopify-section-{{ section.id }} .kz2-locker-piece-img {
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: cover;
-    border-radius: 6px;
-    background: #1a1a1a;
-    display: block;
-  }
-  #shopify-section-{{ section.id }} .kz2-locker-piece-img.kz2-none {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #4a4a44;
-    font-size: 22px;
-  }
-  #shopify-section-{{ section.id }} .kz2-locker-piece-name {
-    font-size: 9.5px;
-    color: #aaa;
-    margin-top: 6px;
-    line-height: 1.25;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    min-height: 24px;
-  }
-  #shopify-section-{{ section.id }} .kz2-locker-piece-price {
-    font-size: 10.5px;
-    font-weight: 700;
-    color: #F2F0EB;
-    margin-top: 2px;
-  }
-  #shopify-section-{{ section.id }} .kz2-locker-piece.active .kz2-locker-piece-name { color: #F2F0EB; }
-
-  /* Taglie del pezzo selezionato — stessi bottoni della pagina prodotto */
-  #shopify-section-{{ section.id }} .kz2-locker-sizes-label {
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: .12em;
-    color: #888880;
-    text-transform: uppercase;
-    margin: 16px 0 8px;
-  }
-  #shopify-section-{{ section.id }} .kz2-locker-sizes { display: flex; gap: 6px; flex-wrap: wrap; }
-  #shopify-section-{{ section.id }} .kz2-locker-size-btn {
-    min-width: 44px;
-    height: 44px;
-    padding: 0 14px;
-    background: transparent;
-    border: 1px solid rgba(242,240,235,0.25);
-    border-radius: 1px;
-    color: #F2F0EB;
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .04em;
-    cursor: pointer;
-    transition: background .15s, border-color .15s, transform .1s;
-  }
-  #shopify-section-{{ section.id }} .kz2-locker-size-btn:hover:not(.unavailable) { border-color: rgba(242,240,235,0.6); transform: translateY(-1px); }
-  #shopify-section-{{ section.id }} .kz2-locker-size-btn.active { background: #E8272A; border-color: #E8272A; color: #fff; box-shadow: 0 0 14px rgba(232,39,42,.35); }
-  #shopify-section-{{ section.id }} .kz2-locker-size-btn.unavailable { opacity: .35; text-decoration: line-through; cursor: not-allowed; }
-
-  /* ── BARRA TOTALE ── */
-  #shopify-section-{{ section.id }} .kz2-locker-bar {
-    position: sticky;
-    bottom: 12px;
-    margin-top: 22px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    background: rgba(10,10,10,0.92);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
     border-radius: 12px;
-    padding: 12px 16px;
-    z-index: 5;
+    padding: 12px;
+    box-shadow: 0 22px 60px rgba(0,0,0,.65);
+    opacity: 0; pointer-events: none;
+    transform: translateY(6px) scale(.96);
+    transition: opacity .18s ease, transform .22s cubic-bezier(.2,.6,.2,1);
+  }
+  #shopify-section-{{ section.id }} .kz2-dot-wrap.kz2-left .kz2-pop { right: calc(100% + 12px); }
+  #shopify-section-{{ section.id }} .kz2-dot-wrap.kz2-right .kz2-pop { left: calc(100% + 12px); }
+  #shopify-section-{{ section.id }} .kz2-dot-wrap.open .kz2-pop { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+  #shopify-section-{{ section.id }} .kz2-pop-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px; font-weight: 900; text-transform: uppercase; letter-spacing: .05em;
+    color: #E8272A; margin-bottom: 10px;
+  }
+  #shopify-section-{{ section.id }} .kz2-pop-pieces {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  }
+  #shopify-section-{{ section.id }} .kz2-piece {
+    background: #1a1a1a; border: 1px solid #262626; border-radius: 8px;
+    padding: 4px; cursor: pointer; text-align: center;
+    transition: border-color .15s, transform .15s;
+  }
+  #shopify-section-{{ section.id }} .kz2-piece:hover:not(.unavailable) { transform: translateY(-2px); border-color: #555; }
+  #shopify-section-{{ section.id }} .kz2-piece.active { border-color: #4cbb7a; box-shadow: 0 0 10px rgba(76,187,122,.25); }
+  #shopify-section-{{ section.id }} .kz2-piece.unavailable { opacity: .35; cursor: not-allowed; }
+  #shopify-section-{{ section.id }} .kz2-piece-img {
+    width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 5px; display: block; background: #111;
+  }
+  #shopify-section-{{ section.id }} .kz2-piece-img.kz2-none {
+    display: flex; align-items: center; justify-content: center; color: #4a4a44; font-size: 18px;
+  }
+  #shopify-section-{{ section.id }} .kz2-piece-name {
+    font-size: 8.5px; color: #aaa; margin-top: 4px; line-height: 1.2;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    min-height: 20px;
+  }
+  #shopify-section-{{ section.id }} .kz2-piece-price { font-size: 9.5px; font-weight: 700; color: #F2F0EB; }
+  #shopify-section-{{ section.id }} .kz2-pop-sizes-label {
+    font-size: 8.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: #888880; margin: 10px 0 6px;
+  }
+  #shopify-section-{{ section.id }} .kz2-pop-sizes { display: flex; gap: 5px; flex-wrap: wrap; }
+  #shopify-section-{{ section.id }} .kz2-size-btn {
+    min-width: 32px; height: 30px; padding: 0 8px;
+    background: transparent; border: 1px solid rgba(242,240,235,0.25); border-radius: 1px;
+    color: #F2F0EB; font-family: 'Inter', sans-serif; font-size: 10.5px; font-weight: 600;
+    cursor: pointer; transition: background .15s, border-color .15s;
+  }
+  #shopify-section-{{ section.id }} .kz2-size-btn.active { background: #E8272A; border-color: #E8272A; color: #fff; }
+  #shopify-section-{{ section.id }} .kz2-size-btn.unavailable { opacity: .35; text-decoration: line-through; cursor: not-allowed; }
+
+  /* ── COLONNA RIEPILOGO ── */
+  #shopify-section-{{ section.id }} .kz2-side-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 14px;
+  }
+  #shopify-section-{{ section.id }} .kz2-sum-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  #shopify-section-{{ section.id }} .kz2-sum-slot {
+    font-size: 9.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #888880;
+    flex-shrink: 0; width: 96px;
+  }
+  #shopify-section-{{ section.id }} .kz2-sum-val { font-size: 12px; color: #F2F0EB; flex: 1; }
+  #shopify-section-{{ section.id }} .kz2-sum-val.kz2-empty { color: #4a4a44; }
+  #shopify-section-{{ section.id }} .kz2-sum-price { font-size: 12px; font-weight: 700; color: #F2F0EB; flex-shrink: 0; }
+
+  #shopify-section-{{ section.id }} .kz2-locker-bar {
+    position: sticky; bottom: 12px; margin-top: 22px;
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
+    padding: 12px 16px; z-index: 5;
   }
   #shopify-section-{{ section.id }} .kz2-locker-total-block { display: flex; flex-direction: column; line-height: 1.15; flex-shrink: 0; }
   #shopify-section-{{ section.id }} .kz2-locker-total-label {
-    font-size: 8.5px;
-    font-weight: 600;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: #888880;
+    font-size: 8.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #888880;
   }
   #shopify-section-{{ section.id }} .kz2-locker-total {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 24px;
-    font-weight: 800;
-    color: #F2F0EB;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 800; color: #F2F0EB;
   }
   #shopify-section-{{ section.id }} .kz2-locker-count { font-size: 10px; color: #888880; }
   #shopify-section-{{ section.id }} .kz2-locker-cta {
-    flex: 1;
-    height: 50px;
-    background: #E8272A;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    cursor: pointer;
+    flex: 1; height: 50px; background: #E8272A; color: #fff; border: none; border-radius: 8px;
+    font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase; cursor: pointer;
     transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
   }
   #shopify-section-{{ section.id }} .kz2-locker-cta:hover:not(:disabled) {
-    background: #c41f22;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 22px rgba(232,39,42,.35);
+    background: #c41f22; transform: translateY(-2px); box-shadow: 0 8px 22px rgba(232,39,42,.35);
   }
   #shopify-section-{{ section.id }} .kz2-locker-cta:active { transform: translateY(0) scale(.98); box-shadow: none; }
   #shopify-section-{{ section.id }} .kz2-locker-cta:disabled { background: #3a3a36; cursor: not-allowed; transform: none; box-shadow: none; }
 
-  /* ── MINI-POPUP CONFERMA (stesso pattern del quick-buy) ── */
+  /* ── MINI-POPUP CONFERMA ── */
   #shopify-section-{{ section.id }} .kz2-locker-added {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
     background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .2s ease;
-    z-index: 999998;
+    backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+    opacity: 0; pointer-events: none; transition: opacity .2s ease; z-index: 999998;
   }
   #shopify-section-{{ section.id }} .kz2-locker-added.show { opacity: 1; pointer-events: auto; }
   #shopify-section-{{ section.id }} .kz2-locker-added-card {
-    background: #161616;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 14px;
-    padding: 26px 26px 22px;
-    width: min(320px, calc(100% - 48px));
-    text-align: center;
+    background: #161616; border: 1px solid rgba(255,255,255,0.1); border-radius: 14px;
+    padding: 26px 26px 22px; width: min(320px, calc(100% - 48px)); text-align: center;
     box-shadow: 0 22px 60px rgba(0,0,0,.6);
     transform: translateY(10px) scale(.96);
     transition: transform .25s cubic-bezier(.2,.6,.2,1);
   }
   #shopify-section-{{ section.id }} .kz2-locker-added.show .kz2-locker-added-card { transform: translateY(0) scale(1); }
   #shopify-section-{{ section.id }} .kz2-locker-added-check {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: rgba(76,187,122,0.12);
-    border: 1.5px solid #4cbb7a;
-    color: #4cbb7a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 12px;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(76,187,122,0.12); border: 1.5px solid #4cbb7a; color: #4cbb7a;
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;
   }
   #shopify-section-{{ section.id }} .kz2-locker-added-check svg { width: 22px; height: 22px; }
   #shopify-section-{{ section.id }} .kz2-locker-added-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 20px;
-    font-weight: 900;
-    text-transform: uppercase;
-    color: #F2F0EB;
-    margin-bottom: 16px;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 900;
+    text-transform: uppercase; color: #F2F0EB; margin-bottom: 16px;
   }
   #shopify-section-{{ section.id }} .kz2-locker-added-cart {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 46px;
-    background: #E8272A;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    cursor: pointer;
-    text-decoration: none;
-    margin-bottom: 8px;
-    transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; height: 46px; background: #E8272A; color: #fff; border: none; border-radius: 8px;
+    font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase; cursor: pointer; text-decoration: none;
+    margin-bottom: 8px; transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
   }
   #shopify-section-{{ section.id }} .kz2-locker-added-cart:hover { background: #c41f22; transform: translateY(-2px); box-shadow: 0 8px 22px rgba(232,39,42,.35); }
   #shopify-section-{{ section.id }} .kz2-locker-added-continue {
-    width: 100%;
-    height: 42px;
-    background: transparent;
-    border: 1px solid rgba(242,240,235,0.35);
-    border-radius: 8px;
-    color: #F2F0EB;
-    font-family: 'Inter', sans-serif;
-    font-size: 11.5px;
-    font-weight: 600;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    cursor: pointer;
+    width: 100%; height: 42px; background: transparent;
+    border: 1px solid rgba(242,240,235,0.35); border-radius: 8px; color: #F2F0EB;
+    font-family: 'Inter', sans-serif; font-size: 11.5px; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase; cursor: pointer;
     transition: border-color .2s ease, transform .2s ease, background .2s ease;
   }
   #shopify-section-{{ section.id }} .kz2-locker-added-continue:hover { border-color: #F2F0EB; transform: translateY(-2px); background: rgba(255,255,255,.04); }
 
   #shopify-section-{{ section.id }} .kz2-locker-empty-state {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 48px 0;
-    text-align: center;
-    color: #888880;
-    font-size: 13px;
+    max-width: 1280px; margin: 0 auto; padding: 48px 0; text-align: center; color: #888880; font-size: 13px;
   }
 
   @media (max-width: 900px) {
     #shopify-section-{{ section.id }} .kz2-locker { padding-left: 16px; padding-right: 16px; }
     #shopify-section-{{ section.id }} .kz2-locker-grid { grid-template-columns: 1fr; gap: 24px; }
-    #shopify-section-{{ section.id }} .kz2-locker-stage { max-width: 440px; margin: 0 auto; width: 100%; }
+    #shopify-section-{{ section.id }} .kz2-locker-stage { max-width: 480px; margin: 0 auto; width: 100%; }
     #shopify-section-{{ section.id }} .kz2-locker-title { font-size: 30px; }
-    #shopify-section-{{ section.id }} .kz2-locker-tabs { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; scrollbar-width: none; }
-    #shopify-section-{{ section.id }} .kz2-locker-tabs::-webkit-scrollbar { display: none; }
-    #shopify-section-{{ section.id }} .kz2-locker-tab { white-space: nowrap; flex-shrink: 0; }
-    #shopify-section-{{ section.id }} .kz2-locker-bar { position: sticky; bottom: 10px; }
+    #shopify-section-{{ section.id }} .kz2-pop { width: 216px; }
+    #shopify-section-{{ section.id }} .kz2-dot-label { display: none; }
   }
 </style>
 
 {%- liquid
   assign src_collection = section.settings.source_collection
-  assign valid_slots = 'testa,corpo,gambe,piedi,accessorio' | split: ','
+  assign valid_slots = 'casco,maglia,pantaloncini,guanti,parastinchi,paradenti' | split: ','
 -%}
 
 <div class="kz2-locker" id="kz2-locker-{{ section.id }}" data-section-id="{{ section.id }}">
@@ -378,6 +279,13 @@
     {%- if src_collection != blank -%}
       {%- for p in src_collection.products limit: 60 -%}
         {%- assign slot = p.metafields.kzone.slot.value | downcase | strip -%}
+        {%- case slot -%}
+          {%- when 'testa' -%}{%- assign slot = 'casco' -%}
+          {%- when 'corpo' -%}{%- assign slot = 'maglia' -%}
+          {%- when 'gambe' -%}{%- assign slot = 'pantaloncini' -%}
+          {%- when 'piedi' -%}{%- assign slot = 'parastinchi' -%}
+          {%- when 'accessorio' -%}{%- assign slot = 'guanti' -%}
+        {%- endcase -%}
         {%- if valid_slots contains slot and p.metafields.kzone.layer_image.value != blank -%}
           {%- unless first -%},{%- endunless -%}
           {%- assign first = false -%}
@@ -408,29 +316,40 @@
   {%- if has_pieces -%}
     <div class="kz2-locker-grid">
 
-      <div class="kz2-locker-stage" data-locker-stage>
-        {%- if section.settings.base_image != blank -%}
-          <img src="{{ section.settings.base_image | image_url: width: 1000 }}" alt="{{ 'sections.kz2-locker.stage_alt' | t }}" loading="lazy">
-        {%- endif -%}
-        {%- comment -%} I layer dei pezzi vengono montati qui dal JS, ordinati per z_index {%- endcomment -%}
-      </div>
-
-      <div class="kz2-locker-side">
-        <div class="kz2-locker-tabs" role="tablist" data-locker-tabs>
-          {%- for slot in valid_slots -%}
-            <button type="button" class="kz2-locker-tab" role="tab" data-locker-tab="{{ slot }}">
-              {{ 'sections.kz2-locker.slot_' | append: slot | t }}
-            </button>
-          {%- endfor -%}
+      <div class="kz2-locker-stage">
+        <div class="kz2-locker-canvas" data-locker-stage>
+          {%- if section.settings.base_image != blank -%}
+            <img src="{{ section.settings.base_image | image_url: width: 1200 }}" alt="{{ 'sections.kz2-locker.stage_alt' | t }}" loading="lazy">
+          {%- endif -%}
         </div>
 
         {%- for slot in valid_slots -%}
-          <div class="kz2-locker-panel" data-locker-panel="{{ slot }}">
-            <div class="kz2-locker-pieces" data-locker-pieces="{{ slot }}"></div>
-            <div data-locker-sizes-wrap="{{ slot }}" style="display:none">
-              <div class="kz2-locker-sizes-label">{{ 'sections.kz2-locker.size' | t }}</div>
-              <div class="kz2-locker-sizes" data-locker-sizes="{{ slot }}"></div>
+          {%- assign side = 'kz2-right' -%}
+          {%- if slot == 'guanti' or slot == 'parastinchi' or slot == 'paradenti' -%}{%- assign side = 'kz2-left' -%}{%- endif -%}
+          <div class="kz2-dot-wrap {{ side }}" data-slot="{{ slot }}" data-locker-dot>
+            <button type="button" class="kz2-dot" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'sections.kz2-locker.slot_' | append: slot | t }}">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            </button>
+            <span class="kz2-dot-label">{{ 'sections.kz2-locker.slot_' | append: slot | t }}</span>
+            <div class="kz2-pop" role="menu">
+              <div class="kz2-pop-title">{{ 'sections.kz2-locker.slot_' | append: slot | t }}</div>
+              <div class="kz2-pop-pieces" data-locker-pieces="{{ slot }}"></div>
+              <div data-locker-sizes-wrap="{{ slot }}" style="display:none">
+                <div class="kz2-pop-sizes-label">{{ 'sections.kz2-locker.size' | t }}</div>
+                <div class="kz2-pop-sizes" data-locker-sizes="{{ slot }}"></div>
+              </div>
             </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      <div class="kz2-locker-side">
+        <div class="kz2-side-title">{{ 'sections.kz2-locker.your_set' | t }}</div>
+        {%- for slot in valid_slots -%}
+          <div class="kz2-sum-row" data-locker-sum="{{ slot }}">
+            <span class="kz2-sum-slot">{{ 'sections.kz2-locker.slot_' | append: slot | t }}</span>
+            <span class="kz2-sum-val kz2-empty" data-sum-name>{{ 'sections.kz2-locker.none' | t }}</span>
+            <span class="kz2-sum-price" data-sum-price></span>
           </div>
         {%- endfor -%}
 
@@ -493,7 +412,7 @@
       "type": "image_picker",
       "id": "base_image",
       "label": "Illustrazione base del fighter",
-      "info": "Silhouette/base su cui si sovrappongono i layer"
+      "info": "Manichino su cui si sovrappongono i layer"
     },
     {
       "type": "range",
@@ -519,126 +438,55 @@
       "eyebrow": "Fighter Locker",
       "title_1": "Monta il tuo",
       "title_2": "arsenale.",
-      "subtitle": "Scegli i pezzi, guarda il fighter prendere forma, porta tutto sul ring.",
+      "subtitle": "Passa sui punti del fighter, scegli i pezzi e porta tutto sul ring.",
       "stage_alt": "Il tuo fighter",
-      "slot_testa": "Testa",
-      "slot_corpo": "Corpo",
-      "slot_gambe": "Gambe",
-      "slot_piedi": "Piedi",
-      "slot_accessorio": "Accessori",
+      "your_set": "Il tuo set",
+      "slot_casco": "Casco",
+      "slot_maglia": "Maglia",
+      "slot_pantaloncini": "Pantaloncini",
+      "slot_guanti": "Guantoni",
+      "slot_parastinchi": "Parastinchi",
+      "slot_paradenti": "Paradenti",
       "size": "Taglia",
       "none": "Vuoto",
       "total": "Totale set",
       "piece": "pezzo",
       "pieces": "pezzi",
       "add_to_cart": "Aggiungi il set al carrello",
+      "update_set": "Aggiorna il set",
       "added": "Set aggiunto al carrello!",
       "go_cart": "Vai al carrello",
       "continue": "Continua a montare",
-      "update_set": "Aggiorna il set",
       "out_of_stock": "Esaurito",
-      "error": "Errore — riprova",
+      "error": "Errore, riprova",
       "empty_state": "Configura la collezione sorgente e i metafield kzone.slot / kzone.layer_image sui prodotti per attivare il locker."
     },
     "en": {
       "eyebrow": "Fighter Locker",
-      "title_1": "Build your",
-      "title_2": "arsenal.",
-      "subtitle": "Pick your pieces, watch your fighter take shape, bring it all to the ring.",
-      "stage_alt": "Your fighter",
-      "slot_testa": "Head",
-      "slot_corpo": "Body",
-      "slot_gambe": "Legs",
-      "slot_piedi": "Feet",
-      "slot_accessorio": "Accessories",
-      "size": "Size",
-      "none": "Empty",
-      "total": "Set total",
-      "piece": "piece",
-      "pieces": "pieces",
-      "add_to_cart": "Add the set to cart",
-      "added": "Set added to cart!",
-      "go_cart": "Go to cart",
-      "continue": "Keep building",
-      "update_set": "Update the set",
-      "out_of_stock": "Sold out",
-      "error": "Error — try again",
-      "empty_state": "Set the source collection and the kzone.slot / kzone.layer_image metafields on products to activate the locker."
-    },
-    "es": {
-      "eyebrow": "Fighter Locker",
-      "title_1": "Monta tu",
-      "title_2": "arsenal.",
-      "subtitle": "Elige las piezas, mira cómo toma forma tu fighter y llévalo todo al ring.",
-      "stage_alt": "Tu fighter",
-      "slot_testa": "Cabeza",
-      "slot_corpo": "Cuerpo",
-      "slot_gambe": "Piernas",
-      "slot_piedi": "Pies",
-      "slot_accessorio": "Accesorios",
-      "size": "Talla",
-      "none": "Vacío",
-      "total": "Total del set",
-      "piece": "pieza",
-      "pieces": "piezas",
-      "add_to_cart": "Añadir el set al carrito",
-      "added": "¡Set añadido al carrito!",
-      "go_cart": "Ir al carrito",
-      "continue": "Seguir montando",
-      "update_set": "Actualizar el set",
-      "out_of_stock": "Agotado",
-      "error": "Error — inténtalo de nuevo",
-      "empty_state": "Configura la colección de origen y los metafields kzone.slot / kzone.layer_image en los productos para activar el locker."
-    },
-    "de": {
-      "eyebrow": "Fighter Locker",
-      "title_1": "Bau dein",
-      "title_2": "Arsenal.",
-      "subtitle": "Wähle deine Teile, sieh deinem Fighter beim Entstehen zu und bring alles in den Ring.",
-      "stage_alt": "Dein Fighter",
-      "slot_testa": "Kopf",
-      "slot_corpo": "Körper",
-      "slot_gambe": "Beine",
-      "slot_piedi": "Füße",
-      "slot_accessorio": "Zubehör",
-      "size": "Größe",
-      "none": "Leer",
-      "total": "Set-Gesamt",
-      "piece": "Teil",
-      "pieces": "Teile",
-      "add_to_cart": "Set in den Warenkorb",
-      "added": "Set im Warenkorb!",
-      "go_cart": "Zum Warenkorb",
-      "continue": "Weiter bauen",
-      "update_set": "Set aktualisieren",
-      "out_of_stock": "Ausverkauft",
-      "error": "Fehler — bitte erneut versuchen",
-      "empty_state": "Lege die Quell-Kollektion und die Metafelder kzone.slot / kzone.layer_image an den Produkten fest, um den Locker zu aktivieren."
-    },
-    "fr": {
-      "eyebrow": "Fighter Locker",
-      "title_1": "Monte ton",
-      "title_2": "arsenal.",
-      "subtitle": "Choisis tes pièces, regarde ton fighter prendre forme, amène tout sur le ring.",
-      "stage_alt": "Ton fighter",
-      "slot_testa": "Tête",
-      "slot_corpo": "Corps",
-      "slot_gambe": "Jambes",
-      "slot_piedi": "Pieds",
-      "slot_accessorio": "Accessoires",
-      "size": "Taille",
-      "none": "Vide",
-      "total": "Total du set",
-      "piece": "pièce",
-      "pieces": "pièces",
-      "add_to_cart": "Ajouter le set au panier",
-      "added": "Set ajouté au panier !",
-      "go_cart": "Voir le panier",
-      "continue": "Continuer le montage",
-      "update_set": "Mettre \u00e0 jour le set",
-      "out_of_stock": "Épuisé",
-      "error": "Erreur — réessaie",
-      "empty_state": "Configure la collection source et les métachamps kzone.slot / kzone.layer_image sur les produits pour activer le locker."
+      "title_1": "Monta il tuo",
+      "title_2": "arsenale.",
+      "subtitle": "Passa sui punti del fighter, scegli i pezzi e porta tutto sul ring.",
+      "stage_alt": "Il tuo fighter",
+      "your_set": "Il tuo set",
+      "slot_casco": "Casco",
+      "slot_maglia": "Maglia",
+      "slot_pantaloncini": "Pantaloncini",
+      "slot_guanti": "Guantoni",
+      "slot_parastinchi": "Parastinchi",
+      "slot_paradenti": "Paradenti",
+      "size": "Taglia",
+      "none": "Vuoto",
+      "total": "Totale set",
+      "piece": "pezzo",
+      "pieces": "pezzi",
+      "add_to_cart": "Aggiungi il set al carrello",
+      "update_set": "Aggiorna il set",
+      "added": "Set aggiunto al carrello!",
+      "go_cart": "Vai al carrello",
+      "continue": "Continua a montare",
+      "out_of_stock": "Esaurito",
+      "error": "Errore, riprova",
+      "empty_state": "Configura la collezione sorgente e i metafield kzone.slot / kzone.layer_image sui prodotti per attivare il locker."
     }
   },
   "presets": [

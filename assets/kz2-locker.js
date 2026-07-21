@@ -1,8 +1,8 @@
 /* ══════════════════════════════════════════════════════════
-   KOMBAT ZONE — Fighter Locker
-   Logica: selezione pezzi per slot -> layer sull'illustrazione,
-   prezzo totale live, add multiplo a /cart/add.js.
-   Stato solo in memoria (nessun localStorage).
+   KOMBAT ZONE — Fighter Locker v2 (hotspot sul manichino)
+   Pallini chiusi -> hover/tap apre il menu -> selezione:
+   pallino verde, layer sul manichino, totale aggiornato.
+   Add multiplo a /cart/add.js con proprieta _kz_set.
    ══════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
@@ -21,24 +21,22 @@
     } catch (e) { return; }
     if (!pieces.length) return;
 
-    var SLOTS = ['testa', 'corpo', 'gambe', 'piedi', 'accessorio'];
-    var editSetId = new URLSearchParams(window.location.search).get('edit_set');
+    var SLOTS = ['casco', 'maglia', 'pantaloncini', 'guanti', 'parastinchi', 'paradenti'];
     var stage = root.querySelector('[data-locker-stage]');
     var totalEl = root.querySelector('[data-locker-total]');
     var countEl = root.querySelector('[data-locker-count]');
     var addBtn = root.querySelector('[data-locker-add]');
     var addedPop = root.querySelector('[data-locker-added]');
+    var editSetId = new URLSearchParams(window.location.search).get('edit_set');
+    var isTouch = !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-    /* Stato: per slot -> { piece, variantId } (null = vuoto) */
     var state = {};
     var layers = {};
 
-    /* Precarica tutte le immagini layer per cambi istantanei */
     pieces.forEach(function (p) {
       if (p.layer) { var im = new Image(); im.src = p.layer; }
     });
 
-    /* Layer <img> per slot, ordinati per z_index */
     SLOTS.forEach(function (slot) {
       var img = document.createElement('img');
       img.className = 'kz2-locker-layer kz2-hidden';
@@ -53,19 +51,20 @@
       var v = piece.variants.find(function (x) { return x.available; });
       return v || piece.variants[0];
     }
-
     function formatMoney(cents) {
       return '€' + (cents / 100).toFixed(2).replace('.', ',');
     }
-
     function selectedEntries() {
       return SLOTS.map(function (s) { return state[s]; }).filter(Boolean);
+    }
+    function entryVariant(e) {
+      return e.piece.variants.find(function (x) { return x.id === e.variantId; });
     }
 
     function refreshTotals() {
       var entries = selectedEntries();
       var total = entries.reduce(function (sum, e) {
-        var v = e.piece.variants.find(function (x) { return x.id === e.variantId; });
+        var v = entryVariant(e);
         return sum + (v ? v.price : 0);
       }, 0);
       totalEl.textContent = formatMoney(total);
@@ -73,16 +72,24 @@
         ? entries.length + ' ' + (entries.length === 1 ? i18n.piece : i18n.pieces)
         : '';
       addBtn.disabled = entries.length === 0;
-      /* Pallino verde sui tab con pezzo selezionato */
-      root.querySelectorAll('[data-locker-tab]').forEach(function (tab) {
-        var slot = tab.getAttribute('data-locker-tab');
-        var dot = tab.querySelector('.kz2-locker-tab-dot');
-        if (state[slot] && !dot) {
-          var d = document.createElement('span');
-          d.className = 'kz2-locker-tab-dot';
-          tab.appendChild(d);
-        } else if (!state[slot] && dot) {
-          dot.remove();
+
+      SLOTS.forEach(function (slot) {
+        var wrap = root.querySelector('[data-locker-dot][data-slot="' + slot + '"]');
+        if (wrap) wrap.classList.toggle('filled', !!state[slot]);
+        var row = root.querySelector('[data-locker-sum="' + slot + '"]');
+        if (row) {
+          var nameEl = row.querySelector('[data-sum-name]');
+          var priceEl = row.querySelector('[data-sum-price]');
+          if (state[slot]) {
+            var v = entryVariant(state[slot]);
+            nameEl.textContent = state[slot].piece.title;
+            nameEl.classList.remove('kz2-empty');
+            priceEl.textContent = v ? formatMoney(v.price) : '';
+          } else {
+            nameEl.textContent = i18n.none;
+            nameEl.classList.add('kz2-empty');
+            priceEl.textContent = '';
+          }
         }
       });
     }
@@ -102,6 +109,7 @@
     function renderSizes(slot) {
       var wrap = root.querySelector('[data-locker-sizes-wrap="' + slot + '"]');
       var box = root.querySelector('[data-locker-sizes="' + slot + '"]');
+      if (!wrap || !box) return;
       box.innerHTML = '';
       var entry = state[slot];
       if (!entry || entry.piece.variants.length <= 1) {
@@ -112,13 +120,14 @@
       entry.piece.variants.forEach(function (v) {
         var b = document.createElement('button');
         b.type = 'button';
-        b.className = 'kz2-locker-size-btn' +
+        b.className = 'kz2-size-btn' +
           (v.id === entry.variantId ? ' active' : '') +
           (!v.available ? ' unavailable' : '');
         b.textContent = v.title;
         b.disabled = !v.available;
         b.setAttribute('aria-pressed', v.id === entry.variantId ? 'true' : 'false');
-        b.addEventListener('click', function () {
+        b.addEventListener('click', function (e) {
+          e.stopPropagation();
           if (!v.available) return;
           entry.variantId = v.id;
           renderSizes(slot);
@@ -130,21 +139,19 @@
 
     function renderPieces(slot) {
       var box = root.querySelector('[data-locker-pieces="' + slot + '"]');
+      if (!box) return;
       box.innerHTML = '';
 
-      /* Opzione "Vuoto" per liberare lo slot */
       var none = document.createElement('button');
       none.type = 'button';
-      none.className = 'kz2-locker-piece' + (state[slot] ? '' : ' active');
+      none.className = 'kz2-piece' + (state[slot] ? '' : ' active');
       none.setAttribute('aria-pressed', state[slot] ? 'false' : 'true');
-      none.innerHTML = '<span class="kz2-locker-piece-img kz2-none" aria-hidden="true">&times;</span>' +
-        '<span class="kz2-locker-piece-name">' + i18n.none + '</span>';
-      none.addEventListener('click', function () {
+      none.innerHTML = '<span class="kz2-piece-img kz2-none" aria-hidden="true">&times;</span>' +
+        '<span class="kz2-piece-name">' + i18n.none + '</span>';
+      none.addEventListener('click', function (e) {
+        e.stopPropagation();
         state[slot] = null;
-        renderPieces(slot);
-        renderSizes(slot);
-        refreshStage(slot);
-        refreshTotals();
+        renderPieces(slot); renderSizes(slot); refreshStage(slot); refreshTotals();
       });
       box.appendChild(none);
 
@@ -152,54 +159,75 @@
         var isActive = state[slot] && state[slot].piece.handle === p.handle;
         var b = document.createElement('button');
         b.type = 'button';
-        b.className = 'kz2-locker-piece' + (isActive ? ' active' : '') + (p.available ? '' : ' unavailable');
+        b.className = 'kz2-piece' + (isActive ? ' active' : '') + (p.available ? '' : ' unavailable');
         b.disabled = !p.available;
         b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
         var v0 = firstAvailableVariant(p);
         b.innerHTML =
-          '<img class="kz2-locker-piece-img" src="' + p.thumb + '" alt="' + p.title.replace(/"/g, '&quot;') + '" loading="lazy">' +
-          '<span class="kz2-locker-piece-name">' + p.title + '</span>' +
-          '<span class="kz2-locker-piece-price">' + (p.available ? formatMoney(v0.price) : i18n.out_of_stock) + '</span>';
-        b.addEventListener('click', function () {
+          '<img class="kz2-piece-img" src="' + p.thumb + '" alt="' + p.title.replace(/"/g, '&quot;') + '" loading="lazy">' +
+          '<span class="kz2-piece-name">' + p.title + '</span>' +
+          '<span class="kz2-piece-price">' + (p.available ? formatMoney(v0.price) : i18n.out_of_stock) + '</span>';
+        b.addEventListener('click', function (e) {
+          e.stopPropagation();
           if (!p.available) return;
           state[slot] = { piece: p, variantId: firstAvailableVariant(p).id };
-          renderPieces(slot);
-          renderSizes(slot);
-          refreshStage(slot);
-          refreshTotals();
+          renderPieces(slot); renderSizes(slot); refreshStage(slot); refreshTotals();
         });
         box.appendChild(b);
       });
     }
 
-    /* Tabs */
-    var tabs = root.querySelectorAll('[data-locker-tab]');
-    function activateTab(slot) {
-      tabs.forEach(function (t) {
-        var is = t.getAttribute('data-locker-tab') === slot;
-        t.classList.toggle('active', is);
-        t.setAttribute('aria-selected', is ? 'true' : 'false');
-      });
-      root.querySelectorAll('[data-locker-panel]').forEach(function (pn) {
-        pn.classList.toggle('active', pn.getAttribute('data-locker-panel') === slot);
+    /* ── Pallini: hover apre (desktop), tap apre/chiude (touch) ── */
+    var dots = root.querySelectorAll('[data-locker-dot]');
+    var closeTimer = null;
+    function closeAll(except) {
+      dots.forEach(function (d) {
+        if (d !== except) {
+          d.classList.remove('open');
+          var b = d.querySelector('.kz2-dot');
+          if (b) b.setAttribute('aria-expanded', 'false');
+        }
       });
     }
-    tabs.forEach(function (t) {
-      t.addEventListener('click', function () { activateTab(t.getAttribute('data-locker-tab')); });
+    dots.forEach(function (wrap) {
+      var btn = wrap.querySelector('.kz2-dot');
+      function open() {
+        clearTimeout(closeTimer);
+        closeAll(wrap);
+        wrap.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+      function scheduleClose() {
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(function () {
+          wrap.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        }, 260);
+      }
+      if (!isTouch) {
+        wrap.addEventListener('mouseenter', open);
+        wrap.addEventListener('mouseleave', scheduleClose);
+      }
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (wrap.classList.contains('open')) {
+          wrap.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        } else {
+          open();
+        }
+      });
     });
+    document.addEventListener('click', function () { closeAll(); });
 
-    /* Default outfit: primo bestseller di ogni slot (o, in modifica, i pezzi del carrello) */
     function renderAll() {
       SLOTS.forEach(function (slot) {
-        renderPieces(slot);
-        renderSizes(slot);
-        refreshStage(slot);
+        renderPieces(slot); renderSizes(slot); refreshStage(slot);
       });
       refreshTotals();
     }
 
     if (editSetId) {
-      /* Modalita modifica: riprendi i pezzi del set dal carrello */
       if (addBtn && i18n.update_set) addBtn.textContent = i18n.update_set;
       fetch('/cart.js')
         .then(function (r) { return r.json(); })
@@ -222,13 +250,7 @@
       renderAll();
     }
 
-    /* Primo tab con pezzi disponibili */
-    var firstSlot = SLOTS.find(function (s) {
-      return pieces.some(function (p) { return p.slot === s; });
-    }) || SLOTS[0];
-    activateTab(firstSlot);
-
-    /* Add set al carrello: una sola chiamata con array items */
+    /* ── Add set al carrello ── */
     addBtn.addEventListener('click', function () {
       var entries = selectedEntries();
       if (!entries.length || addBtn.disabled) return;
@@ -237,8 +259,6 @@
       addBtn.textContent = '…';
 
       var setId = editSetId || ('kzset-' + Date.now().toString(36));
-
-      /* In modifica: prima azzera le righe del vecchio set */
       var clearOld = editSetId
         ? fetch('/cart.js')
             .then(function (r) { return r.json(); })
@@ -272,10 +292,9 @@
           return r.json();
         })
         .then(function () {
-          if (editSetId) { window.location.href = '/cart'; return; }
           addBtn.disabled = false;
           addBtn.textContent = label;
-          /* Aggiorna il badge del carrello nell'header */
+          if (editSetId) { window.location.href = '/cart'; return; }
           fetch('/cart.js').then(function (r) { return r.json(); }).then(function (cart) {
             var badge = document.querySelector('.kz-cart-count');
             if (!badge) return;
