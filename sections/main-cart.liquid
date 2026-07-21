@@ -850,11 +850,22 @@
     border: 1px solid var(--kz-border);
     border-radius: 10px;
     overflow: hidden;
-    transition: border-color .2s;
+    transition: border-color .25s ease, transform .25s ease, box-shadow .25s ease;
     display: flex;
     flex-direction: column;
   }
-  .kz-card:hover { border-color: var(--kz-red); }
+  .kz-card:hover {
+    border-color: var(--kz-red);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0,0,0,.45), 0 0 18px rgba(232,39,42,.18);
+  }
+  .kz-card__image { transition: transform .5s cubic-bezier(.2,.6,.2,1); backface-visibility: hidden; }
+  .kz-card:hover .kz-card__image { transform: scale(1.06); }
+  @media (prefers-reduced-motion: reduce) {
+    .kz-card, .kz-card__image { transition: none; }
+    .kz-card:hover { transform: none; }
+    .kz-card:hover .kz-card__image { transform: none; }
+  }
 
   .kz-card__image-wrap {
     display: block;
