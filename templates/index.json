@@ -320,7 +320,7 @@
         "visual_image": "shopify://shop_images/3_g_1_1.png",
         "visual_image_2": "shopify://shop_images/1_g_1_1.png",
         "visual_image_3": "shopify://shop_images/2_g_1_1.png",
-        "rotate_seconds": 5,
+        "rotate_seconds": 4,
         "show_name_preview": false,
         "name_preview_text": "PERSONALizza come vuoi tu",
         "show_free_badge": false,
