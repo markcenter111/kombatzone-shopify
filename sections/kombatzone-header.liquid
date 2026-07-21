@@ -249,6 +249,13 @@
     flex-direction: column;
     background: rgba(10,10,10,0.98);
     border-top: 0;
+    /* Agganciato sotto l'header fisso: si apre dove clicchi, non in cima alla pagina */
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    z-index: 9998;
+    box-shadow: 0 18px 34px rgba(0,0,0,.55);
     padding: 20px 32px;
     gap: 16px;
     /* Chiuso: collassato e trasparente. Aperto: scende con fade. */
