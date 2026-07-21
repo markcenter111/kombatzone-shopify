@@ -415,6 +415,34 @@
         });
     });
 
+    /* Thumb del riepilogo: vuoto -> porta al manichino e apre lo slot;
+       pieno -> la x rimuove il pezzo */
+    SLOTS.forEach(function (slot) {
+      var row = root.querySelector('[data-locker-sum="' + slot + '"]');
+      if (!row) return;
+      var thumb = row.querySelector('[data-sum-thumb]');
+      if (!thumb) return;
+      thumb.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (state[slot]) {
+          state[slot] = null;
+          renderPieces(slot); renderSizes(slot); refreshStage(slot); refreshTotals();
+        } else {
+          var wrap = root.querySelector('[data-locker-dot][data-slot="' + slot + '"]');
+          var stageEl = root.querySelector('.kz2-locker-stage');
+          if (stageEl) stageEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (wrap) {
+            closeAll(wrap);
+            setTimeout(function () {
+              wrap.classList.add('open');
+              var b = wrap.querySelector('.kz2-dot');
+              if (b) b.setAttribute('aria-expanded', 'true');
+            }, 350);
+          }
+        }
+      });
+    });
+
     function resetLocker() {
       SLOTS.forEach(function (slot) { state[slot] = null; });
       closeAll();

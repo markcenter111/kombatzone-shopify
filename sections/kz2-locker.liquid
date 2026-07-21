@@ -220,18 +220,44 @@
     background-size: cover; background-position: center;
     border: 1px dashed rgba(255,255,255,0.15);
     position: relative;
-    transition: border-color .2s ease;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color .2s ease, transform .2s ease;
   }
+  #shopify-section-{{ section.id }} .kz2-sum-thumb:hover { transform: translateY(-1px); }
+  /* vuoto: + centrale, hover rosso (porta al manichino) */
   #shopify-section-{{ section.id }} .kz2-sum-thumb::after {
     content: '+';
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
     color: #3a3a36; font-size: 16px;
+    transition: color .2s ease;
   }
+  #shopify-section-{{ section.id }} .kz2-sum-thumb:hover::after { color: #E8272A; }
+  #shopify-section-{{ section.id }} .kz2-sum-thumb:hover { border-color: rgba(232,39,42,.5); }
+  /* pieno: gradiente rosso + x in hover (rimuove il pezzo) */
   #shopify-section-{{ section.id }} .kz2-sum-thumb.kz2-has {
     border: 1px solid rgba(76,187,122,0.5);
   }
-  #shopify-section-{{ section.id }} .kz2-sum-thumb.kz2-has::after { content: ''; }
+  #shopify-section-{{ section.id }} .kz2-sum-thumb.kz2-has::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(232,39,42,0.25), rgba(232,39,42,0.75));
+    opacity: 0;
+    transition: opacity .25s ease;
+  }
+  #shopify-section-{{ section.id }} .kz2-sum-thumb.kz2-has::after {
+    content: '\00d7';
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    opacity: 0;
+    transform: scale(.5) rotate(-90deg);
+    transition: opacity .25s ease, transform .3s cubic-bezier(.2,.6,.2,1), color 0s;
+  }
+  #shopify-section-{{ section.id }} .kz2-sum-thumb.kz2-has:hover { border-color: #E8272A; }
+  #shopify-section-{{ section.id }} .kz2-sum-thumb.kz2-has:hover::before { opacity: 1; }
+  #shopify-section-{{ section.id }} .kz2-sum-thumb.kz2-has:hover::after { opacity: 1; transform: scale(1) rotate(0deg); color: #fff; }
   #shopify-section-{{ section.id }} .kz2-sum-slot {
     font-size: 9.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #888880;
     flex-shrink: 0; width: 96px;
