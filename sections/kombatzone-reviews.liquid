@@ -69,9 +69,6 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 2px;
   }
-  @media (max-width: 800px) {
-    #kz-reviews-{{ section.id }} .reviews-grid { grid-template-columns: 1fr; }
-  }
   #kz-reviews-{{ section.id }} .review-card {
     background: var(--bg2);
     padding: 28px;
@@ -118,6 +115,49 @@
   }
   #kz-reviews-{{ section.id }} .review-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
   #kz-reviews-{{ section.id }} .review-sport { font-size: 10px; color: var(--text-muted); letter-spacing: .06em; text-transform: uppercase; }
+
+  /* -- Mobile: carosello orizzontale swipe, molto piu compatto -- */
+  @media (max-width: 800px) {
+    #kz-reviews-{{ section.id }} {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+    #kz-reviews-{{ section.id }} .section-header { margin-bottom: 20px; gap: 10px; }
+    #kz-reviews-{{ section.id }} .section-title { font-size: 30px; }
+
+    #kz-reviews-{{ section.id }} .reviews-grid {
+      display: flex;
+      grid-template-columns: none;
+      gap: 10px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      margin: 0 -16px;
+      padding: 0 16px 10px;
+    }
+    #kz-reviews-{{ section.id }} .reviews-grid::-webkit-scrollbar { display: none; }
+
+    #kz-reviews-{{ section.id }} .review-card {
+      flex: 0 0 78%;
+      scroll-snap-align: start;
+      padding: 16px 16px 14px;
+      border-radius: 10px;
+    }
+    #kz-reviews-{{ section.id }} .stars { font-size: 10px; margin-bottom: 6px; }
+    /* il virgolettone decorativo su mobile ruba una riga intera */
+    #kz-reviews-{{ section.id }} .review-quote { display: none; }
+    #kz-reviews-{{ section.id }} .review-text {
+      font-size: 12.5px;
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+    #kz-reviews-{{ section.id }} .review-footer { gap: 9px; }
+    #kz-reviews-{{ section.id }} .review-avatar { width: 28px; height: 28px; font-size: 12px; }
+    #kz-reviews-{{ section.id }} .review-name { font-size: 11.5px; }
+    #kz-reviews-{{ section.id }} .review-sport { font-size: 9px; }
+  }
 </style>
 
 <div id="kz-reviews-{{ section.id }}">
