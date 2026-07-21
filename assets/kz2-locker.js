@@ -96,7 +96,7 @@
 
     function refreshStage(slot) {
       var img = layers[slot];
-      if (state[slot]) {
+      if (state[slot] && state[slot].piece.layer) {
         var p = state[slot].piece;
         img.src = p.layer;
         img.style.zIndex = p.z || 1;
