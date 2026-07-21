@@ -65,26 +65,14 @@
     transform: scale(1.5);
     transform-origin: 50% 26%;
   }
-  #shopify-section-{{ section.id }} .kz2-zoom-btn {
-    position: absolute; right: 12px; bottom: 12px; z-index: 12;
-    width: 36px; height: 36px; border-radius: 50%;
-    background: rgba(10,10,10,0.78);
-    border: 1.5px solid rgba(255,255,255,0.3);
-    color: #fff; cursor: pointer; padding: 0;
-    display: flex; align-items: center; justify-content: center;
-    transition: background .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease;
-  }
-  #shopify-section-{{ section.id }} .kz2-zoom-btn svg { width: 16px; height: 16px; }
-  #shopify-section-{{ section.id }} .kz2-zoom-btn:hover {
-    background: #E8272A; border-color: #E8272A; transform: scale(1.1);
-    box-shadow: 0 0 14px rgba(232,39,42,.5);
-  }
-  #shopify-section-{{ section.id }} .kz2-zoom-btn.active { background: #E8272A; border-color: #E8272A; }
   #shopify-section-{{ section.id }} .kz2-locker-canvas .kz2-locker-layer { transition: opacity .25s ease; }
   #shopify-section-{{ section.id }} .kz2-locker-canvas .kz2-locker-layer.kz2-hidden { opacity: 0; }
 
   /* ── PALLINI HOTSPOT ── */
   #shopify-section-{{ section.id }} .kz2-dot-wrap { position: absolute; z-index: 10; }
+  #shopify-section-{{ section.id }} .kz2-dot-wrap.open { z-index: 80; }
+  #shopify-section-{{ section.id }} .kz2-dot-wrap.open .kz2-dot-label { opacity: 0; }
+  #shopify-section-{{ section.id }} .kz2-dot-label { transition: opacity .15s ease; }
   #shopify-section-{{ section.id }} .kz2-dot {
     width: 34px; height: 34px; border-radius: 50%;
     background: rgba(10,10,10,0.78);
@@ -109,10 +97,10 @@
 
   /* posizioni: lato sinistro = protezioni, destro = vestiti */
   #shopify-section-{{ section.id }} .kz2-dot-wrap[data-slot="paradenti"]   { left: 39%; top: 14%; }
-  #shopify-section-{{ section.id }} .kz2-dot-wrap[data-slot="guanti"]      { left: 34%; top: 29%; }
+  #shopify-section-{{ section.id }} .kz2-dot-wrap[data-slot="guanti"]      { left: 34%; top: 25%; }
   #shopify-section-{{ section.id }} .kz2-dot-wrap[data-slot="parastinchi"] { left: 37%; top: 74%; }
   #shopify-section-{{ section.id }} .kz2-dot-wrap[data-slot="casco"]       { left: 58%; top: 9%;  }
-  #shopify-section-{{ section.id }} .kz2-dot-wrap[data-slot="maglia"]      { left: 61%; top: 32%; }
+  #shopify-section-{{ section.id }} .kz2-dot-wrap[data-slot="maglia"]      { left: 61%; top: 35%; }
   #shopify-section-{{ section.id }} .kz2-dot-wrap[data-slot="pantaloncini"]{ left: 60%; top: 51%; }
 
   #shopify-section-{{ section.id }} .kz2-dot-label {
@@ -175,18 +163,31 @@
   }
   #shopify-section-{{ section.id }} .kz2-piece-price { font-size: 9.5px; font-weight: 700; color: #F2F0EB; }
   #shopify-section-{{ section.id }} .kz2-pop-sizes-label {
-    font-size: 8.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-    color: #888880; margin: 10px 0 6px;
+    font-size: 8.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    color: #888880; margin: 12px 0 7px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.07);
   }
-  #shopify-section-{{ section.id }} .kz2-pop-sizes { display: flex; gap: 5px; flex-wrap: wrap; }
+  #shopify-section-{{ section.id }} .kz2-pop-sizes { display: flex; gap: 6px; flex-wrap: wrap; }
   #shopify-section-{{ section.id }} .kz2-size-btn {
-    min-width: 32px; height: 30px; padding: 0 8px;
+    min-width: 34px; height: 32px; padding: 0 10px;
     background: transparent; border: 1px solid rgba(242,240,235,0.25); border-radius: 1px;
-    color: #F2F0EB; font-family: 'Inter', sans-serif; font-size: 10.5px; font-weight: 600;
-    cursor: pointer; transition: background .15s, border-color .15s;
+    color: #F2F0EB; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600;
+    cursor: pointer; transition: background .15s, border-color .15s, transform .1s;
   }
-  #shopify-section-{{ section.id }} .kz2-size-btn.active { background: #E8272A; border-color: #E8272A; color: #fff; }
+  #shopify-section-{{ section.id }} .kz2-size-btn:hover:not(.unavailable):not(.active) { border-color: rgba(242,240,235,0.6); transform: translateY(-1px); }
+  #shopify-section-{{ section.id }} .kz2-size-btn.active { background: #E8272A; border-color: #E8272A; color: #fff; box-shadow: 0 0 10px rgba(232,39,42,.35); }
   #shopify-section-{{ section.id }} .kz2-size-btn.unavailable { opacity: .35; text-decoration: line-through; cursor: not-allowed; }
+  #shopify-section-{{ section.id }} .kz2-swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+  #shopify-section-{{ section.id }} .kz2-swatch {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 2px solid rgba(242,240,235,0.25);
+    cursor: pointer; padding: 0; background-size: cover;
+    transition: border-color .15s, transform .1s;
+  }
+  #shopify-section-{{ section.id }} .kz2-swatch:hover:not(.unavailable) { transform: translateY(-1px); }
+  #shopify-section-{{ section.id }} .kz2-swatch.active { border-color: #E8272A; box-shadow: 0 0 10px rgba(232,39,42,.4); }
+  #shopify-section-{{ section.id }} .kz2-swatch.unavailable { opacity: .25; cursor: not-allowed; }
 
   /* ── COLONNA RIEPILOGO ── */
   #shopify-section-{{ section.id }} .kz2-side-title {
@@ -285,8 +286,19 @@
     #shopify-section-{{ section.id }} .kz2-locker-grid { grid-template-columns: 1fr; gap: 24px; }
     #shopify-section-{{ section.id }} .kz2-locker-stage { max-width: 480px; margin: 0 auto; width: 100%; }
     #shopify-section-{{ section.id }} .kz2-locker-title { font-size: 30px; }
-    #shopify-section-{{ section.id }} .kz2-pop { width: 216px; }
     #shopify-section-{{ section.id }} .kz2-dot-label { display: none; }
+    /* Su telefono il pannello diventa un bottom-sheet fisso: niente overflow laterali */
+    #shopify-section-{{ section.id }} .kz2-dot-wrap .kz2-pop,
+    #shopify-section-{{ section.id }} .kz2-dot-wrap.kz2-left .kz2-pop,
+    #shopify-section-{{ section.id }} .kz2-dot-wrap.kz2-right .kz2-pop {
+      position: fixed;
+      left: 12px; right: 12px; bottom: 12px; top: auto;
+      width: auto; max-height: 62vh;
+      transform: translateY(12px) scale(.98);
+      z-index: 9000;
+    }
+    #shopify-section-{{ section.id }} .kz2-dot-wrap.open .kz2-pop { transform: translateY(0) scale(1); }
+    #shopify-section-{{ section.id }} .kz2-pop-pieces { grid-template-columns: repeat(4, 1fr); }
   }
 </style>
 
@@ -351,9 +363,6 @@
           {%- if section.settings.base_image != blank -%}
             <img src="{{ section.settings.base_image | image_url: width: 1600 }}" alt="{{ 'sections.kz2-locker.stage_alt' | t }}" loading="lazy">
           {%- endif -%}
-          <button type="button" class="kz2-zoom-btn" data-locker-zoom aria-label="Zoom" aria-pressed="false">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM10.5 7.5v6m3-3h-6"/></svg>
-          </button>
         </div>
 
         {%- for slot in valid_slots -%}
@@ -367,10 +376,7 @@
             <div class="kz2-pop" role="menu">
               <div class="kz2-pop-title">{{ 'sections.kz2-locker.slot_' | append: slot | t }}</div>
               <div class="kz2-pop-pieces" data-locker-pieces="{{ slot }}"></div>
-              <div data-locker-sizes-wrap="{{ slot }}" style="display:none">
-                <div class="kz2-pop-sizes-label">{{ 'sections.kz2-locker.size' | t }}</div>
-                <div class="kz2-pop-sizes" data-locker-sizes="{{ slot }}"></div>
-              </div>
+              <div data-locker-opts="{{ slot }}"></div>
             </div>
           </div>
         {%- endfor -%}
@@ -419,7 +425,9 @@
         "pieces": {{ 'sections.kz2-locker.pieces' | t | json }},
         "out_of_stock": {{ 'sections.kz2-locker.out_of_stock' | t | json }},
         "error": {{ 'sections.kz2-locker.error' | t | json }},
-        "update_set": {{ 'sections.kz2-locker.update_set' | t | json }}
+        "update_set": {{ 'sections.kz2-locker.update_set' | t | json }},
+        "size": {{ 'sections.kz2-locker.size' | t | json }},
+        "color": {{ 'sections.kz2-locker.color' | t | json }}
       }
     </script>
     <script src="{{ 'kz2-locker.js' | asset_url }}" defer></script>
@@ -481,6 +489,7 @@
       "slot_parastinchi": "Parastinchi",
       "slot_paradenti": "Paradenti",
       "size": "Taglia",
+      "color": "Colore",
       "none": "Vuoto",
       "total": "Totale set",
       "piece": "pezzo",
@@ -508,6 +517,7 @@
       "slot_parastinchi": "Parastinchi",
       "slot_paradenti": "Paradenti",
       "size": "Taglia",
+      "color": "Colore",
       "none": "Vuoto",
       "total": "Totale set",
       "piece": "pezzo",

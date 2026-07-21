@@ -47,6 +47,10 @@
       state[slot] = null;
     });
 
+    function vParts(v) {
+      var parts = String(v.title).split(' / ');
+      return { size: parts[0] || '', color: parts[1] || '' };
+    }
     function firstAvailableVariant(piece) {
       var v = piece.variants.find(function (x) { return x.available; });
       return v || piece.variants[0];
@@ -106,35 +110,97 @@
       }
     }
 
+    function cssColor(name) {
+      return String(name).toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
+    }
+
     function renderSizes(slot) {
-      var wrap = root.querySelector('[data-locker-sizes-wrap="' + slot + '"]');
-      var box = root.querySelector('[data-locker-sizes="' + slot + '"]');
-      if (!wrap || !box) return;
+      var box = root.querySelector('[data-locker-opts="' + slot + '"]');
+      if (!box) return;
       box.innerHTML = '';
       var entry = state[slot];
-      if (!entry || entry.piece.variants.length <= 1) {
-        wrap.style.display = 'none';
-        return;
-      }
-      wrap.style.display = 'block';
-      entry.piece.variants.forEach(function (v) {
-        var b = document.createElement('button');
-        b.type = 'button';
-        b.className = 'kz2-size-btn' +
-          (v.id === entry.variantId ? ' active' : '') +
-          (!v.available ? ' unavailable' : '');
-        b.textContent = v.title;
-        b.disabled = !v.available;
-        b.setAttribute('aria-pressed', v.id === entry.variantId ? 'true' : 'false');
-        b.addEventListener('click', function (e) {
-          e.stopPropagation();
-          if (!v.available) return;
-          entry.variantId = v.id;
-          renderSizes(slot);
-          refreshTotals();
-        });
-        box.appendChild(b);
+      if (!entry || entry.piece.variants.length <= 1) return;
+
+      var vs = entry.piece.variants;
+      var cur = vs.find(function (v) { return v.id === entry.variantId; }) || vs[0];
+      var curP = vParts(cur);
+      var colors = []; var sizes = [];
+      vs.forEach(function (v) {
+        var p = vParts(v);
+        if (p.color && colors.indexOf(p.color) < 0) colors.push(p.color);
+        if (p.size && sizes.indexOf(p.size) < 0) sizes.push(p.size);
       });
+
+      function pick(size, color) {
+        var exact = vs.find(function (v) { var p = vParts(v); return p.size === size && p.color === color && v.available; });
+        if (exact) return exact;
+        var byColor = vs.find(function (v) { return vParts(v).color === color && v.available; });
+        if (color && byColor) return byColor;
+        var bySize = vs.find(function (v) { return vParts(v).size === size && v.available; });
+        return bySize || null;
+      }
+
+      /* COLORE sopra (pallini) */
+      if (colors.length > 1) {
+        var cl = document.createElement('div');
+        cl.className = 'kz2-pop-sizes-label';
+        cl.textContent = (i18n.color || 'Colore');
+        box.appendChild(cl);
+        var crow = document.createElement('div');
+        crow.className = 'kz2-swatches';
+        colors.forEach(function (c) {
+          var anyAvail = vs.some(function (v) { return vParts(v).color === c && v.available; });
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'kz2-swatch' + (c === curP.color ? ' active' : '') + (anyAvail ? '' : ' unavailable');
+          b.style.backgroundColor = cssColor(c);
+          b.title = c;
+          b.setAttribute('aria-label', c);
+          b.disabled = !anyAvail;
+          b.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var v = pick(curP.size, c);
+            if (!v) return;
+            entry.variantId = v.id;
+            renderSizes(slot);
+            refreshTotals();
+          });
+          crow.appendChild(b);
+        });
+        box.appendChild(crow);
+      }
+
+      /* TAGLIA sotto */
+      if (sizes.length > 0) {
+        var sl = document.createElement('div');
+        sl.className = 'kz2-pop-sizes-label';
+        sl.textContent = (i18n.size || 'Taglia');
+        box.appendChild(sl);
+        var srow = document.createElement('div');
+        srow.className = 'kz2-pop-sizes';
+        sizes.forEach(function (sz) {
+          var avail = vs.some(function (v) {
+            var p = vParts(v);
+            if (colors.length > 1) return p.size === sz && p.color === curP.color && v.available;
+            return p.size === sz && v.available;
+          });
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'kz2-size-btn' + (sz === curP.size ? ' active' : '') + (avail ? '' : ' unavailable');
+          b.textContent = sz;
+          b.disabled = !avail;
+          b.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var v = pick(sz, curP.color);
+            if (!v) return;
+            entry.variantId = v.id;
+            renderSizes(slot);
+            refreshTotals();
+          });
+          srow.appendChild(b);
+        });
+        box.appendChild(srow);
+      }
     }
 
     function renderPieces(slot) {
