@@ -13,7 +13,7 @@
       "type": "kz2-locker",
       "settings": {
         "source_collection": "locker",
-        "base_image": "shopify://shop_images/set_colorato.png",
+        "base_image": "shopify://shop_images/manichino_rust_ups_no_bg.png",
         "padding_top": 48,
         "padding_bottom": 80
       }
