@@ -134,20 +134,17 @@
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
       -ms-overflow-style: none;
-      margin: 0 -16px;
-      padding: 0 16px 10px;
+      padding-bottom: 10px;
     }
     #kz-reviews-{{ section.id }} .reviews-grid::-webkit-scrollbar { display: none; }
 
     #kz-reviews-{{ section.id }} .review-card {
-      flex: 0 0 78%;
+      flex: 0 0 80%;
       scroll-snap-align: start;
       padding: 16px 16px 14px;
-      border-radius: 10px;
     }
     #kz-reviews-{{ section.id }} .stars { font-size: 10px; margin-bottom: 6px; }
-    /* il virgolettone decorativo su mobile ruba una riga intera */
-    #kz-reviews-{{ section.id }} .review-quote { display: none; }
+    #kz-reviews-{{ section.id }} .review-quote { font-size: 22px; margin-bottom: 8px; }
     #kz-reviews-{{ section.id }} .review-text {
       font-size: 12.5px;
       line-height: 1.55;
