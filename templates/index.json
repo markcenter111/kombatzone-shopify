@@ -317,8 +317,11 @@
       "name": "KZ — Personalizzazione",
       "settings": {
         "bg_color": "#111111",
-        "visual_image": "shopify://shop_images/set_colorato.png",
-        "show_name_preview": true,
+        "visual_image": "shopify://shop_images/3_g_1_1.png",
+        "visual_image_2": "shopify://shop_images/1_g_1_1.png",
+        "visual_image_3": "shopify://shop_images/2_g_1_1.png",
+        "rotate_seconds": 2,
+        "show_name_preview": false,
         "name_preview_text": "PERSONALizza come vuoi tu",
         "show_free_badge": true,
         "free_badge_text": "Gratis",
