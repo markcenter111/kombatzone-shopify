@@ -94,6 +94,17 @@
               thumbEl.style.backgroundImage = 'url("' + state[slot].piece.thumb + '")';
               thumbEl.classList.add('kz2-has');
             }
+            /* riga variante: taglia + pallino colore */
+            if (v && v.title !== 'Default Title') {
+              var pv = vParts(v);
+              var varEl = document.createElement('span');
+              varEl.className = 'kz2-sum-var';
+              var html = '';
+              if (pv.size) html += '<span>' + pv.size + '</span>';
+              if (pv.color) html += (pv.size ? '<span>/</span>' : '') + '<span class="kz2-sum-dot" style="background-color:' + cssColor(pv.color) + '" title="' + pv.color + '"></span>';
+              varEl.innerHTML = html;
+              nameEl.appendChild(varEl);
+            }
           } else {
             nameEl.textContent = i18n.none;
             nameEl.classList.add('kz2-empty');
@@ -291,6 +302,12 @@
         } else {
           open();
         }
+      });
+      var closeBtn = wrap.querySelector('[data-pop-close]');
+      if (closeBtn) closeBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        wrap.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
       });
     });
     document.addEventListener('click', function () { closeAll(); });

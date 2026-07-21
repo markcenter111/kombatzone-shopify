@@ -134,11 +134,26 @@
   #shopify-section-{{ section.id }} .kz2-dot-wrap.kz2-left .kz2-pop { right: calc(100% + 12px); }
   #shopify-section-{{ section.id }} .kz2-dot-wrap.kz2-right .kz2-pop { left: calc(100% + 12px); }
   #shopify-section-{{ section.id }} .kz2-dot-wrap.open .kz2-pop { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+  #shopify-section-{{ section.id }} .kz2-pop-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    margin-bottom: 10px;
+  }
   #shopify-section-{{ section.id }} .kz2-pop-title {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 15px; font-weight: 900; text-transform: uppercase; letter-spacing: .05em;
-    color: #E8272A; margin-bottom: 10px;
+    color: #E8272A;
   }
+  #shopify-section-{{ section.id }} .kz2-pop-close {
+    width: 26px; height: 26px; flex-shrink: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #a5a59d; cursor: pointer; padding: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+  }
+  #shopify-section-{{ section.id }} .kz2-pop-close svg { width: 12px; height: 12px; }
+  #shopify-section-{{ section.id }} .kz2-pop-close:hover { background: #E8272A; border-color: #E8272A; color: #fff; transform: scale(1.1); }
   #shopify-section-{{ section.id }} .kz2-pop-pieces {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
   }
@@ -199,7 +214,7 @@
     padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
   }
   #shopify-section-{{ section.id }} .kz2-sum-thumb {
-    width: 42px; height: 42px; flex-shrink: 0;
+    width: 54px; height: 54px; flex-shrink: 0;
     border-radius: 8px;
     background-color: #141414;
     background-size: cover; background-position: center;
@@ -222,6 +237,14 @@
     flex-shrink: 0; width: 96px;
   }
   #shopify-section-{{ section.id }} .kz2-sum-val { font-size: 12px; color: #F2F0EB; flex: 1; }
+  #shopify-section-{{ section.id }} .kz2-sum-var {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 10px; color: #888880; margin-top: 3px;
+  }
+  #shopify-section-{{ section.id }} .kz2-sum-dot {
+    display: inline-block; width: 11px; height: 11px; border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.35); flex-shrink: 0;
+  }
   #shopify-section-{{ section.id }} .kz2-sum-val.kz2-empty { color: #4a4a44; }
   #shopify-section-{{ section.id }} .kz2-sum-price { font-size: 12px; font-weight: 700; color: #F2F0EB; flex-shrink: 0; }
 
@@ -398,7 +421,12 @@
             </button>
             <span class="kz2-dot-label">{{ 'sections.kz2-locker.slot_' | append: slot | t }}</span>
             <div class="kz2-pop" role="menu">
-              <div class="kz2-pop-title">{{ 'sections.kz2-locker.slot_' | append: slot | t }}</div>
+              <div class="kz2-pop-head">
+                <div class="kz2-pop-title">{{ 'sections.kz2-locker.slot_' | append: slot | t }}</div>
+                <button type="button" class="kz2-pop-close" data-pop-close aria-label="Chiudi">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
+                </button>
+              </div>
               <div class="kz2-pop-pieces" data-locker-pieces="{{ slot }}"></div>
               <div data-locker-opts="{{ slot }}"></div>
             </div>
@@ -412,7 +440,7 @@
           <div class="kz2-sum-row" data-locker-sum="{{ slot }}">
             <span class="kz2-sum-thumb" data-sum-thumb aria-hidden="true"></span>
             <span class="kz2-sum-slot">{{ 'sections.kz2-locker.slot_' | append: slot | t }}</span>
-            <span class="kz2-sum-val kz2-empty" data-sum-name>{{ 'sections.kz2-locker.none' | t }}</span>
+            <span class="kz2-sum-val kz2-empty" data-sum-name>{{ 'sections.kz2-locker.none' | t }}<span class="kz2-sum-var" data-sum-var style="display:none"></span></span>
             <span class="kz2-sum-price" data-sum-price></span>
           </div>
         {%- endfor -%}
