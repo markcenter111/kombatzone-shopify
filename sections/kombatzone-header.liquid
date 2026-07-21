@@ -312,6 +312,47 @@
     .kz-nav-icons { gap: 2px; }
     .kz-header-placeholder { height: 60px; }
   }
+
+  /* --- Abbellimenti menu mobile --- */
+  .kz-nav-mobile.open { border-top: 2px solid var(--kz-red); gap: 2px; padding-bottom: 22px; }
+
+  .kz-nav-mobile > a:not(.kz-nav-cta):not(.kz-nav-special) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 6px 15px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 14px;
+    letter-spacing: .12em;
+    position: relative;
+  }
+  /* barra rossa che compare a sinistra sull'hover */
+  .kz-nav-mobile > a:not(.kz-nav-cta):not(.kz-nav-special)::before {
+    content: '';
+    position: absolute; left: 0; top: 50%;
+    transform: translateY(-50%) scaleY(0);
+    width: 3px; height: 58%;
+    background: var(--kz-red);
+    transition: transform .22s cubic-bezier(.2,.6,.2,1);
+  }
+  /* freccetta a destra */
+  .kz-nav-mobile > a:not(.kz-nav-cta):not(.kz-nav-special)::after {
+    content: '';
+    width: 7px; height: 7px; margin-left: auto; flex: none;
+    border-top: 2px solid var(--kz-text-dim);
+    border-right: 2px solid var(--kz-text-dim);
+    transform: rotate(45deg);
+    transition: border-color .2s ease, transform .2s ease;
+  }
+  .kz-nav-mobile > a:not(.kz-nav-cta):not(.kz-nav-special):hover { color: var(--kz-text); padding-left: 22px; }
+  .kz-nav-mobile > a:not(.kz-nav-cta):not(.kz-nav-special):hover::before { transform: translateY(-50%) scaleY(1); }
+  .kz-nav-mobile > a:not(.kz-nav-cta):not(.kz-nav-special):hover::after { border-color: var(--kz-red); transform: rotate(45deg) translate(1px,-1px); }
+
+  /* "Personalizza" evidenziato e centrato */
+  .kz-nav-mobile > a.kz-nav-special { align-self: center; margin: 14px 0 8px; }
+
+  /* CTA finale piu' spaziata */
+  .kz-nav-mobile .kz-nav-cta { margin-top: 14px; padding: 13px 18px; letter-spacing: .14em; }
 </style>
 
 <!-- Riserva lo spazio fisico perché il nav è fixed e non occupa flusso -->
@@ -394,6 +435,8 @@
 
     function onScroll() {
       var y = window.scrollY || window.pageYOffset;
+      var m = document.getElementById('kz-mobile-menu');
+      if (m && m.classList.contains('open')) m.classList.remove('open');
       if (y > threshold && !scrolled) {
         nav.classList.add('kz-scrolled');
         scrolled = true;
