@@ -293,19 +293,19 @@
         "step_rXiky9": {
           "type": "step",
           "settings": {
-            "text": "Scegli il prodotto"
+            "text": "Tocca i punti sul fighter"
           }
         },
         "step_xDEtpY": {
           "type": "step",
           "settings": {
-            "text": "Inserisci il testo nella nota dell'ordine"
+            "text": "Scegli pezzo, taglia e colore"
           }
         },
         "step_DA3nN6": {
           "type": "step",
           "settings": {
-            "text": "Noi personalizziamo e spediamo — senza costi extra"
+            "text": "Aggiungi il set completo al carrello"
           }
         }
       },
@@ -314,7 +314,7 @@
         "step_xDEtpY",
         "step_DA3nN6"
       ],
-      "name": "KZ — Personalizzazione",
+      "name": "KZ — Crea il tuo set",
       "settings": {
         "bg_color": "#111111",
         "visual_image": "shopify://shop_images/3_g_1_1.png",
@@ -322,14 +322,14 @@
         "visual_image_3": "shopify://shop_images/2_g_1_1.png",
         "rotate_seconds": 4,
         "show_name_preview": false,
-        "name_preview_text": "PERSONALizza come vuoi tu",
+        "name_preview_text": "Monta il tuo arsenale",
         "show_free_badge": false,
         "free_badge_text": "Gratis",
-        "tag": "Esclusiva Kombat Zone",
-        "title_line1": "Il tuo gear,",
-        "title_line2": "la tua firma.",
-        "description": "Ogni prodotto Kombat Zone può essere personalizzato con il tuo nome, nickname o numero. Zero costo aggiuntivo. Pronto in 2 giorni.",
-        "button_text": "Personalizza il tuo set",
+        "tag": "Fighter Locker",
+        "title_line1": "Monta il tuo set,",
+        "title_line2": "pezzo per pezzo.",
+        "description": "Casco, maglia, pantaloncini, guantoni, parastinchi e paradenti: scegli ogni pezzo direttamente sul fighter e guarda il set prendere forma. Il totale si aggiorna mentre monti, poi porti tutto nel carrello in un colpo solo.",
+        "button_text": "Apri il Fighter Locker",
         "button_link": "/pages/fighter-locker"
       }
     },
