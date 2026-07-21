@@ -35,7 +35,14 @@
     position: relative;
     overflow: hidden;
   }
-  #kz-custom-{{ section.id }} .custom-visual { background: #050505; }
+  #kz-custom-{{ section.id }} .custom-visual {
+    background:
+      radial-gradient(ellipse 80% 45% at 50% 30%, rgba(232,39,42,0.10) 0%, transparent 65%),
+      radial-gradient(ellipse 120% 45% at 50% 108%, rgba(232,39,42,0.06) 0%, transparent 55%),
+      repeating-linear-gradient(60deg, transparent 0, transparent 38px, rgba(255,255,255,0.015) 38px, rgba(255,255,255,0.015) 39px),
+      repeating-linear-gradient(-60deg, transparent 0, transparent 38px, rgba(255,255,255,0.015) 38px, rgba(255,255,255,0.015) 39px),
+      #000;
+  }
   #kz-custom-{{ section.id }} .custom-visual img {
     position: absolute;
     inset: 0;
@@ -44,34 +51,31 @@
     object-fit: cover;
     object-position: center;
   }
+  /* Giostra: centrale davanti, laterali dietro piu' piccoli e scuri */
   #kz-custom-{{ section.id }} .custom-slide {
     opacity: 0;
-    transform: scale(1.03);
-    transition: opacity .9s ease, transform 1.2s ease;
+    transform: translateX(0) scale(.5);
+    z-index: 0;
+    transition: transform .8s cubic-bezier(.2,.6,.2,1), opacity .8s ease, filter .8s ease;
+    will-change: transform, opacity;
   }
-  #kz-custom-{{ section.id }} .custom-slide.active {
+  #kz-custom-{{ section.id }} .custom-slide.pos-center {
     opacity: 1;
-    transform: scale(1);
-  }
-  #kz-custom-{{ section.id }} .custom-dots {
-    position: absolute;
-    bottom: 14px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 7px;
+    transform: translateX(0) scale(1);
     z-index: 3;
+    filter: none;
   }
-  #kz-custom-{{ section.id }} .custom-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 99px;
-    background: rgba(255,255,255,0.25);
-    transition: background .3s ease, width .3s ease;
+  #kz-custom-{{ section.id }} .custom-slide.pos-left {
+    opacity: .5;
+    transform: translateX(-30%) scale(.72);
+    z-index: 1;
+    filter: brightness(.55) saturate(.8);
   }
-  #kz-custom-{{ section.id }} .custom-dot.active {
-    background: #E8272A;
-    width: 20px;
+  #kz-custom-{{ section.id }} .custom-slide.pos-right {
+    opacity: .5;
+    transform: translateX(30%) scale(.72);
+    z-index: 1;
+    filter: brightness(.55) saturate(.8);
   }
   #kz-custom-{{ section.id }} .custom-visual-inner {
     font-family: var(--ff-display), sans-serif;
@@ -197,29 +201,36 @@
 </style>
 
 <script>
-  /* Rotazione manichini: crossfade ogni 4s */
+  /* Giostra circolare: sinistro -> centro -> destro, ogni N secondi (setting) */
   document.addEventListener('DOMContentLoaded', function () {
     var root = document.getElementById('kz-custom-{{ section.id }}');
     if (!root) return;
-    var slides = root.querySelectorAll('.custom-slide');
-    var dots = root.querySelectorAll('.custom-dot');
-    if (slides.length < 2) return;
-    var i = 0;
-    setInterval(function () {
-      slides[i].classList.remove('active');
-      if (dots[i]) dots[i].classList.remove('active');
-      i = (i + 1) % slides.length;
-      slides[i].classList.add('active');
-      if (dots[i]) dots[i].classList.add('active');
-    }, 4000);
+    var slides = Array.prototype.slice.call(root.querySelectorAll('.custom-slide'));
+    var n = slides.length;
+    if (!n) return;
+    var idx = 0;
+    function apply() {
+      slides.forEach(function (el, k) {
+        el.classList.remove('pos-center', 'pos-left', 'pos-right');
+        if (n === 1) { if (k === 0) el.classList.add('pos-center'); return; }
+        var off = (k - idx + n) % n;
+        if (off === 0) el.classList.add('pos-center');
+        else if (off === 1) el.classList.add('pos-right');
+        else if (off === n - 1) el.classList.add('pos-left');
+      });
+    }
+    apply();
+    if (n < 2) return;
+    var secs = parseFloat(root.getAttribute('data-rotate-secs')) || 4;
+    setInterval(function () { idx = (idx + 1) % n; apply(); }, secs * 1000);
   });
 </script>
 
-<div id="kz-custom-{{ section.id }}">
+<div id="kz-custom-{{ section.id }}" data-rotate-secs="{{ section.settings.rotate_seconds | default: 4 }}">
   <div class="custom-visual">
     {%- assign kzc_slides = '' -%}
     {%- if section.settings.visual_image != blank -%}
-      <img class="custom-slide active" src="{{ section.settings.visual_image | image_url: width: 1000 }}" alt="{{ section.settings.title_line1 }}" loading="lazy">
+      <img class="custom-slide" src="{{ section.settings.visual_image | image_url: width: 1000 }}" alt="{{ section.settings.title_line1 }}" loading="lazy">
       {%- assign kzc_slides = kzc_slides | append: 'x' -%}
     {%- endif -%}
     {%- if section.settings.visual_image_2 != blank -%}
@@ -230,16 +241,18 @@
       <img class="custom-slide" src="{{ section.settings.visual_image_3 | image_url: width: 1000 }}" alt="{{ section.settings.title_line1 }}" loading="lazy">
       {%- assign kzc_slides = kzc_slides | append: 'x' -%}
     {%- endif -%}
+    {%- if section.settings.visual_image_4 != blank -%}
+      <img class="custom-slide" src="{{ section.settings.visual_image_4 | image_url: width: 1000 }}" alt="{{ section.settings.title_line1 }}" loading="lazy">
+      {%- assign kzc_slides = kzc_slides | append: 'x' -%}
+    {%- endif -%}
+    {%- if section.settings.visual_image_5 != blank -%}
+      <img class="custom-slide" src="{{ section.settings.visual_image_5 | image_url: width: 1000 }}" alt="{{ section.settings.title_line1 }}" loading="lazy">
+      {%- assign kzc_slides = kzc_slides | append: 'x' -%}
+    {%- endif -%}
     {%- if kzc_slides == '' -%}
       <div class="custom-visual-inner">KZ<br>GEAR</div>
     {%- endif -%}
-    {%- if kzc_slides.size > 1 -%}
-      <div class="custom-dots" aria-hidden="true">
-        {%- for i in (1..kzc_slides.size) -%}
-          <span class="custom-dot{% if forloop.first %} active{% endif %}"></span>
-        {%- endfor -%}
-      </div>
-    {%- endif -%}
+
     {% if section.settings.show_name_preview %}
       <div class="custom-name-preview">{{ section.settings.name_preview_text }}</div>
     {% endif %}
@@ -299,6 +312,25 @@
       "type": "image_picker",
       "id": "visual_image_3",
       "label": "Immagine manichino 3 (rotazione)"
+    },
+    {
+      "type": "image_picker",
+      "id": "visual_image_4",
+      "label": "Immagine manichino 4 (rotazione)"
+    },
+    {
+      "type": "image_picker",
+      "id": "visual_image_5",
+      "label": "Immagine manichino 5 (rotazione)"
+    },
+    {
+      "type": "range",
+      "id": "rotate_seconds",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 4,
+      "label": "Secondi tra le rotazioni"
     },
     {
       "type": "checkbox",
