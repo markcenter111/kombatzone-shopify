@@ -198,6 +198,25 @@
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
     padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
   }
+  #shopify-section-{{ section.id }} .kz2-sum-thumb {
+    width: 42px; height: 42px; flex-shrink: 0;
+    border-radius: 8px;
+    background-color: #141414;
+    background-size: cover; background-position: center;
+    border: 1px dashed rgba(255,255,255,0.15);
+    position: relative;
+    transition: border-color .2s ease;
+  }
+  #shopify-section-{{ section.id }} .kz2-sum-thumb::after {
+    content: '+';
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: #3a3a36; font-size: 16px;
+  }
+  #shopify-section-{{ section.id }} .kz2-sum-thumb.kz2-has {
+    border: 1px solid rgba(76,187,122,0.5);
+  }
+  #shopify-section-{{ section.id }} .kz2-sum-thumb.kz2-has::after { content: ''; }
   #shopify-section-{{ section.id }} .kz2-sum-slot {
     font-size: 9.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #888880;
     flex-shrink: 0; width: 96px;
@@ -286,7 +305,12 @@
     #shopify-section-{{ section.id }} .kz2-locker-grid { grid-template-columns: 1fr; gap: 24px; }
     #shopify-section-{{ section.id }} .kz2-locker-stage { max-width: 480px; margin: 0 auto; width: 100%; }
     #shopify-section-{{ section.id }} .kz2-locker-title { font-size: 30px; }
-    #shopify-section-{{ section.id }} .kz2-dot-label { display: none; }
+    /* Stessa geometria del PC, tutto scalato: pallini piccoli ed etichette compatte */
+    #shopify-section-{{ section.id }} .kz2-dot { width: 26px; height: 26px; border-width: 1.5px; }
+    #shopify-section-{{ section.id }} .kz2-dot svg { width: 11px; height: 11px; }
+    #shopify-section-{{ section.id }} .kz2-dot-label { font-size: 7.5px; letter-spacing: .06em; }
+    #shopify-section-{{ section.id }} .kz2-dot-wrap.kz2-left .kz2-dot-label { right: calc(100% + 5px); }
+    #shopify-section-{{ section.id }} .kz2-dot-wrap.kz2-right .kz2-dot-label { left: calc(100% + 5px); }
     /* Su telefono il pannello diventa un bottom-sheet fisso: niente overflow laterali */
     #shopify-section-{{ section.id }} .kz2-dot-wrap .kz2-pop,
     #shopify-section-{{ section.id }} .kz2-dot-wrap.kz2-left .kz2-pop,
@@ -386,6 +410,7 @@
         <div class="kz2-side-title">{{ 'sections.kz2-locker.your_set' | t }}</div>
         {%- for slot in valid_slots -%}
           <div class="kz2-sum-row" data-locker-sum="{{ slot }}">
+            <span class="kz2-sum-thumb" data-sum-thumb aria-hidden="true"></span>
             <span class="kz2-sum-slot">{{ 'sections.kz2-locker.slot_' | append: slot | t }}</span>
             <span class="kz2-sum-val kz2-empty" data-sum-name>{{ 'sections.kz2-locker.none' | t }}</span>
             <span class="kz2-sum-price" data-sum-price></span>

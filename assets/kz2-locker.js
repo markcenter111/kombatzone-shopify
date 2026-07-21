@@ -84,15 +84,24 @@
         if (row) {
           var nameEl = row.querySelector('[data-sum-name]');
           var priceEl = row.querySelector('[data-sum-price]');
+          var thumbEl = row.querySelector('[data-sum-thumb]');
           if (state[slot]) {
             var v = entryVariant(state[slot]);
             nameEl.textContent = state[slot].piece.title;
             nameEl.classList.remove('kz2-empty');
             priceEl.textContent = v ? formatMoney(v.price) : '';
+            if (thumbEl) {
+              thumbEl.style.backgroundImage = 'url("' + state[slot].piece.thumb + '")';
+              thumbEl.classList.add('kz2-has');
+            }
           } else {
             nameEl.textContent = i18n.none;
             nameEl.classList.add('kz2-empty');
             priceEl.textContent = '';
+            if (thumbEl) {
+              thumbEl.style.backgroundImage = '';
+              thumbEl.classList.remove('kz2-has');
+            }
           }
         }
       });
