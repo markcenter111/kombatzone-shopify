@@ -58,6 +58,57 @@
 
   </div>
 
+  {%- comment -%} Search Bar {%- endcomment -%}
+  <style>
+    .kz-search{max-width:1280px;margin:0 auto 14px}
+    .kz-search__form{display:flex;align-items:stretch;background:#141414;border:1px solid rgba(255,255,255,.12);border-radius:10px;overflow:hidden}
+    .kz-search__form:focus-within{border-color:#E8272A;box-shadow:0 0 0 2px rgba(232,39,42,.22)}
+    .kz-search__icon{display:flex;align-items:center;padding:0 12px;color:#888880}
+    .kz-search__input{flex:1;background:transparent;border:none;outline:none;color:#F2F0EB;font-family:inherit;font-size:14px;padding:13px 6px}
+    .kz-search__input::placeholder{color:#6a6a64}
+    .kz-search__clear{background:none;border:none;color:#888880;cursor:pointer;padding:0 10px;display:none;font-size:14px}
+    .kz-search__clear.show{display:block}
+    .kz-search__btn{background:#E8272A;color:#fff;border:none;padding:0 22px;font-family:inherit;font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:12px;cursor:pointer;transition:background .15s}
+    .kz-search__btn:hover{background:#c41f22}
+  </style>
+  <div class="kz-search">
+    <form class="kz-search__form" action="{{ routes.search_url }}" method="get" role="search" data-kz-search>
+      <span class="kz-search__icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/></svg></span>
+      <input type="hidden" name="type" value="product">
+      <input type="search" name="q" class="kz-search__input" placeholder="Cerca un prodotto..." autocomplete="off" aria-label="Cerca prodotti" data-kz-search-input>
+      <button type="button" class="kz-search__clear" data-kz-search-clear aria-label="Cancella ricerca">&times;</button>
+      <button type="submit" class="kz-search__btn">Cerca</button>
+    </form>
+  </div>
+  <script>
+  (function(){
+    var form=document.querySelector('[data-kz-search]'); if(!form) return;
+    var input=form.querySelector('[data-kz-search-input]');
+    var clear=form.querySelector('[data-kz-search-clear]');
+    var grid=document.getElementById('kz-grid');
+    function norm(s){return (s||'').toLowerCase();}
+    function apply(){
+      var q=norm(input.value.trim());
+      clear.classList.toggle('show', q.length>0);
+      if(!grid) return;
+      var cards=grid.children, shown=0;
+      for(var i=0;i<cards.length;i++){
+        var c=cards[i];
+        if(c.id==='kz-search-none') continue;
+        if(c.classList&&c.classList.contains('kz-empty')) continue;
+        var match=!q||norm(c.textContent).indexOf(q)>-1;
+        c.style.display=match?'':'none'; if(match)shown++;
+      }
+      var none=document.getElementById('kz-search-none');
+      if(q&&shown===0){ if(!none){none=document.createElement('p');none.id='kz-search-none';none.className='kz-empty';none.innerHTML='Nessun prodotto in questa pagina. Premi <strong>Cerca</strong> per cercare in tutto il negozio.';grid.appendChild(none);} none.style.display=''; }
+      else if(none){ none.style.display='none'; }
+    }
+    input.addEventListener('input',apply);
+    clear.addEventListener('click',function(){input.value='';apply();input.focus();});
+    apply();
+  })();
+  </script>
+
   {%- comment -%} ── Filter / Sort Bar ── {%- endcomment -%}
   <div class="kz-filter-bar">
 
