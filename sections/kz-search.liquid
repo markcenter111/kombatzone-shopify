@@ -24,7 +24,7 @@
       <div>
         <h1 class="kz-collection-header__title">
           {%- if search.terms != blank -%}
-            Risultati<em> per {{ search.terms }}</em>
+            Risultati<em> per {{ search.terms | escape | truncate: 40 }}</em>
           {%- else -%}
             Cerca
           {%- endif -%}
@@ -53,7 +53,7 @@
         {%- render 'kz2-product-card', product: item -%}
       {%- endif -%}
     {%- else -%}
-      <p class="kz-empty">Nessun prodotto trovato{% if search.terms != blank %} per {{ search.terms }}{% endif %}. Prova con un altro termine.</p>
+      <p class="kz-empty">Nessun prodotto trovato{% if search.terms != blank %} per {{ search.terms | escape | truncate: 40 }}{% endif %}. Prova con un altro termine.</p>
     {%- endfor -%}
   </div>
 
@@ -109,7 +109,9 @@
 {%- endpaginate -%}
 
 <style>
-  .kz-collection-header__top{align-items:center;gap:12px}
+  .kz-collection-header__top{align-items:center;gap:12px;flex-wrap:wrap}
+  .kz-collection-header__top>div:first-child{min-width:0;flex:1 1 auto}
+  .kz-collection-header__title{overflow-wrap:anywhere;word-break:break-word}
   .kz-search{display:flex;align-items:center;margin-left:auto;flex-shrink:0}
   .kz-search__form{display:flex;align-items:center;background:transparent;border:1px solid transparent;border-radius:9px;transition:background .2s,border-color .2s,box-shadow .2s}
   .kz-search__form.is-open{background:#141414;border-color:rgba(255,255,255,.14)}
@@ -130,24 +132,9 @@
   var form=document.querySelector('[data-kz-search]'); if(!form) return;
   var input=form.querySelector('[data-kz-search-input]');
   var toggle=form.querySelector('[data-kz-search-toggle]');
-  var grid=document.getElementById('kz-grid');
-  function apply(){
-    var q=(input.value||'').trim().toLowerCase();
-    if(!grid) return;
-    var cards=grid.children, shown=0;
-    for(var i=0;i<cards.length;i++){var c=cards[i];
-      if(c.id==='kz-search-none')continue;
-      if(c.classList&&c.classList.contains('kz-empty'))continue;
-      var m=!q||(c.textContent||'').toLowerCase().indexOf(q)>-1;
-      c.style.display=m?'':'none'; if(m)shown++;}
-    var none=document.getElementById('kz-search-none');
-    if(q&&shown===0){if(!none){none=document.createElement('p');none.id='kz-search-none';none.className='kz-empty';none.innerHTML='Niente in questa pagina. Premi Invio per una nuova ricerca.';grid.appendChild(none);}none.style.display='';}
-    else if(none){none.style.display='none';}
-  }
   function openS(){form.classList.add('is-open');input.removeAttribute('tabindex');input.focus();}
   function closeS(){form.classList.remove('is-open');input.setAttribute('tabindex','-1');}
   toggle.addEventListener('click',function(){form.classList.contains('is-open')?closeS():openS();});
-  input.addEventListener('input',apply);
   input.addEventListener('keydown',function(e){if(e.key==='Escape')closeS();});
 })();
 </script>
