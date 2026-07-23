@@ -1,0 +1,157 @@
+{%- comment -%}
+  Section: sections/kz-search.liquid
+  Template: templates/search.json
+  Pagina risultati ricerca — stessa estetica della collezione (kz2-collection.css),
+  senza pill categorie e senza barra filtri/ordina.
+{%- endcomment -%}
+
+{{ 'kz2-collection.css' | asset_url | stylesheet_tag }}
+
+{%- paginate search.results by 24 -%}
+
+<div class="kz-catalog">
+
+  {%- comment -%} Breadcrumb {%- endcomment -%}
+  <nav class="kz-breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ routes.root_url }}">Home</a>
+    <span aria-hidden="true">/</span>
+    <span class="kz-breadcrumb__current">Ricerca</span>
+  </nav>
+
+  {%- comment -%} Header con titolo + barra ricerca {%- endcomment -%}
+  <div class="kz-collection-header">
+    <div class="kz-collection-header__top">
+      <div>
+        <h1 class="kz-collection-header__title">
+          {%- if search.terms != blank -%}
+            Risultati<em> per {{ search.terms }}</em>
+          {%- else -%}
+            Cerca
+          {%- endif -%}
+        </h1>
+        {%- if search.performed -%}
+          <div class="kz-collection-header__eyebrow" style="margin-top:8px;color:#888880">
+            {{ paginate.items }} prodott{{ paginate.items | pluralize: 'o', 'i' }}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="kz-search">
+        <form class="kz-search__form{% if search.terms != blank %} is-open{% endif %}" action="{{ routes.search_url }}" method="get" role="search" data-kz-search>
+          <input type="hidden" name="type" value="product">
+          <input type="search" name="q" class="kz-search__input" placeholder="Cerca un prodotto..." autocomplete="off" aria-label="Cerca prodotti" value="{{ search.terms | escape }}" data-kz-search-input{% if search.terms == blank %} tabindex="-1"{% endif %}>
+          <button type="button" class="kz-search__toggle" data-kz-search-toggle aria-label="Cerca"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/></svg></button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} Griglia prodotti {%- endcomment -%}
+  <div class="kz-product-grid kz-product-grid--md" id="kz-grid">
+    {%- for item in search.results -%}
+      {%- if item.object_type == 'product' -%}
+        {%- render 'kz2-product-card', product: item -%}
+      {%- endif -%}
+    {%- else -%}
+      <p class="kz-empty">Nessun prodotto trovato{% if search.terms != blank %} per {{ search.terms }}{% endif %}. Prova con un altro termine.</p>
+    {%- endfor -%}
+  </div>
+
+  {%- comment -%} Paginazione {%- endcomment -%}
+  {%- if paginate.pages > 1 -%}
+    <nav class="kz-pagination" aria-label="Pagine risultati">
+      <div class="kz-pagination__inner">
+        {%- if paginate.previous -%}
+          <a href="{{ paginate.previous.url }}" class="kz-page-btn kz-page-btn--arrow" aria-label="Pagina precedente">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
+          </a>
+        {%- else -%}
+          <span class="kz-page-btn kz-page-btn--arrow kz-page-btn--disabled" aria-disabled="true">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
+          </span>
+        {%- endif -%}
+
+        <div class="kz-pagination__label">
+          <span class="kz-pagination__current">{{ paginate.current_page }}</span>
+          <span class="kz-pagination__sep">/</span>
+          <span class="kz-pagination__total">{{ paginate.pages }}</span>
+        </div>
+
+        <div class="kz-pagination__dots" aria-hidden="true">
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <a href="{{ part.url }}" class="kz-page-dot" aria-label="Pagina {{ part.title }}"></a>
+            {%- else -%}
+              {%- if part.title == paginate.current_page -%}
+                <span class="kz-page-dot kz-page-dot--active"></span>
+              {%- else -%}
+                <span class="kz-page-dot kz-page-dot--gap">…</span>
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.next -%}
+          <a href="{{ paginate.next.url }}" class="kz-page-btn kz-page-btn--arrow kz-page-btn--next" aria-label="Pagina successiva">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/></svg>
+          </a>
+        {%- else -%}
+          <span class="kz-page-btn kz-page-btn--arrow kz-page-btn--next kz-page-btn--disabled" aria-disabled="true">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/></svg>
+          </span>
+        {%- endif -%}
+      </div>
+    </nav>
+  {%- endif -%}
+
+</div>
+
+<style>
+  .kz-collection-header__top{align-items:center;gap:12px}
+  .kz-search{display:flex;align-items:center;margin-left:auto;flex-shrink:0}
+  .kz-search__form{display:flex;align-items:center;background:transparent;border:1px solid transparent;border-radius:9px;transition:background .2s,border-color .2s,box-shadow .2s}
+  .kz-search__form.is-open{background:#141414;border-color:rgba(255,255,255,.14)}
+  .kz-search__form.is-open:focus-within{border-color:#E8272A;box-shadow:0 0 0 2px rgba(232,39,42,.2)}
+  .kz-search__input{width:0;opacity:0;padding:0;border:none;background:transparent;outline:none;color:#F2F0EB;font-family:inherit;font-size:14px;transition:width .25s ease,opacity .18s,padding .25s}
+  .kz-search__form.is-open .kz-search__input{width:230px;opacity:1;padding:8px 6px 8px 12px}
+  .kz-search__input::placeholder{color:#6a6a64}
+  .kz-search__toggle{background:none;border:none;color:#b9b7b0;cursor:pointer;padding:7px 8px;display:flex;align-items:center;border-radius:9px;transition:color .15s}
+  .kz-search__toggle:hover{color:#fff}
+  .kz-search__form.is-open .kz-search__toggle{color:#E8272A}
+  @media(max-width:600px){
+    .kz-search{margin-right:4px}
+    .kz-search__form.is-open .kz-search__input{width:150px}
+  }
+</style>
+<script>
+(function(){
+  var form=document.querySelector('[data-kz-search]'); if(!form) return;
+  var input=form.querySelector('[data-kz-search-input]');
+  var toggle=form.querySelector('[data-kz-search-toggle]');
+  var grid=document.getElementById('kz-grid');
+  function apply(){
+    var q=(input.value||'').trim().toLowerCase();
+    if(!grid) return;
+    var cards=grid.children, shown=0;
+    for(var i=0;i<cards.length;i++){var c=cards[i];
+      if(c.id==='kz-search-none')continue;
+      if(c.classList&&c.classList.contains('kz-empty'))continue;
+      var m=!q||(c.textContent||'').toLowerCase().indexOf(q)>-1;
+      c.style.display=m?'':'none'; if(m)shown++;}
+    var none=document.getElementById('kz-search-none');
+    if(q&&shown===0){if(!none){none=document.createElement('p');none.id='kz-search-none';none.className='kz-empty';none.innerHTML='Niente in questa pagina. Premi Invio per una nuova ricerca.';grid.appendChild(none);}none.style.display='';}
+    else if(none){none.style.display='none';}
+  }
+  function openS(){form.classList.add('is-open');input.removeAttribute('tabindex');input.focus();}
+  function closeS(){form.classList.remove('is-open');input.setAttribute('tabindex','-1');}
+  toggle.addEventListener('click',function(){form.classList.contains('is-open')?closeS():openS();});
+  input.addEventListener('input',apply);
+  input.addEventListener('keydown',function(e){if(e.key==='Escape')closeS();});
+})();
+</script>
+
+{% schema %}
+{
+  "name": "KZ Ricerca"
+}
+{% endschema %}
