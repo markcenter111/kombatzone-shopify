@@ -30,7 +30,7 @@
           "type": "stat",
           "settings": {
             "stat_number": "48h",
-            "stat_label": "Elaborazione EU"
+            "stat_label": "Elaborazione ordine"
           }
         }
       },
