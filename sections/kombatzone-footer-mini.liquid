@@ -7,7 +7,9 @@
   usa questa sezione al posto di quello, oppure tienila come barra di chiusura extra.
 {% endcomment %}
 
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800;900&display=swap" rel="stylesheet">
 <style>
+  #kz-footer-mini-{{ section.id }} .footer-brand{ display:none; }
   #kz-footer-mini-{{ section.id }} {
     --bg0: #0a0a0a;
     --text-muted: #4a4a44;
@@ -46,12 +48,45 @@
     color: var(--text-dim);
   }
 
-  @media (max-width: 500px) {
+  @media (max-width: 600px) {
     #kz-footer-mini-{{ section.id }} {
-      /* column-reverse: i link restano sopra, il copyright va sotto */
-      flex-direction: column-reverse;
-      align-items: flex-start;
-      gap: 18px;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 16px;
+      padding-top: 28px;
+      padding-bottom: 28px;
+    }
+    #kz-footer-mini-{{ section.id }} .footer-brand {
+      display: block;
+      order: 1;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #F2F0EB;
+    }
+    #kz-footer-mini-{{ section.id }} .footer-brand span { color: #E8272A; }
+    #kz-footer-mini-{{ section.id }} .footer-links {
+      order: 2;
+      flex-direction: column;
+      align-items: center;
+      gap: 13px;
+      width: 100%;
+    }
+    #kz-footer-mini-{{ section.id }} .footer-links a { font-size: 13px; color: #b9b7b0; }
+    #kz-footer-mini-{{ section.id }} .footer-copy {
+      order: 3;
+      position: relative;
+      padding-top: 16px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    #kz-footer-mini-{{ section.id }} .footer-copy::before {
+      content: '';
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 64px; height: 1px; background: rgba(255,255,255,0.1);
     }
   }
 </style>
@@ -63,6 +98,7 @@
       <a href="{{ block.settings.link | default: '#' }}" {{ block.shopify_attributes }}>{{ block.settings.label }}</a>
     {% endfor %}
   </div>
+  <div class="footer-brand" aria-hidden="true">KOMBAT<span>ZONE</span></div>
 </div>
 
 {% schema %}
