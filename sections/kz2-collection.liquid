@@ -5,6 +5,11 @@
 
 {{ 'kz2-collection.css' | asset_url | stylesheet_tag }}
 
+<style>
+  #shopify-section-{{ section.id }}{background:#0a0a0a}
+  #shopify-section-{{ section.id }} .kz-catalog{min-height:calc(100vh - 200px)}
+</style>
+
 {%- paginate collection.products by section.settings.products_per_page -%}
 
 <div class="kz-catalog">
