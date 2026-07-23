@@ -1,8 +1,11 @@
 {
   "sections": {
     "main": {
-      "type": "kz-search"
+      "type": "kz-search",
+      "settings": {}
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
