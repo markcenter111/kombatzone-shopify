@@ -30,6 +30,9 @@
     {%- render 'scripts' -%}
     {%- render 'theme-styles-variables' -%}
     {%- render 'color-schemes' -%}
+    {%- if template contains 'collection' or template contains 'search' -%}
+      <style>body{background:#0a0a0a}</style>
+    {%- endif -%}
 
     {% if request.design_mode %}
       {%- render 'theme-editor' -%}

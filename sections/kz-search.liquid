@@ -110,7 +110,7 @@
 
 <style>
   #shopify-section-{{ section.id }}{background:#0a0a0a}
-  #shopify-section-{{ section.id }} .kz-catalog{min-height:calc(100vh - 200px)}
+  #shopify-section-{{ section.id }} .kz-catalog{display:flex;flex-direction:column;min-height:calc(100dvh - var(--header-group-height, 0px))}
   .kz-collection-header__top{align-items:flex-start;gap:12px;flex-wrap:nowrap}
   .kz-collection-header__top>div:first-child{min-width:0;flex:1 1 auto}
   .kz-collection-header__title{overflow-wrap:anywhere;word-break:break-word}

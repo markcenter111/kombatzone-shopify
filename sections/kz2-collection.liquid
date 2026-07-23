@@ -7,7 +7,8 @@
 
 <style>
   #shopify-section-{{ section.id }}{background:#0a0a0a}
-  #shopify-section-{{ section.id }} .kz-catalog{min-height:calc(100vh - 200px)}
+  #shopify-section-{{ section.id }} .kz-catalog{display:flex;flex-direction:column;min-height:calc(100dvh - var(--header-group-height, 0px))}
+  #shopify-section-{{ section.id }} .kz-trust-bar{margin-top:auto}
 </style>
 
 {%- paginate collection.products by section.settings.products_per_page -%}
@@ -50,7 +51,7 @@
     .kz-search__form.is-open{background:#141414;border-color:rgba(255,255,255,.14)}
     .kz-search__form.is-open:focus-within{border-color:#E8272A;box-shadow:0 0 0 2px rgba(232,39,42,.2)}
     .kz-search__input{width:0;opacity:0;padding:0;border:none;background:transparent;outline:none;color:#F2F0EB;font-family:inherit;font-size:14px;transition:width .25s ease,opacity .18s,padding .25s}
-    .kz-search__form.is-open .kz-search__input{width:230px;opacity:1;padding:8px 6px 8px 12px}
+    .kz-search__form.is-open .kz-search__input{width:40vw;opacity:1;padding:8px 6px 8px 12px}
     .kz-search__input::placeholder{color:#6a6a64}
     .kz-search__toggle{background:none;border:none;color:#b9b7b0;cursor:pointer;padding:7px 8px;display:flex;align-items:center;border-radius:9px;transition:color .15s}
     .kz-search__toggle:hover{color:#fff}
