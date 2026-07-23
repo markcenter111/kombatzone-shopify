@@ -24,7 +24,7 @@
       <div>
         <h1 class="kz-collection-header__title">
           {%- if search.terms != blank -%}
-            Risultati<em> per {{ search.terms | escape | truncate: 40 }}</em>
+            Risultati per <em>{{ search.terms | escape | truncate: 40 }}</em>
           {%- else -%}
             Cerca
           {%- endif -%}
@@ -123,8 +123,9 @@
   .kz-search__toggle:hover{color:#fff}
   .kz-search__form.is-open .kz-search__toggle{color:#E8272A}
   @media(max-width:600px){
-    .kz-search{margin-right:4px}
-    .kz-search__form.is-open .kz-search__input{width:150px}
+    .kz-collection-header__top{flex-direction:column;align-items:flex-start;gap:10px;flex-wrap:nowrap}
+    .kz-search{margin-left:0;margin-right:0}
+    .kz-search__form.is-open .kz-search__input{width:170px}
   }
 </style>
 <script>
