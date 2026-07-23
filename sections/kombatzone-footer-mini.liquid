@@ -9,7 +9,6 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800;900&display=swap" rel="stylesheet">
 <style>
-  #kz-footer-mini-{{ section.id }} .footer-brand{ display:none; }
   #kz-footer-mini-{{ section.id }} {
     --bg0: #0a0a0a;
     --text-muted: #4a4a44;
@@ -57,25 +56,17 @@
       padding-top: 28px;
       padding-bottom: 28px;
     }
-    #kz-footer-mini-{{ section.id }} .footer-brand {
-      display: block;
-      order: 1;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 900;
-      font-size: 22px;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      color: #F2F0EB;
-    }
-    #kz-footer-mini-{{ section.id }} .footer-brand span { color: #E8272A; }
     #kz-footer-mini-{{ section.id }} .footer-links {
       order: 2;
-      flex-direction: column;
-      align-items: center;
-      gap: 13px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 16px;
       width: 100%;
+      max-width: 340px;
+      justify-items: center;
     }
-    #kz-footer-mini-{{ section.id }} .footer-links a { font-size: 13px; color: #b9b7b0; }
+    #kz-footer-mini-{{ section.id }} .footer-links a { font-size: 13px; color: #b9b7b0; text-align: center; }
+    #kz-footer-mini-{{ section.id }} .footer-links a:last-child:nth-child(odd) { grid-column: 1 / -1; }
     #kz-footer-mini-{{ section.id }} .footer-copy {
       order: 3;
       position: relative;
@@ -98,7 +89,6 @@
       <a href="{{ block.settings.link | default: '#' }}" {{ block.shopify_attributes }}>{{ block.settings.label }}</a>
     {% endfor %}
   </div>
-  <div class="footer-brand" aria-hidden="true">KOMBAT<span>ZONE</span></div>
 </div>
 
 {% schema %}
