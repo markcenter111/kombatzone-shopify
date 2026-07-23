@@ -58,54 +58,54 @@
 
   </div>
 
-  {%- comment -%} Search Bar {%- endcomment -%}
+  {%- comment -%} Search (icona lente, a destra, apri al click) {%- endcomment -%}
   <style>
-    .kz-search{max-width:1280px;margin:0 auto 14px}
-    .kz-search__form{display:flex;align-items:stretch;background:#141414;border:1px solid rgba(255,255,255,.12);border-radius:10px;overflow:hidden}
-    .kz-search__form:focus-within{border-color:#E8272A;box-shadow:0 0 0 2px rgba(232,39,42,.22)}
-    .kz-search__icon{display:flex;align-items:center;padding:0 12px;color:#888880}
-    .kz-search__input{flex:1;background:transparent;border:none;outline:none;color:#F2F0EB;font-family:inherit;font-size:14px;padding:13px 6px}
+    .kz-search{max-width:1280px;margin:0 auto 10px;display:flex;justify-content:flex-end}
+    .kz-search__form{display:flex;align-items:center;background:transparent;border:1px solid transparent;border-radius:9px;transition:background .2s,border-color .2s,box-shadow .2s}
+    .kz-search__form.is-open{background:#141414;border-color:rgba(255,255,255,.14)}
+    .kz-search__form.is-open:focus-within{border-color:#E8272A;box-shadow:0 0 0 2px rgba(232,39,42,.2)}
+    .kz-search__input{width:0;opacity:0;padding:0;border:none;background:transparent;outline:none;color:#F2F0EB;font-family:inherit;font-size:14px;transition:width .25s ease,opacity .18s,padding .25s}
+    .kz-search__form.is-open .kz-search__input{width:240px;opacity:1;padding:9px 6px 9px 12px}
     .kz-search__input::placeholder{color:#6a6a64}
-    .kz-search__clear{background:none;border:none;color:#888880;cursor:pointer;padding:0 10px;display:none;font-size:14px}
-    .kz-search__clear.show{display:block}
-    .kz-search__btn{background:#E8272A;color:#fff;border:none;padding:0 22px;font-family:inherit;font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:12px;cursor:pointer;transition:background .15s}
-    .kz-search__btn:hover{background:#c41f22}
+    .kz-search__toggle{background:none;border:none;color:#b9b7b0;cursor:pointer;padding:8px 9px;display:flex;align-items:center;border-radius:9px;transition:color .15s}
+    .kz-search__toggle:hover{color:#fff}
+    .kz-search__form.is-open .kz-search__toggle{color:#E8272A}
+    @media(max-width:600px){.kz-search__form.is-open .kz-search__input{width:150px}}
   </style>
   <div class="kz-search">
     <form class="kz-search__form" action="{{ routes.search_url }}" method="get" role="search" data-kz-search>
-      <span class="kz-search__icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/></svg></span>
       <input type="hidden" name="type" value="product">
-      <input type="search" name="q" class="kz-search__input" placeholder="Cerca un prodotto..." autocomplete="off" aria-label="Cerca prodotti" data-kz-search-input>
-      <button type="button" class="kz-search__clear" data-kz-search-clear aria-label="Cancella ricerca">&times;</button>
-      <button type="submit" class="kz-search__btn">Cerca</button>
+      <input type="search" name="q" class="kz-search__input" placeholder="Cerca un prodotto..." autocomplete="off" aria-label="Cerca prodotti" data-kz-search-input tabindex="-1">
+      <button type="button" class="kz-search__toggle" data-kz-search-toggle aria-label="Cerca">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/></svg>
+      </button>
     </form>
   </div>
   <script>
   (function(){
     var form=document.querySelector('[data-kz-search]'); if(!form) return;
     var input=form.querySelector('[data-kz-search-input]');
-    var clear=form.querySelector('[data-kz-search-clear]');
+    var toggle=form.querySelector('[data-kz-search-toggle]');
     var grid=document.getElementById('kz-grid');
-    function norm(s){return (s||'').toLowerCase();}
     function apply(){
-      var q=norm(input.value.trim());
-      clear.classList.toggle('show', q.length>0);
+      var q=(input.value||'').trim().toLowerCase();
       if(!grid) return;
       var cards=grid.children, shown=0;
-      for(var i=0;i<cards.length;i++){
-        var c=cards[i];
-        if(c.id==='kz-search-none') continue;
-        if(c.classList&&c.classList.contains('kz-empty')) continue;
-        var match=!q||norm(c.textContent).indexOf(q)>-1;
-        c.style.display=match?'':'none'; if(match)shown++;
-      }
+      for(var i=0;i<cards.length;i++){var c=cards[i];
+        if(c.id==='kz-search-none')continue;
+        if(c.classList&&c.classList.contains('kz-empty'))continue;
+        var m=!q||(c.textContent||'').toLowerCase().indexOf(q)>-1;
+        c.style.display=m?'':'none'; if(m)shown++;}
       var none=document.getElementById('kz-search-none');
-      if(q&&shown===0){ if(!none){none=document.createElement('p');none.id='kz-search-none';none.className='kz-empty';none.innerHTML='Nessun prodotto in questa pagina. Premi <strong>Cerca</strong> per cercare in tutto il negozio.';grid.appendChild(none);} none.style.display=''; }
-      else if(none){ none.style.display='none'; }
+      if(q&&shown===0){if(!none){none=document.createElement('p');none.id='kz-search-none';none.className='kz-empty';none.innerHTML='Niente in questa pagina. Premi Invio per cercare in tutto il negozio.';grid.appendChild(none);}none.style.display='';}
+      else if(none){none.style.display='none';}
     }
+    function openS(){form.classList.add('is-open');input.removeAttribute('tabindex');input.focus();}
+    function closeS(){form.classList.remove('is-open');input.value='';input.setAttribute('tabindex','-1');apply();}
+    toggle.addEventListener('click',function(){form.classList.contains('is-open')?closeS():openS();});
     input.addEventListener('input',apply);
-    clear.addEventListener('click',function(){input.value='';apply();input.focus();});
-    apply();
+    input.addEventListener('keydown',function(e){if(e.key==='Escape')closeS();});
+    document.addEventListener('click',function(e){if(form.classList.contains('is-open')&&!form.contains(e.target)&&!input.value)closeS();});
   })();
   </script>
 
