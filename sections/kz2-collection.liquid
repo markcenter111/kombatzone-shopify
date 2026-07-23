@@ -29,58 +29,32 @@
           {%- endif -%}
         </h1>
       </div>
+      <div class="kz-search">
+        <form class="kz-search__form" action="{{ routes.search_url }}" method="get" role="search" data-kz-search>
+          <input type="hidden" name="type" value="product">
+          <input type="search" name="q" class="kz-search__input" placeholder="Cerca un prodotto..." autocomplete="off" aria-label="Cerca prodotti" data-kz-search-input tabindex="-1">
+          <button type="button" class="kz-search__toggle" data-kz-search-toggle aria-label="Cerca"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/></svg></button>
+        </form>
+      </div>
     </div>
   </div>
-
-  {%- comment -%} ── Category Pills ── {%- endcomment -%}
-  <div class="kz-cat-bar" role="list">
-
-    <a href="{{ collection.url }}"
-       class="kz-cat-btn{% unless current_tags %} kz-cat-btn--active{% endunless %}"
-       role="listitem">
-      TUTTI
-    </a>
-
-    {%- for block in section.blocks -%}
-      {%- if block.type == 'category' -%}
-        {%- assign tag = block.settings.tag -%}
-        {%- if collection.all_tags contains tag -%}
-          {%- assign tag_url = collection.url | append: '/' | append: tag | handle -%}
-          <a href="{{ tag_url }}"
-             class="kz-cat-btn{% if current_tags contains tag %} kz-cat-btn--active{% endif %}"
-             role="listitem"
-             {{ block.shopify_attributes }}>
-            {{ block.settings.label }}
-          </a>
-        {%- endif -%}
-      {%- endif -%}
-    {%- endfor -%}
-
-  </div>
-
-  {%- comment -%} Search (icona lente, a destra, apri al click) {%- endcomment -%}
   <style>
-    .kz-search{max-width:1280px;margin:0 auto 10px;display:flex;justify-content:flex-end}
+    .kz-collection-header__top{align-items:center;gap:12px}
+    .kz-search{display:flex;align-items:center;margin-left:auto;flex-shrink:0}
     .kz-search__form{display:flex;align-items:center;background:transparent;border:1px solid transparent;border-radius:9px;transition:background .2s,border-color .2s,box-shadow .2s}
     .kz-search__form.is-open{background:#141414;border-color:rgba(255,255,255,.14)}
     .kz-search__form.is-open:focus-within{border-color:#E8272A;box-shadow:0 0 0 2px rgba(232,39,42,.2)}
     .kz-search__input{width:0;opacity:0;padding:0;border:none;background:transparent;outline:none;color:#F2F0EB;font-family:inherit;font-size:14px;transition:width .25s ease,opacity .18s,padding .25s}
-    .kz-search__form.is-open .kz-search__input{width:240px;opacity:1;padding:9px 6px 9px 12px}
+    .kz-search__form.is-open .kz-search__input{width:230px;opacity:1;padding:8px 6px 8px 12px}
     .kz-search__input::placeholder{color:#6a6a64}
-    .kz-search__toggle{background:none;border:none;color:#b9b7b0;cursor:pointer;padding:8px 9px;display:flex;align-items:center;border-radius:9px;transition:color .15s}
+    .kz-search__toggle{background:none;border:none;color:#b9b7b0;cursor:pointer;padding:7px 8px;display:flex;align-items:center;border-radius:9px;transition:color .15s}
     .kz-search__toggle:hover{color:#fff}
     .kz-search__form.is-open .kz-search__toggle{color:#E8272A}
-    @media(max-width:600px){.kz-search__form.is-open .kz-search__input{width:150px}}
+    @media(max-width:600px){
+      .kz-search{margin-right:4px}
+      .kz-search__form.is-open .kz-search__input{width:150px}
+    }
   </style>
-  <div class="kz-search">
-    <form class="kz-search__form" action="{{ routes.search_url }}" method="get" role="search" data-kz-search>
-      <input type="hidden" name="type" value="product">
-      <input type="search" name="q" class="kz-search__input" placeholder="Cerca un prodotto..." autocomplete="off" aria-label="Cerca prodotti" data-kz-search-input tabindex="-1">
-      <button type="button" class="kz-search__toggle" data-kz-search-toggle aria-label="Cerca">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/></svg>
-      </button>
-    </form>
-  </div>
   <script>
   (function(){
     var form=document.querySelector('[data-kz-search]'); if(!form) return;
@@ -108,6 +82,32 @@
     document.addEventListener('click',function(e){if(form.classList.contains('is-open')&&!form.contains(e.target)&&!input.value)closeS();});
   })();
   </script>
+
+  {%- comment -%} ── Category Pills ── {%- endcomment -%}
+  <div class="kz-cat-bar" role="list">
+
+    <a href="{{ collection.url }}"
+       class="kz-cat-btn{% unless current_tags %} kz-cat-btn--active{% endunless %}"
+       role="listitem">
+      TUTTI
+    </a>
+
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'category' -%}
+        {%- assign tag = block.settings.tag -%}
+        {%- if collection.all_tags contains tag -%}
+          {%- assign tag_url = collection.url | append: '/' | append: tag | handle -%}
+          <a href="{{ tag_url }}"
+             class="kz-cat-btn{% if current_tags contains tag %} kz-cat-btn--active{% endif %}"
+             role="listitem"
+             {{ block.shopify_attributes }}>
+            {{ block.settings.label }}
+          </a>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+  </div>
 
   {%- comment -%} ── Filter / Sort Bar ── {%- endcomment -%}
   <div class="kz-filter-bar">
